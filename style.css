@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #047857; /* Deep Emerald Green */
+  --color-secondary: #10B981; /* Soft Eco-Green */
+  --color-accent: #D946EF; /* Orchid Pink */
+  --color-accent-gold: #F59E0B; /* Gold */
+  
+  --font-inter: 'Inter', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-inter text-gray-800 bg-gray-50;
+    scroll-behavior: smooth;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-outfit text-gray-900;
+  }
+}
+
+@layer utilities {
+  .glassmorphism {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-lg;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary;
+  }
+}

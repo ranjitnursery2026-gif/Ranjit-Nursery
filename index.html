@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ranjit Nursery | 5 Star Nursery Wholesale</title>
+  <meta name="description" content="Jai Jagannath | Your Green Partner for Premium Plants & Landscaping in Rourkela, Odisha. Wholesale & Retail Supplier." />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Vite Main Stylesheet entry point is main.js, which imports style.css -->
+</head>
+<body class="antialiased bg-gray-50 text-gray-800 overflow-x-hidden">
+  
+  <!-- Navbar -->
+  <nav class="fixed w-full z-50 transition-all duration-300 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm" id="navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex items-center gap-2">
+          <i data-lucide="leaf" class="text-primary h-8 w-8"></i>
+          <div>
+            <h1 class="text-2xl font-outfit font-bold text-primary leading-none">Ranjit Nursery</h1>
+            <p class="text-[0.65rem] font-medium tracking-wider text-gray-500 uppercase mt-1">5 Star Nursery Wholesale</p>
+          </div>
+        </div>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex space-x-8 items-center font-medium">
+          <a href="#home" class="text-gray-600 hover:text-primary transition-colors">Home</a>
+          <a href="#about" class="text-gray-600 hover:text-primary transition-colors">About</a>
+          <a href="#products" class="text-gray-600 hover:text-primary transition-colors">Products</a>
+          <a href="#services" class="text-gray-600 hover:text-primary transition-colors">Services</a>
+          <a href="#contact" class="text-gray-600 hover:text-primary transition-colors">Contact</a>
+          <a href="https://wa.me/917978809687" target="_blank" rel="noopener noreferrer" class="bg-primary hover:bg-emerald-800 text-white px-5 py-2.5 rounded-full font-semibold transition-all shadow-lg hover:shadow-emerald-600/30 flex items-center gap-2 transform hover:-translate-y-0.5">
+            <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+          </a>
+        </div>
+
+        <!-- Mobile menu button -->
+        <div class="md:hidden flex items-center">
+          <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary focus:outline-none p-2">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Panel -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
+      <div class="px-4 pt-2 pb-6 space-y-1">
+        <a href="#home" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-emerald-50 rounded-md">Home</a>
+        <a href="#about" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-emerald-50 rounded-md">About</a>
+        <a href="#products" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-emerald-50 rounded-md">Products</a>
+        <a href="#services" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-emerald-50 rounded-md">Services</a>
+        <a href="#contact" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-emerald-50 rounded-md">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="relative pt-20 min-h-[90vh] flex items-center justify-center overflow-hidden">
+    <!-- Background Image with Overlay -->
+    <div class="absolute inset-0 z-0">
+      <!-- High quality nursery background via Unsplash -->
+      <img src="/images/hero_bg_1781686274168.png" alt="Lush Green Nursery" class="w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/90 to-emerald-900/60 mix-blend-multiply"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center animate-on-scroll opacity-0 translate-y-8 transition-all duration-1000 ease-out">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white mb-8">
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+        </span>
+        <span class="text-sm font-medium tracking-wide">Jai Jagannath | Premium Plants</span>
+      </div>
+      
+      <h1 class="text-5xl md:text-7xl font-outfit font-extrabold text-white mb-6 leading-tight drop-shadow-lg">
+        Transform Your Spaces <br/>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-green-200">with 5-Star Nature</span>
+      </h1>
+      
+      <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl font-light">
+        Your Green Partner for Premium Plants, Landscaping & Expert Gardening Consultancy. Delivering wholesale prices and unmatched quality.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a href="#products" class="px-8 py-4 bg-primary hover:bg-emerald-600 text-white rounded-full font-semibold text-lg transition-all shadow-xl hover:shadow-primary/40 transform hover:-translate-y-1">
+          Explore Our Plants
+        </a>
+        <a href="https://wa.me/917978809687" target="_blank" rel="noopener noreferrer" class="px-8 py-4 bg-white hover:bg-gray-50 text-emerald-900 rounded-full font-semibold text-lg transition-all shadow-xl hover:shadow-white/20 transform hover:-translate-y-1 flex items-center justify-center gap-2">
+          <i data-lucide="phone" class="w-5 h-5"></i> Chat on WhatsApp
+        </a>
+      </div>
+    </div>
+    
+    <!-- Scroll Down Indicator -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce z-10 text-white/70">
+      <i data-lucide="chevron-down" class="w-8 h-8"></i>
+    </div>
+  </section>
+
+  <!-- About Us Section -->
+  <section id="about" class="py-24 bg-white relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <!-- Images grid -->
+        <div class="grid grid-cols-2 gap-4 animate-on-scroll opacity-0 -translate-x-8 transition-all duration-1000 ease-out">
+          <img src="/images/about_orchid_1781686291477.png" alt="Orchid Flower" class="rounded-2xl shadow-xl w-full h-64 object-cover transform translate-y-8" />
+          <img src="/images/about_potted_1781686303406.png" alt="Potted Plants" class="rounded-2xl shadow-xl w-full h-64 object-cover" />
+        </div>
+        
+        <!-- Content -->
+        <div class="animate-on-scroll opacity-0 translate-x-8 transition-all duration-1000 ease-out delay-200">
+          <div class="text-accent font-bold tracking-wider uppercase mb-2 flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-5 h-5"></i> About Us
+          </div>
+          <h2 class="text-4xl md:text-5xl font-outfit font-bold text-gray-900 mb-6 leading-tight">
+            Trusted Wholesale Supplier in <span class="text-primary">Rourkela, Odisha</span>
+          </h2>
+          <p class="text-gray-600 text-lg mb-6 leading-relaxed">
+            Welcome to Ranjit Nursery (5 Star Nursery Wholesale), where passion for nature meets exceptional quality. We are dedicated to providing the finest selection of plants and landscaping solutions to transform your homes, offices, and gardens.
+          </p>
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-start gap-3">
+              <div class="mt-1 bg-emerald-100 p-1.5 rounded-full text-primary">
+                <i data-lucide="check" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <strong class="text-gray-900">Commitment to Organic Growth</strong>
+                <p class="text-gray-600 text-sm mt-1">We prioritize sustainable and organic methods to ensure our plants are healthy and vibrant.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <div class="mt-1 bg-emerald-100 p-1.5 rounded-full text-primary">
+                <i data-lucide="check" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <strong class="text-gray-900">Natural Plant Medicines</strong>
+                <p class="text-gray-600 text-sm mt-1">Providing safe, organic fertilizers and medicines for premium plant care.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <div class="mt-1 bg-emerald-100 p-1.5 rounded-full text-primary">
+                <i data-lucide="check" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <strong class="text-gray-900">Expert Consultation</strong>
+                <p class="text-gray-600 text-sm mt-1">Professional advice for your gardening and landscaping projects from seasoned experts.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Categories Section -->
+  <section id="products" class="py-24 bg-gray-50 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16 animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+        <h2 class="text-4xl md:text-5xl font-outfit font-bold text-gray-900 mb-4">Our Core Products</h2>
+        <p class="text-gray-600 text-lg">Explore our diverse collection of premium plants, gardening supplies, and exotic specialities perfect for any space.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Specialty Card: Orchids -->
+        <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group animate-on-scroll opacity-0 translate-y-8 delay-100 ring-2 ring-accent/20">
+          <div class="relative h-64 overflow-hidden">
+            <img src="/images/about_orchid_1781686291477.png" alt="Exotic Orchids" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+            <div class="absolute top-4 right-4 bg-accent text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-lg flex items-center gap-1">
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i> Specialty
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <h3 class="absolute bottom-4 left-6 text-2xl font-outfit font-bold text-white">Exotic Orchids</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-600 mb-4">Our signature collection of breathtaking orchids. Available in various striking colors and species.</p>
+            <a href="https://wa.me/917978809687" class="text-accent font-semibold hover:text-pink-600 inline-flex items-center gap-1 transition-colors">
+              Inquire Now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Category: Indoor & Outdoor Plants -->
+        <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group animate-on-scroll opacity-0 translate-y-8 delay-200">
+          <div class="relative h-64 overflow-hidden">
+            <img src="https://placehold.co/1000x800/047857/FFF?text=Indoor+%26+Outdoor+Plants" alt="Indoor & Outdoor Plants" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <h3 class="absolute bottom-4 left-6 text-2xl font-outfit font-bold text-white">Indoor & Outdoor Plants</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-600 mb-4">Air-purifying indoor greens and robust outdoor plants to bring life to any environment.</p>
+            <a href="https://wa.me/917978809687" class="text-primary font-semibold hover:text-emerald-700 inline-flex items-center gap-1 transition-colors">
+              View Selection <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Category: Ornamental & Potted Plants -->
+        <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group animate-on-scroll opacity-0 translate-y-8 delay-300">
+          <div class="relative h-64 overflow-hidden">
+            <img src="https://placehold.co/1000x800/10B981/FFF?text=Ornamental+Plants" alt="Ornamental Plants" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <h3 class="absolute bottom-4 left-6 text-2xl font-outfit font-bold text-white">Ornamental & Potted</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-600 mb-4">Beautiful decorative plants ready-potted for instant appeal in homes or offices.</p>
+            <a href="https://wa.me/917978809687" class="text-primary font-semibold hover:text-emerald-700 inline-flex items-center gap-1 transition-colors">
+              View Selection <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Category: Fruit & Veg Plants -->
+        <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group animate-on-scroll opacity-0 translate-y-8 delay-100">
+          <div class="relative h-64 overflow-hidden">
+            <img src="/images/fruit_veg_1781686317000.png" alt="Fruit & Vegetable Plants" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <h3 class="absolute bottom-4 left-6 text-2xl font-outfit font-bold text-white">Fruit, Veg & Seeds</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-600 mb-4">All varieties of fruit and vegetable plants, plus premium quality seeds to grow your own food.</p>
+            <a href="https://wa.me/917978809687" class="text-primary font-semibold hover:text-emerald-700 inline-flex items-center gap-1 transition-colors">
+              View Selection <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Category: Avenue Trees & Grass -->
+        <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group animate-on-scroll opacity-0 translate-y-8 delay-200">
+          <div class="relative h-64 overflow-hidden">
+            <img src="/images/avenue_trees_1781686330383.png" alt="Avenue Trees" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <h3 class="absolute bottom-4 left-6 text-2xl font-outfit font-bold text-white">Avenue Trees & Grass</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-600 mb-4">Majestic avenue trees and lush carpet grass rolls to completely transform outdoor landscapes.</p>
+            <a href="https://wa.me/917978809687" class="text-primary font-semibold hover:text-emerald-700 inline-flex items-center gap-1 transition-colors">
+              View Selection <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Category: Supplies & Care -->
+        <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group animate-on-scroll opacity-0 translate-y-8 delay-300">
+          <div class="relative h-64 overflow-hidden">
+            <img src="/images/tools_supplies_1781686346677.png" alt="Gardening Tools & Supplies" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <h3 class="absolute bottom-4 left-6 text-2xl font-outfit font-bold text-white">Supplies & Organic Care</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-gray-600 mb-4">High-quality plastic pots, gardening tools, natural plant medicines, and organic fertilizers.</p>
+            <a href="https://wa.me/917978809687" class="text-primary font-semibold hover:text-emerald-700 inline-flex items-center gap-1 transition-colors">
+              View Selection <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="py-24 bg-white relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <div class="animate-on-scroll opacity-0 -translate-x-8 transition-all duration-1000 ease-out">
+          <h2 class="text-4xl md:text-5xl font-outfit font-bold text-gray-900 mb-6">Professional Services</h2>
+          <p class="text-gray-600 text-lg mb-8">Beyond supplying premium plants, Ranjit Nursery offers comprehensive services to ensure your green spaces thrive beautifully.</p>
+          
+          <div class="space-y-8">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:border-primary/30 transition-colors shadow-sm hover:shadow-md">
+              <div class="flex items-start gap-4">
+                <div class="bg-white p-3 rounded-xl shadow-sm text-primary">
+                  <i data-lucide="trees" class="w-8 h-8"></i>
+                </div>
+                <div>
+                  <h4 class="text-xl font-bold text-gray-900 mb-2">Landscaping & Design Services</h4>
+                  <p class="text-gray-600 leading-relaxed">
+                    Custom landscape design and implementation for homes, corporate offices, and public gardens. We specialize in creating harmonious, sustainable environments.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:border-primary/30 transition-colors shadow-sm hover:shadow-md">
+              <div class="flex items-start gap-4">
+                <div class="bg-white p-3 rounded-xl shadow-sm text-primary">
+                  <i data-lucide="sprout" class="w-8 h-8"></i>
+                </div>
+                <div>
+                  <h4 class="text-xl font-bold text-gray-900 mb-2">Expert Gardening Consultancy</h4>
+                  <p class="text-gray-600 leading-relaxed">
+                    Need advice on plant health, soil conditions, or pest control? Our experts provide tailored guidance to ensure your plants flourish organically.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative h-[500px] rounded-3xl overflow-hidden shadow-2xl animate-on-scroll opacity-0 translate-x-8 transition-all duration-1000 ease-out delay-200">
+          <img src="https://placehold.co/1000x800/047857/FFF?text=Landscaping+Services" alt="Landscaping" class="absolute inset-0 w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+          <div class="absolute bottom-8 left-8 right-8">
+            <h3 class="text-3xl font-outfit font-bold text-white mb-2">Let's Build Your Dream Garden</h3>
+            <a href="https://wa.me/917978809687" class="inline-flex items-center gap-2 bg-accent hover:bg-pink-600 text-white px-6 py-3 rounded-full font-semibold transition-colors shadow-lg">
+              Book a Consultation <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / Footer Section -->
+  <footer id="contact" class="bg-emerald-950 pt-20 pb-10 text-gray-300 relative overflow-hidden">
+    <!-- Decorative background element -->
+    <div class="absolute top-0 right-0 -mr-32 -mt-32 opacity-10">
+      <i data-lucide="leaf" class="w-96 h-96 text-white"></i>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        
+        <!-- Brand -->
+        <div class="lg:col-span-1">
+          <div class="flex items-center gap-2 mb-6">
+            <i data-lucide="leaf" class="text-secondary h-8 w-8"></i>
+            <h2 class="text-2xl font-outfit font-bold text-white leading-none">Ranjit Nursery</h2>
+          </div>
+          <p class="text-sm text-gray-400 mb-6">
+            5 Star Nursery Wholesale. Your green partner for premium plants and landscaping solutions in Odisha.
+          </p>
+          <div class="inline-block bg-white/10 px-4 py-2 rounded-lg border border-white/10">
+            <p class="text-accent-gold font-medium">Jai Jagannath 🙏</p>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="text-lg font-bold text-white mb-6">Quick Links</h4>
+          <ul class="space-y-3">
+            <li><a href="#home" class="hover:text-secondary transition-colors">Home</a></li>
+            <li><a href="#about" class="hover:text-secondary transition-colors">About Us</a></li>
+            <li><a href="#products" class="hover:text-secondary transition-colors">Our Products</a></li>
+            <li><a href="#services" class="hover:text-secondary transition-colors">Services</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="lg:col-span-2">
+          <h4 class="text-lg font-bold text-white mb-6">Contact & Visit Us</h4>
+          <div class="space-y-4">
+            <div class="flex items-start gap-3">
+              <i data-lucide="map-pin" class="w-5 h-5 text-secondary flex-shrink-0 mt-1"></i>
+              <p>Bisra Chowk, Bondamunda Road,<br />Rourkela - 769001, Odisha</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <i data-lucide="phone" class="w-5 h-5 text-secondary flex-shrink-0"></i>
+              <a href="tel:+917978809687" class="hover:text-white transition-colors">+91 7978809687</a>
+            </div>
+            <div class="flex items-center gap-3">
+              <i data-lucide="clock" class="w-5 h-5 text-secondary flex-shrink-0"></i>
+              <p>Mon - Sun: 8:00 AM - 8:00 PM</p>
+            </div>
+            
+            <div class="mt-6 pt-2">
+              <a href="https://wa.me/917978809687" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebd5a] text-white px-6 py-3 rounded-full font-bold transition-all shadow-lg shadow-[#25D366]/20">
+                <i data-lucide="message-circle" class="w-5 h-5"></i> Message on WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-white/10 pt-8 text-center md:flex md:justify-between md:text-left">
+        <p class="text-sm text-gray-500">&copy; 2026 Ranjit Nursery. All rights reserved.</p>
+        <p class="text-sm text-gray-500 mt-2 md:mt-0">Designed for 5-Star Nature.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
