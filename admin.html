@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Ranjit Nursery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#2D5A27', accent: '#A66B29' },
+                    fontFamily: { outfit: ['Outfit', 'sans-serif'], inter: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter text-gray-800 antialiased">
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="leaf" class="text-primary w-6 h-6"></i>
+                    <span class="font-outfit font-bold text-xl text-gray-900">Ranjit Nursery <span class="text-primary">Admin</span></span>
+                </div>
+                <a href="/" class="text-sm font-medium text-gray-500 hover:text-gray-900 flex items-center gap-2">
+                    <i data-lucide="external-link" class="w-4 h-4"></i> View Live Store
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <h1 class="text-3xl font-outfit font-bold text-gray-900">Product Management</h1>
+                <p class="text-gray-500 mt-1">Manage your catalog, add new products, and toggle stock availability in real-time.</p>
+            </div>
+            <button onclick="window.openAddModal()" class="bg-primary hover:bg-green-800 text-white px-5 py-2.5 rounded-lg font-semibold shadow-sm flex items-center gap-2 transition-colors">
+                <i data-lucide="plus" class="w-5 h-5"></i> Add New Product
+            </button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex space-x-1 bg-gray-100 p-1 rounded-xl mb-6 overflow-x-auto border border-gray-200">
+            <button class="admin-tab active bg-white text-primary font-semibold shadow-sm rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="all">All Products</button>
+            <button class="admin-tab text-gray-600 hover:text-gray-900 font-medium rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="plants">Plants</button>
+            <button class="admin-tab text-gray-600 hover:text-gray-900 font-medium rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="seeds">Seeds</button>
+            <button class="admin-tab text-gray-600 hover:text-gray-900 font-medium rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="fertilizers">Fertilizers & Medicines</button>
+            <button class="admin-tab text-gray-600 hover:text-gray-900 font-medium rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="tools">Tools & Pots</button>
+        </div>
+
+        <!-- Products Table -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase tracking-wider text-gray-500 font-semibold">
+                            <th class="px-6 py-4">Product</th>
+                            <th class="px-6 py-4">Categories</th>
+                            <th class="px-6 py-4">Price</th>
+                            <th class="px-6 py-4 text-center">Status</th>
+                            <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-product-list" class="divide-y divide-gray-100">
+                        <!-- Products will be injected here -->
+                        <tr><td colspan="5" class="px-6 py-8 text-center text-gray-400">Loading catalog...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="addProductModal" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h2 id="modal-title" class="text-xl font-outfit font-bold text-gray-900">Add New Product</h2>
+                <button onclick="document.getElementById('addProductModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto">
+                <form id="add-product-form" class="space-y-5">
+                    <input type="hidden" id="p-id" value="">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="text-sm font-semibold text-gray-700">Product Name *</label>
+                            <input type="text" id="p-name" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        </div>
+                        
+                        <div class="space-y-1">
+                            <label class="text-sm font-semibold text-gray-700">Selling Price (₹) *</label>
+                            <input type="number" id="p-price" required min="1" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-sm font-semibold text-gray-700">MRP (₹) - Optional</label>
+                            <input type="number" id="p-mrp" min="1" placeholder="e.g. 599" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        </div>
+                        
+                        <div class="space-y-1">
+                            <label class="text-sm font-semibold text-gray-700">Badge (Optional)</label>
+                            <input type="text" id="p-badge" placeholder="e.g. Bestseller, New" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-sm font-semibold text-gray-700">In Stock Units *</label>
+                            <input type="number" id="p-stock" required min="0" placeholder="e.g. 10" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        </div>
+
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="text-sm font-semibold text-gray-700">Categories (Comma separated) *</label>
+                            <input type="text" id="p-categories" required placeholder="e.g. Indoor Plants, Air Purifying, Pet Friendly" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        </div>
+
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="text-sm font-semibold text-gray-700">Image Path / URL *</label>
+                            <input type="text" id="p-image" required placeholder="/images/your_photo.png" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        </div>
+
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="text-sm font-semibold text-gray-700">Description</label>
+                            <textarea id="p-desc" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4 border-t border-gray-100 flex justify-end gap-3">
+                        <button type="button" onclick="document.getElementById('addProductModal').classList.add('hidden')" class="px-5 py-2.5 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition-colors">Cancel</button>
+                        <button type="submit" id="save-btn" class="bg-primary hover:bg-green-800 text-white px-6 py-2.5 rounded-lg font-semibold shadow-sm flex items-center gap-2 transition-colors">
+                            Save Product
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-gray-900 text-white px-6 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
+        <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>
+        <span id="toast-msg" class="font-medium">Action successful</span>
+    </div>
+
+    <script type="module" src="/admin.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

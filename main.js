@@ -1,4 +1,7 @@
 import './style.css'
+import { supabase } from './supabaseClient.js'
+import * as Cart from './cart.js'
+import { categoryData } from './categoryData.js'
 
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize Lucide icons
@@ -46,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        // Remove the translate/opacity classes to trigger Tailwind transition
         entry.target.classList.remove('opacity-0', 'translate-y-8', '-translate-x-8', 'translate-x-8');
         entry.target.classList.add('opacity-100', 'translate-y-0', 'translate-x-0');
         observer.unobserve(entry.target);
@@ -59,4 +61,583 @@ document.addEventListener('DOMContentLoaded', () => {
   animatedElements.forEach(el => {
     observer.observe(el);
   });
+
+  // Handle Consultation Form Submission
+  const consultationForm = document.getElementById('consultation-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const formStatus = document.getElementById('form-status');
+
+  if (consultationForm) {
+    consultationForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('consult-name').value;
+      const phone = document.getElementById('consult-phone').value;
+      const service = document.getElementById('consult-service').value;
+      const message = document.getElementById('consult-message').value;
+
+      // Build WhatsApp Message
+      let waMsg = `🌿 *NEW INQUIRY — Ranjit Nursery* 🌿\n`;
+      waMsg += `━━━━━━━━━━━━━━━━━━\n`;
+      waMsg += `*Name:* ${name}\n`;
+      waMsg += `*Phone:* ${phone}\n`;
+      waMsg += `*Interested In:* ${service}\n`;
+      if (message && message.trim() !== '') {
+        waMsg += `*Message:* ${message.trim()}\n`;
+      }
+      waMsg += `━━━━━━━━━━━━━━━━━━\n`;
+
+      const whatsappUrl = `https://wa.me/919692905128?text=${encodeURIComponent(waMsg)}`;
+      window.open(whatsappUrl, '_blank');
+
+      // Success feedback
+      formStatus.classList.remove('hidden', 'bg-red-100', 'text-red-700');
+      formStatus.classList.add('bg-emerald-100', 'text-emerald-700');
+      formStatus.textContent = 'Redirecting to WhatsApp...';
+      consultationForm.reset();
+    });
+  }
+
+  // ─── Mega Menu & Category Navigation Logic ───────────────────
+  const categoriesTab = document.getElementById('categories-tab-container');
+  const megaMenuContainer = document.getElementById('mega-menu-container');
+  const megaMenuRootList = document.getElementById('mega-menu-root-list');
+  const megaMenuGrid = document.getElementById('mega-menu-grid');
+  const mobileAccordion = document.getElementById('mobile-category-accordion');
+  
+  let hoverTimeout;
+  let activeCategoryKey = Object.keys(categoryData)[0]; // Default to first
+
+  if (categoriesTab && megaMenuContainer && megaMenuGrid && megaMenuRootList) {
+    
+    // 1. Render Left Sidebar of Mega Menu
+    megaMenuRootList.innerHTML = Object.keys(categoryData).map(categoryKey => `
+      <li>
+        <button data-category="${categoryKey}" class="mega-root-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm flex items-center justify-between transition-colors ${categoryKey === activeCategoryKey ? 'bg-white text-primary shadow-sm border border-gray-100' : 'text-gray-600 hover:bg-gray-100'}">
+          ${categoryKey}
+          <i data-lucide="chevron-right" class="w-4 h-4 opacity-50"></i>
+        </button>
+      </li>
+    `).join('');
+
+    const rootBtns = document.querySelectorAll('.mega-root-btn');
+    rootBtns.forEach(btn => {
+      btn.addEventListener('mouseenter', (e) => {
+        const cat = e.currentTarget.dataset.category;
+        if (cat !== activeCategoryKey) {
+          activeCategoryKey = cat;
+          rootBtns.forEach(b => {
+            b.className = `mega-root-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm flex items-center justify-between transition-colors ${b.dataset.category === activeCategoryKey ? 'bg-white text-primary shadow-sm border border-gray-100' : 'text-gray-600 hover:bg-gray-100'}`;
+          });
+          renderMegaMenu(activeCategoryKey);
+          if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+      });
+    });
+
+    renderMegaMenu(activeCategoryKey);
+
+    // Desktop Hover Logic for the Tab
+    categoriesTab.addEventListener('mouseenter', () => {
+      clearTimeout(hoverTimeout);
+      megaMenuContainer.classList.remove('hidden', 'pointer-events-none');
+      setTimeout(() => {
+        megaMenuContainer.classList.remove('opacity-0');
+      }, 10);
+    });
+    
+    categoriesTab.addEventListener('mouseleave', () => {
+      hoverTimeout = setTimeout(() => {
+        hideMegaMenu();
+      }, 300);
+    });
+
+    megaMenuContainer.addEventListener('mouseenter', () => {
+      clearTimeout(hoverTimeout);
+    });
+    
+    megaMenuContainer.addEventListener('mouseleave', () => {
+      hoverTimeout = setTimeout(() => {
+        hideMegaMenu();
+      }, 300);
+    });
+  }
+
+  // 2. Render Mobile Accordion Items
+  if (mobileAccordion) {
+    Object.keys(categoryData).forEach(categoryKey => {
+      const accItem = document.createElement('div');
+      accItem.className = 'border-b border-gray-100';
+      
+      // Accordion Header
+      const accHeader = document.createElement('button');
+      accHeader.className = 'w-full px-3 py-3 text-base font-bold text-gray-900 flex justify-between items-center text-left';
+      accHeader.innerHTML = `<span>${categoryKey}</span> <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 transition-transform duration-200"></i>`;
+      
+      // Accordion Body
+      const accBody = document.createElement('div');
+      accBody.className = 'hidden px-3 pb-3 space-y-4 max-h-0 overflow-hidden transition-all duration-300';
+      
+      // Populate Body
+      const columns = categoryData[categoryKey];
+      accBody.innerHTML = columns.map(col => `
+        <div>
+          <h5 class="text-sm font-bold text-primary mb-2 uppercase tracking-wider">${col.title}</h5>
+          <ul class="space-y-2">
+            ${col.links.map(link => `
+              <li><a href="products.html?category=${encodeURIComponent(link)}" class="text-gray-600 text-sm hover:text-primary block py-1">${link}</a></li>
+            `).join('')}
+          </ul>
+        </div>
+      `).join('');
+
+      // Accordion Click Logic
+      accHeader.addEventListener('click', () => {
+        const isExpanded = !accBody.classList.contains('hidden') && accBody.style.maxHeight !== '0px';
+        
+        // Close all other accordions first
+        document.querySelectorAll('#mobile-category-accordion .accordion-body').forEach(body => {
+          body.style.maxHeight = '0px';
+          setTimeout(() => body.classList.add('hidden'), 300);
+          body.previousElementSibling.querySelector('i').classList.remove('rotate-180');
+        });
+
+        if (!isExpanded) {
+          accBody.classList.remove('hidden');
+          accBody.classList.add('accordion-body');
+          setTimeout(() => {
+            accBody.style.maxHeight = accBody.scrollHeight + 'px';
+          }, 10);
+          accHeader.querySelector('i').classList.add('rotate-180');
+        }
+      });
+
+      accItem.appendChild(accHeader);
+      accItem.appendChild(accBody);
+      mobileAccordion.appendChild(accItem);
+    });
+  }
+
+  function renderMegaMenu(categoryKey) {
+    const columns = categoryData[categoryKey];
+    if (!columns) return;
+    
+    megaMenuGrid.innerHTML = columns.map(col => `
+      <div class="min-w-[200px] flex-1">
+        <h4 class="text-sm font-bold text-gray-900 mb-3 border-b border-gray-100 pb-2">${col.title}</h4>
+        <ul class="space-y-2">
+          ${col.links.map(link => `
+            <li>
+              <a href="products.html?category=${encodeURIComponent(link)}" onclick="hideMegaMenu();" class="text-sm text-gray-600 hover:text-primary hover:font-medium transition-colors block py-0.5">
+                ${link}
+              </a>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    `).join('');
+  }
+
+  function hideMegaMenu() {
+    megaMenuContainer.classList.remove('opacity-100');
+    megaMenuContainer.classList.add('opacity-0', 'pointer-events-none');
+    setTimeout(() => {
+      if (megaMenuContainer.classList.contains('opacity-0')) {
+        megaMenuContainer.classList.add('hidden');
+      }
+    }, 300);
+  }
+
+  // Make hideMegaMenu globally available for inline onclick handlers in the mega menu links
+  window.hideMegaMenu = hideMegaMenu;
+
+  // ─── Sidebar Rendering for Products Page ─────────────────────
+  const sidebarContainer = document.getElementById('sidebar-categories');
+  if (sidebarContainer) {
+    sidebarContainer.innerHTML = Object.keys(categoryData).map(categoryKey => {
+      const columns = categoryData[categoryKey];
+      return `
+        <div class="mb-6">
+          <h4 class="text-base font-bold text-gray-900 mb-2 border-b border-gray-100 pb-2">${categoryKey}</h4>
+          ${columns.map(col => `
+            <div class="mt-3">
+              <h5 class="text-xs font-bold text-primary uppercase tracking-wider mb-2">${col.title}</h5>
+              <ul class="space-y-1.5 border-l-2 border-emerald-50 ml-1 pl-3">
+                ${col.links.map(link => `
+                  <li>
+                    <a href="products.html?category=${encodeURIComponent(link)}" class="text-sm text-gray-600 hover:text-primary hover:font-medium transition-colors block py-0.5">
+                      ${link}
+                    </a>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ─── Hero Carousel Logic ─────────────────────────────────────
+  const slides = document.querySelectorAll('.carousel-slide');
+  const dots = document.querySelectorAll('.carousel-dot');
+  if (slides.length > 0 && dots.length > 0) {
+    let currentSlide = 0;
+    let slideInterval;
+
+    function goToSlide(index) {
+      // Remove active state from current slide
+      slides[currentSlide].classList.remove('opacity-100', 'z-10');
+      slides[currentSlide].classList.add('opacity-0', 'z-0', 'pointer-events-none');
+      const currentContent = slides[currentSlide].querySelector('.slide-content');
+      if (currentContent) {
+        currentContent.classList.remove('translate-y-0', 'opacity-100');
+        currentContent.classList.add('translate-y-8', 'opacity-0');
+      }
+      
+      dots[currentSlide].classList.remove('w-10', 'opacity-100');
+      dots[currentSlide].classList.add('w-3', 'opacity-40');
+
+      // Update current slide index
+      currentSlide = index;
+
+      // Add active state to new slide
+      slides[currentSlide].classList.remove('opacity-0', 'z-0', 'pointer-events-none');
+      slides[currentSlide].classList.add('opacity-100', 'z-10');
+      
+      dots[currentSlide].classList.remove('w-3', 'opacity-40');
+      dots[currentSlide].classList.add('w-10', 'opacity-100');
+
+      // Animate new content in
+      const newContent = slides[currentSlide].querySelector('.slide-content');
+      if (newContent) {
+        setTimeout(() => {
+          newContent.classList.remove('translate-y-8', 'opacity-0');
+          newContent.classList.add('translate-y-0', 'opacity-100');
+        }, 100);
+      }
+    }
+
+    function nextSlide() {
+      goToSlide((currentSlide + 1) % slides.length);
+    }
+
+    function startSlideShow() {
+      slideInterval = setInterval(nextSlide, 5000);
+    }
+
+    function resetSlideShow() {
+      clearInterval(slideInterval);
+      startSlideShow();
+    }
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        if (currentSlide !== index) {
+          goToSlide(index);
+          resetSlideShow();
+        }
+      });
+    });
+
+    startSlideShow();
+  }
+
+  // ─── Plant Finder Quiz Logic ─────────────────────────────────
+  const quizBtns = document.querySelectorAll('.quiz-btn');
+  const quizSteps = [
+    document.getElementById('quiz-step-1'),
+    document.getElementById('quiz-step-2'),
+    document.getElementById('quiz-step-3'),
+    document.getElementById('quiz-result')
+  ];
+  const quizReset = document.getElementById('quiz-reset');
+  const quizPlantName = document.getElementById('quiz-plant-name');
+  const quizShopLink = document.getElementById('quiz-shop-link');
+
+  let quizAnswers = { step1: '', step2: '', step3: '' };
+
+  if (quizBtns.length > 0) {
+    quizBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const currentBtn = e.currentTarget;
+        const step = parseInt(currentBtn.dataset.step);
+        const val = currentBtn.dataset.val;
+
+        quizAnswers[`step${step}`] = val;
+
+        // Update glowing progress bar
+        const progressBar = document.getElementById('quiz-progress-bar');
+        if (progressBar) {
+          const percentage = ((step) / 3) * 100;
+          progressBar.style.width = `${percentage}%`;
+          if (step === 3) progressBar.classList.add('bg-accent-gold');
+        }
+
+        // Hide current step
+        const currentStepEl = quizSteps[step - 1];
+        currentStepEl.classList.remove('opacity-100');
+        currentStepEl.classList.add('opacity-0');
+        
+        setTimeout(() => {
+          currentStepEl.classList.add('hidden');
+          
+          // Show next step
+          const nextStepEl = quizSteps[step];
+          if (nextStepEl) {
+            nextStepEl.classList.remove('hidden');
+            
+            // Staggered Entrance Animation for buttons inside the next step
+            const nextBtns = nextStepEl.querySelectorAll('.quiz-btn');
+            nextBtns.forEach((b, i) => {
+              b.style.transform = 'translateY(20px)';
+              b.style.opacity = '0';
+              setTimeout(() => {
+                b.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                b.style.transform = 'translateY(0)';
+                b.style.opacity = '1';
+              }, 50 + (i * 100));
+            });
+
+            setTimeout(() => {
+              nextStepEl.classList.remove('opacity-0');
+              nextStepEl.classList.add('opacity-100');
+            }, 50);
+
+            // If it's the result step, calculate the plant
+            if (step === 3) {
+              calculateQuizResult();
+            }
+          }
+        }, 500);
+      });
+    });
+
+    if (quizReset) {
+      quizReset.addEventListener('click', () => {
+        quizAnswers = { step1: '', step2: '', step3: '' };
+        
+        const progressBar = document.getElementById('quiz-progress-bar');
+        if (progressBar) {
+          progressBar.style.width = `33.33%`;
+          progressBar.classList.remove('bg-accent-gold');
+        }
+
+        quizSteps[3].classList.remove('opacity-100');
+        quizSteps[3].classList.add('opacity-0');
+        
+        setTimeout(() => {
+          quizSteps[3].classList.add('hidden');
+          quizSteps[0].classList.remove('hidden');
+          setTimeout(() => {
+            quizSteps[0].classList.remove('opacity-0');
+            quizSteps[0].classList.add('opacity-100');
+          }, 50);
+        }, 500);
+      });
+    }
+
+    function calculateQuizResult() {
+      let resultData = {
+        name: "Snake Plant (Sansevieria)",
+        category: "Indoor Plants",
+        img: "/images/snake_plant.png",
+        varieties: ["Laurentii (Yellow Edges)", "Zeylanica (Dark Green Waves)"]
+      };
+
+      if (quizAnswers.step1 === 'indoor') {
+        if (quizAnswers.step2 === 'low' || quizAnswers.step3 === 'low') {
+          resultData = {
+            name: "Snake Plant (Sansevieria)",
+            category: "Indoor Plants",
+            img: "/images/snake_plant.png",
+            varieties: ["Laurentii (Yellow Edges)", "Zeylanica (Dark Green)"]
+          };
+        } else if (quizAnswers.step2 === 'high') {
+          resultData = {
+            name: "Jade Plant (Crassula)",
+            category: "Indoor Plants",
+            img: "/images/jade_plant.png",
+            varieties: ["Miniature Jade", "Gollum Jade"]
+          };
+        } else {
+          resultData = {
+            name: "Money Plant (Epipremnum)",
+            category: "Indoor Plants",
+            img: "/images/money_plant.png",
+            varieties: ["Golden Pothos", "Marble Queen"]
+          };
+        }
+      } else if (quizAnswers.step1 === 'outdoor') {
+        if (quizAnswers.step3 === 'high') {
+          resultData = {
+            name: "Ficus Bonsai",
+            category: "Bonsai",
+            img: "/images/ficus_bonsai.png",
+            varieties: ["Ginseng Ficus", "Microcarpa"]
+          };
+        } else if (quizAnswers.step2 === 'high') {
+          resultData = {
+            name: "Bougainvillea",
+            category: "Flowering Plants",
+            img: "/images/bougainvillea.png",
+            varieties: ["Magenta Glabra", "Pink Spectabilis"]
+          };
+        } else {
+          resultData = {
+            name: "Areca Palm",
+            category: "Avenue Trees",
+            img: "/images/areca_palm.png",
+            varieties: ["Golden Cane Palm", "Butterfly Palm"]
+          };
+        }
+      } else if (quizAnswers.step1 === 'balcony') {
+        if (quizAnswers.step2 === 'high') {
+          resultData = {
+            name: "Aloe Vera",
+            category: "Medicinal Plants",
+            img: "/images/aloe_vera.png",
+            varieties: ["Barbadensis Miller", "Aloe Aristata"]
+          };
+        } else {
+          resultData = {
+            name: "Jasmine Plant",
+            category: "Flowering Plants",
+            img: "/images/jasmine_plant.png",
+            varieties: ["Arabian Jasmine (Mogra)", "Star Jasmine"]
+          };
+        }
+      }
+
+      if (quizPlantName) quizPlantName.textContent = resultData.name;
+      if (quizShopLink) quizShopLink.href = `products.html?category=${encodeURIComponent(resultData.category)}`;
+      
+      const quizImg = document.getElementById('quiz-result-img');
+      if (quizImg) quizImg.src = resultData.img;
+      
+      const varList = document.getElementById('quiz-varieties-list');
+      if (varList) {
+        varList.innerHTML = resultData.varieties.map(v => `<li>${v}</li>`).join('');
+      }
+
+      const waLink = document.getElementById('quiz-wa-link');
+      if (waLink) {
+         const waMsg = encodeURIComponent(`Hi! I took the Plant Finder Quiz and got a match for the ${resultData.name}. Can you help me order it?`);
+         waLink.href = `https://wa.me/919692905128?text=${waMsg}`;
+      }
+    }
+  }
+
+  // ─── Plant Doctor Logic ──────────────────────────────────────
+  const symptomBtns = document.querySelectorAll('.symptom-btn');
+  const doctorResult = document.getElementById('doctor-result');
+  
+  const doctorData = {
+    yellow: {
+      title: "Overwatering or Nutrient Deficiency",
+      desc: "Yellow leaves often indicate that the roots are suffocating from too much water, or the plant lacks essential nitrogen.",
+      remedy: "Organic NPK Fertilizer & Soil Aeration",
+      link: "products.html?category=Fertilizers",
+      icon: "alert-triangle",
+      color: "text-yellow-600"
+    },
+    bugs: {
+      title: "Pest Infestation (Aphids/Mealybugs)",
+      desc: "Small insects or sticky sap on leaves mean pests are feeding on your plant's sap. Left untreated, this can stunt growth.",
+      remedy: "Premium Cold-Pressed Neem Oil",
+      link: "products.html?category=Pesticides",
+      icon: "bug",
+      color: "text-red-600"
+    },
+    drooping: {
+      title: "Underwatering or Heat Stress",
+      desc: "When plants lose water faster than they can absorb it, their cells lose turgidity, causing stems and leaves to wilt.",
+      remedy: "Moisture-Retaining Potting Mix",
+      link: "products.html?category=Soil",
+      icon: "droplet",
+      color: "text-blue-600"
+    },
+    spots: {
+      title: "Fungal or Bacterial Leaf Spot",
+      desc: "Dark spots usually develop when water sits on leaves for too long in poor ventilation, promoting fungal growth.",
+      remedy: "Organic Fungicide Spray",
+      link: "products.html?category=Pesticides",
+      icon: "microscope",
+      color: "text-gray-600"
+    }
+  };
+
+  function updatePlantDoctor(symptomKey) {
+    if (!doctorResult || !doctorData[symptomKey]) return;
+    
+    const data = doctorData[symptomKey];
+    
+    doctorResult.classList.add('opacity-0', 'translate-y-4');
+    
+    setTimeout(() => {
+      doctorResult.innerHTML = `
+        <div class="mb-5 relative z-10">
+          <div class="flex items-center gap-3 mb-4">
+             <div class="relative">
+               <div class="absolute inset-0 bg-${data.color.split('-')[1]}-200 rounded-xl blur animate-pulse opacity-60"></div>
+               <div class="relative w-14 h-14 rounded-2xl bg-white flex items-center justify-center ${data.color} border border-gray-100 shadow-md">
+                 <i data-lucide="${data.icon}" class="w-6 h-6"></i>
+               </div>
+             </div>
+             <div>
+               <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-50 text-red-600 text-[9px] font-bold uppercase tracking-widest mb-1 border border-red-100">
+                 <span class="w-1 h-1 rounded-full bg-red-600 animate-pulse"></span> Alert
+               </div>
+               <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Diagnosis Match</h4>
+             </div>
+          </div>
+          <h3 class="text-2xl font-outfit font-extrabold text-gray-900 mb-3 leading-tight">${data.title}</h3>
+          <p class="text-gray-600 text-base leading-relaxed">${data.desc}</p>
+        </div>
+        
+        <div class="bg-gradient-to-br from-emerald-50 to-green-50/50 rounded-xl p-5 border border-emerald-200 shadow-[inset_0_2px_10px_rgba(52,211,153,0.1)] relative z-10">
+          <h4 class="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-2 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i> Verified Remedy</h4>
+          <p class="text-lg font-bold text-gray-900 mb-4">${data.remedy}</p>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <a href="${data.link}" class="flex-1 text-center bg-white border-2 border-emerald-200 text-emerald-800 hover:border-primary hover:text-primary font-bold py-2.5 px-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 text-sm">
+              <i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop Product
+            </a>
+            <a href="https://wa.me/919692905128?text=Hi!%20I%20used%20the%20Plant%20Doctor.%20My%20plant%20has%20${symptomKey}%20symptoms.%20Can%20you%20help?" target="_blank" class="flex-1 text-center bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold py-2.5 px-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-[0_5px_15px_rgba(37,211,102,0.4)] hover:shadow-[0_8px_25px_rgba(37,211,102,0.6)] transform hover:-translate-y-0.5 text-sm">
+               <i data-lucide="message-circle" class="w-4 h-4"></i> Consult Expert
+            </a>
+          </div>
+        </div>
+      `;
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      doctorResult.classList.remove('opacity-0', 'translate-y-4');
+    }, 300);
+  }
+
+  if (symptomBtns.length > 0) {
+    symptomBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // Remove active class from all
+        symptomBtns.forEach(b => {
+          b.classList.remove('border-primary', 'bg-emerald-50');
+          b.classList.add('border-transparent', 'bg-white');
+        });
+        
+        // Add active class to clicked
+        const current = e.currentTarget;
+        current.classList.remove('border-transparent', 'bg-white');
+        current.classList.add('border-primary', 'bg-emerald-50');
+        
+        const symptom = current.dataset.symptom;
+        updatePlantDoctor(symptom);
+      });
+    });
+
+    // Initialize first symptom
+    updatePlantDoctor('yellow');
+    symptomBtns[0].classList.remove('border-transparent', 'bg-white');
+    symptomBtns[0].classList.add('border-primary', 'bg-emerald-50');
+  }
+
+  // ─── Initialize E-Commerce Cart System ─────────────────────
+  Cart.init();
 });

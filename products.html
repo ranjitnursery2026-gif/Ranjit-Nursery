@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Products | Ranjit Nursery</title>
+  <meta name="description" content="Browse all plants, seeds, and gardening supplies at Ranjit Nursery." />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="antialiased bg-gray-50 text-gray-800 overflow-x-hidden pt-32">
+  
+  <!-- Navbar -->
+  <nav class="fixed w-full z-50 top-0 transition-all duration-300 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm" id="navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex items-center gap-2">
+          <i data-lucide="leaf" class="text-primary h-8 w-8"></i>
+          <div>
+            <a href="index.html">
+              <h1 class="text-2xl font-outfit font-bold text-primary leading-none">Ranjit Nursery</h1>
+              <p class="text-[0.65rem] font-medium tracking-wider text-gray-500 uppercase mt-1">5 Star Nursery Wholesale</p>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex space-x-8 items-center font-medium h-full">
+          <a href="index.html" class="text-gray-600 hover:text-primary transition-colors">Home</a>
+          <a href="index.html#about" class="text-gray-600 hover:text-primary transition-colors">About</a>
+          
+          <div class="relative group h-full flex items-center" id="categories-tab-container">
+            <button class="text-gray-600 group-hover:text-primary transition-colors flex items-center gap-1 cursor-pointer h-full border-b-2 border-transparent group-hover:border-primary">
+              Categories <i data-lucide="chevron-down" class="w-4 h-4 group-hover:rotate-180 transition-transform"></i>
+            </button>
+          </div>
+
+          <a href="products.html" class="text-primary hover:text-emerald-800 transition-colors">Products</a>
+          <a href="index.html#services" class="text-gray-600 hover:text-primary transition-colors">Services</a>
+          <a href="index.html#contact" class="text-gray-600 hover:text-primary transition-colors">Contact</a>
+          <button class="cart-icon-btn relative text-gray-600 hover:text-primary transition-colors p-2">
+            <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+            <span class="cart-badge hidden absolute -top-1 -right-1 bg-accent text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md">0</span>
+          </button>
+          <a href="https://wa.me/919692905128" target="_blank" rel="noopener noreferrer" class="bg-primary hover:bg-emerald-800 text-white px-5 py-2.5 rounded-full font-semibold transition-all shadow-lg hover:shadow-emerald-600/30 flex items-center gap-2 transform hover:-translate-y-0.5">
+            <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+          </a>
+        </div>
+
+        <!-- Mobile menu button -->
+        <div class="md:hidden flex items-center gap-2">
+          <button class="cart-icon-btn relative text-gray-600 hover:text-primary transition-colors p-2">
+            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+            <span class="cart-badge hidden absolute -top-1 -right-1 bg-accent text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md">0</span>
+          </button>
+          <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary focus:outline-none p-2">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mega Menu Container -->
+    <div id="mega-menu-container" class="absolute left-0 w-full bg-white shadow-2xl border-t border-gray-100 z-40 hidden opacity-0 transition-opacity duration-300 pointer-events-none" style="top: 100%;">
+      <div class="max-w-7xl mx-auto flex">
+        
+        <!-- Left Sidebar: Root Categories -->
+        <div class="w-64 border-r border-gray-100 bg-gray-50/50 py-6 shrink-0" id="mega-menu-sidebar">
+          <ul id="mega-menu-root-list" class="space-y-1 px-4">
+            <!-- Populated by JS -->
+          </ul>
+        </div>
+
+        <!-- Right Content: Subcategories -->
+        <div class="flex-1 py-8 px-10 min-w-0">
+          <div id="mega-menu-grid" class="flex gap-10 overflow-x-auto pb-4 custom-scrollbar">
+            <!-- Columns populated by JS -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Menu Panel -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg h-[calc(100vh-80px)] overflow-y-auto">
+      <div class="px-4 pt-2 pb-6 space-y-1">
+        <a href="index.html" class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100">Home</a>
+        <a href="index.html#about" class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100">About</a>
+        <div id="mobile-category-accordion" class="py-2"></div>
+        <a href="products.html" class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100">Products</a>
+        <a href="index.html#services" class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100">Services</a>
+        <a href="index.html#contact" class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Products Main Layout -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen flex flex-col md:flex-row gap-8">
+    
+    <!-- Left Sidebar (Desktop) -->
+    <aside class="w-full md:w-64 flex-shrink-0 hidden md:block">
+      <div class="sticky top-40 bg-white p-5 rounded-3xl shadow-sm border border-gray-100">
+        <h3 class="text-lg font-outfit font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <i data-lucide="layers" class="w-5 h-5 text-primary"></i> Browse Categories
+        </h3>
+        <div id="sidebar-categories" class="space-y-4 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right Content Area -->
+    <main class="flex-1 min-w-0">
+      
+      <!-- Filter Status UI -->
+      <div id="filter-status-container" class="hidden flex-wrap items-center justify-between mb-8 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+        <div class="flex items-center gap-2">
+          <i data-lucide="filter" class="w-5 h-5 text-primary"></i>
+          <span class="text-gray-600 text-sm">Showing results for:</span>
+          <span id="active-filter-badge" class="bg-emerald-100 text-primary font-bold px-3 py-1 rounded-full text-sm">Category Name</span>
+        </div>
+        <button id="clear-filter-btn" class="text-sm font-semibold text-gray-500 hover:text-red-500 transition-colors flex items-center gap-1">
+          <i data-lucide="x-circle" class="w-4 h-4"></i> Clear Filter
+        </button>
+      </div>
+
+      <!-- Dynamic Product Grid -->
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Products injected by cart.js -->
+      </div>
+      
+      <!-- Empty State UI -->
+      <div id="products-empty-state" class="hidden text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-100">
+        <i data-lucide="leafy-green" class="w-16 h-16 text-gray-200 mx-auto mb-4"></i>
+        <h3 class="text-2xl font-outfit font-bold text-gray-900 mb-2">No products found</h3>
+        <p class="text-gray-500 max-w-md mx-auto mb-6">We're currently updating our catalog for this category. Please check back later or explore our other collections.</p>
+        <button id="empty-state-clear-btn" class="bg-primary hover:bg-emerald-800 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md">
+          View All Products
+        </button>
+      </div>
+    </main>
+
+  </section>
+
+  <!-- Main Footer -->
+  <footer class="bg-gray-900 text-gray-300 pt-20 pb-10 border-t-4 border-primary">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <div class="space-y-4">
+          <div class="flex items-center gap-2 mb-6">
+            <i data-lucide="leaf" class="text-primary w-8 h-8"></i>
+            <h2 class="text-2xl font-outfit font-bold text-white">Ranjit Nursery</h2>
+          </div>
+          <p class="text-sm text-gray-400 leading-relaxed">Your trusted 5-star wholesale nursery in Rourkela, Odisha. Delivering premium plants and landscaping solutions with a commitment to quality and nature.</p>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-sm text-gray-500">&copy; 2026 Ranjit Nursery. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="/main.js"></script>
+
+  <!-- Cart Drawer & Checkout Modals (same as index.html) -->
+  <div id="cart-overlay" class="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300"></div>
+  <aside id="cart-drawer" class="fixed top-0 right-0 z-[95] h-full w-full max-w-md bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+    <!-- Drawer content injected by cart.js logic, we just need the structural shell -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-100">
+      <h3 class="text-xl font-outfit font-bold text-gray-900 flex items-center gap-2"><i data-lucide="shopping-cart" class="w-5 h-5 text-primary"></i> Your Cart</h3>
+      <button id="cart-drawer-close" class="text-gray-400 hover:text-gray-700 p-2 rounded-xl hover:bg-gray-100 transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-6 space-y-4">
+      <div id="cart-empty" class="text-center py-16">
+        <i data-lucide="shopping-bag" class="w-16 h-16 text-gray-200 mx-auto mb-4"></i>
+        <p class="text-gray-400 font-medium">Your cart is empty</p>
+      </div>
+      <div id="cart-items-list" class="space-y-3"></div>
+    </div>
+    <div class="border-t border-gray-100 p-6 bg-gray-50/80">
+      <div class="flex justify-between items-center mb-4"><span class="text-gray-600 font-medium">Subtotal</span><span id="cart-subtotal" class="text-2xl font-outfit font-extrabold text-primary">₹0</span></div>
+      <button id="cart-checkout-btn" disabled class="w-full bg-primary hover:bg-emerald-800 disabled:bg-gray-300 text-white font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2"><i data-lucide="credit-card" class="w-5 h-5"></i> Proceed to Checkout</button>
+    </div>
+  </aside>
+
+  <div id="checkout-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300 flex">
+    <div id="checkout-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <div id="checkout-content" class="relative z-10 bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl transform scale-95 transition-transform duration-300">
+      <div class="sticky top-0 bg-white/95 backdrop-blur-md p-6 border-b border-gray-100 flex items-center justify-between rounded-t-3xl z-10">
+        <h3 class="text-2xl font-outfit font-bold text-gray-900 flex items-center gap-2"><i data-lucide="package" class="w-6 h-6 text-primary"></i> Checkout</h3>
+        <button id="checkout-close" class="text-gray-400 hover:text-gray-700 p-2 rounded-xl hover:bg-gray-100 transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-6 space-y-6">
+        <div><h4 class="font-bold text-gray-900 mb-3"><i data-lucide="receipt" class="w-4 h-4 text-primary inline"></i> Order Summary</h4><div id="checkout-order-summary" class="bg-gray-50 rounded-2xl p-4 border border-gray-100"></div></div>
+        <div><h4 class="font-bold text-gray-900 mb-3"><i data-lucide="user" class="w-4 h-4 text-primary inline"></i> Your Details</h4>
+          <div class="space-y-4">
+            <input type="text" id="checkout-name" class="w-full px-4 py-3 rounded-xl border border-gray-200" placeholder="Full Name">
+            <input type="tel" id="checkout-phone" class="w-full px-4 py-3 rounded-xl border border-gray-200" placeholder="Phone Number">
+            <textarea id="checkout-address" class="w-full px-4 py-3 rounded-xl border border-gray-200" placeholder="Address"></textarea>
+            <select id="checkout-shipping" class="w-full px-4 py-3 rounded-xl border border-gray-200"><option value="Standard">Standard Delivery</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="sticky bottom-0 bg-white/95 backdrop-blur-md p-6 border-t border-gray-100 rounded-b-3xl">
+        <button id="place-order-btn" class="w-full bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="message-circle" class="w-5 h-5"></i> Place Order via WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
