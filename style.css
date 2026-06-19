@@ -11,9 +11,11 @@
 }
 
 @layer base {
-  body {
+  html, body {
     @apply font-inter text-gray-800 bg-gray-50;
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
   
   h1, h2, h3, h4, h5, h6 {

@@ -349,13 +349,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('quiz-step-1'),
     document.getElementById('quiz-step-2'),
     document.getElementById('quiz-step-3'),
+    document.getElementById('quiz-step-4'),
+    document.getElementById('quiz-step-5'),
     document.getElementById('quiz-result')
   ];
   const quizReset = document.getElementById('quiz-reset');
   const quizPlantName = document.getElementById('quiz-plant-name');
   const quizShopLink = document.getElementById('quiz-shop-link');
 
-  let quizAnswers = { step1: '', step2: '', step3: '' };
+  let quizAnswers = { step1: '', step2: '', step3: '', step4: '', step5: '' };
 
   if (quizBtns.length > 0) {
     quizBtns.forEach(btn => {
@@ -369,18 +371,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update glowing progress bar
         const progressBar = document.getElementById('quiz-progress-bar');
         if (progressBar) {
-          const percentage = ((step) / 3) * 100;
+          const percentage = ((step) / 5) * 100;
           progressBar.style.width = `${percentage}%`;
-          if (step === 3) progressBar.classList.add('bg-accent-gold');
+          if (step === 5) progressBar.classList.add('bg-accent-gold');
         }
 
         // Hide current step
         const currentStepEl = quizSteps[step - 1];
-        currentStepEl.classList.remove('opacity-100');
-        currentStepEl.classList.add('opacity-0');
+        if(currentStepEl) {
+            currentStepEl.classList.remove('opacity-100');
+            currentStepEl.classList.add('opacity-0');
+        }
         
         setTimeout(() => {
-          currentStepEl.classList.add('hidden');
+          if(currentStepEl) currentStepEl.classList.add('hidden');
           
           // Show next step
           const nextStepEl = quizSteps[step];
@@ -405,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 50);
 
             // If it's the result step, calculate the plant
-            if (step === 3) {
+            if (step === 5) {
               calculateQuizResult();
             }
           }
@@ -415,19 +419,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (quizReset) {
       quizReset.addEventListener('click', () => {
-        quizAnswers = { step1: '', step2: '', step3: '' };
+        quizAnswers = { step1: '', step2: '', step3: '', step4: '', step5: '' };
         
         const progressBar = document.getElementById('quiz-progress-bar');
         if (progressBar) {
-          progressBar.style.width = `33.33%`;
+          progressBar.style.width = `20%`; // Approx 1st step width
           progressBar.classList.remove('bg-accent-gold');
         }
 
-        quizSteps[3].classList.remove('opacity-100');
-        quizSteps[3].classList.add('opacity-0');
+        quizSteps[5].classList.remove('opacity-100');
+        quizSteps[5].classList.add('opacity-0');
         
         setTimeout(() => {
-          quizSteps[3].classList.add('hidden');
+          quizSteps[5].classList.add('hidden');
           quizSteps[0].classList.remove('hidden');
           setTimeout(() => {
             quizSteps[0].classList.remove('opacity-0');
@@ -438,92 +442,79 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function calculateQuizResult() {
-      let resultData = {
-        name: "Snake Plant (Sansevieria)",
-        category: "Indoor Plants",
-        img: "/images/snake_plant.png",
-        varieties: ["Laurentii (Yellow Edges)", "Zeylanica (Dark Green Waves)"]
-      };
+      const allProducts = window.RanjitCart.PRODUCTS || [];
+      let matchedProducts = [];
 
-      if (quizAnswers.step1 === 'indoor') {
-        if (quizAnswers.step2 === 'low' || quizAnswers.step3 === 'low') {
-          resultData = {
-            name: "Snake Plant (Sansevieria)",
-            category: "Indoor Plants",
-            img: "/images/snake_plant.png",
-            varieties: ["Laurentii (Yellow Edges)", "Zeylanica (Dark Green)"]
-          };
-        } else if (quizAnswers.step2 === 'high') {
-          resultData = {
-            name: "Jade Plant (Crassula)",
-            category: "Indoor Plants",
-            img: "/images/jade_plant.png",
-            varieties: ["Miniature Jade", "Gollum Jade"]
-          };
-        } else {
-          resultData = {
-            name: "Money Plant (Epipremnum)",
-            category: "Indoor Plants",
-            img: "/images/money_plant.png",
-            varieties: ["Golden Pothos", "Marble Queen"]
-          };
+      let categoryKeywords = [];
+      
+      // Step 1: Type
+      if (quizAnswers.step1 === 'plants') categoryKeywords.push('Indoor Plants', 'Outdoor Plants', 'Air Purifying', 'Foliage');
+      if (quizAnswers.step1 === 'flowers') categoryKeywords.push('Flowering Plants', 'Flower Seeds');
+      if (quizAnswers.step1 === 'seeds') categoryKeywords.push('Vegetable Seeds', 'Fruit Seeds', 'Herb Seeds', 'Seeds');
+      
+      // Step 2: Season
+      if (quizAnswers.step2 === 'summer') categoryKeywords.push('Summer');
+      if (quizAnswers.step2 === 'winter') categoryKeywords.push('Winter');
+      if (quizAnswers.step2 === 'rainy') categoryKeywords.push('Monsoon', 'All Seasons');
+
+      // Step 3: Location (Old step 1)
+      if (quizAnswers.step3 === 'indoor') categoryKeywords.push('Indoor', 'Table Top', 'Bedroom', 'Office');
+      if (quizAnswers.step3 === 'outdoor') categoryKeywords.push('Outdoor', 'Avenue Trees');
+      if (quizAnswers.step3 === 'balcony') categoryKeywords.push('Balcony', 'Hanging Planters', 'Terrace');
+
+      // Step 4: Light (Old step 2)
+      if (quizAnswers.step4 === 'low') categoryKeywords.push('Low Light', 'Low Maintenance');
+      if (quizAnswers.step4 === 'high') categoryKeywords.push('Direct Sun');
+
+      // Step 5: Care (Old step 3)
+      if (quizAnswers.step5 === 'low') categoryKeywords.push('Low Maintenance', 'Drought Tolerant', 'Cactus', 'Succulents');
+
+      if (allProducts.length > 0) {
+        matchedProducts = allProducts.filter(p => {
+          if(!p.categories) return false;
+          let pCats = Array.isArray(p.categories) ? p.categories : [];
+          if (typeof p.categories === 'string') {
+            try { pCats = JSON.parse(p.categories); } catch(e){}
+          }
+          return categoryKeywords.some(kw => pCats.some(c => c.toLowerCase().includes(kw.toLowerCase())));
+        });
+
+        if (matchedProducts.length < 6) {
+          const others = allProducts.filter(p => !matchedProducts.some(mp => mp.id === p.id));
+          const shuffled = others.sort(() => 0.5 - Math.random());
+          matchedProducts = [...matchedProducts, ...shuffled.slice(0, 6 - matchedProducts.length)];
         }
-      } else if (quizAnswers.step1 === 'outdoor') {
-        if (quizAnswers.step3 === 'high') {
-          resultData = {
-            name: "Ficus Bonsai",
-            category: "Bonsai",
-            img: "/images/ficus_bonsai.png",
-            varieties: ["Ginseng Ficus", "Microcarpa"]
-          };
-        } else if (quizAnswers.step2 === 'high') {
-          resultData = {
-            name: "Bougainvillea",
-            category: "Flowering Plants",
-            img: "/images/bougainvillea.png",
-            varieties: ["Magenta Glabra", "Pink Spectabilis"]
-          };
-        } else {
-          resultData = {
-            name: "Areca Palm",
-            category: "Avenue Trees",
-            img: "/images/areca_palm.png",
-            varieties: ["Golden Cane Palm", "Butterfly Palm"]
-          };
-        }
-      } else if (quizAnswers.step1 === 'balcony') {
-        if (quizAnswers.step2 === 'high') {
-          resultData = {
-            name: "Aloe Vera",
-            category: "Medicinal Plants",
-            img: "/images/aloe_vera.png",
-            varieties: ["Barbadensis Miller", "Aloe Aristata"]
-          };
-        } else {
-          resultData = {
-            name: "Jasmine Plant",
-            category: "Flowering Plants",
-            img: "/images/jasmine_plant.png",
-            varieties: ["Arabian Jasmine (Mogra)", "Star Jasmine"]
-          };
-        }
+      } else {
+        matchedProducts = [
+          { id: 16, name: "Snake Plant (Sansevieria)", price: 199, image: "/images/snake_plant.png" },
+          { id: 18, name: "Jade Plant (Crassula ovata)", price: 179, image: "/images/jade_plant.png" },
+          { id: 1, name: "Golden Pothos (Money Plant)", price: 149, image: "/images/money_plant.png" },
+          { id: 17, name: "Aloe Vera Plant", price: 149, image: "/images/aloe_vera.png" },
+          { id: 15, name: "Golden Barrel Cactus", price: 299, image: "/images/barrel_cactus.png" },
+          { id: 12, name: "Areca Palm", price: 399, image: "/images/areca_palm.png" }
+        ];
       }
 
-      if (quizPlantName) quizPlantName.textContent = resultData.name;
-      if (quizShopLink) quizShopLink.href = `products.html?category=${encodeURIComponent(resultData.category)}`;
-      
-      const quizImg = document.getElementById('quiz-result-img');
-      if (quizImg) quizImg.src = resultData.img;
-      
-      const varList = document.getElementById('quiz-varieties-list');
-      if (varList) {
-        varList.innerHTML = resultData.varieties.map(v => `<li>${v}</li>`).join('');
-      }
+      matchedProducts = matchedProducts.slice(0, 6);
 
-      const waLink = document.getElementById('quiz-wa-link');
-      if (waLink) {
-         const waMsg = encodeURIComponent(`Hi! I took the Plant Finder Quiz and got a match for the ${resultData.name}. Can you help me order it?`);
-         waLink.href = `https://wa.me/919692905128?text=${waMsg}`;
+      const gridEl = document.getElementById('quiz-results-grid');
+      if (gridEl) {
+        gridEl.innerHTML = matchedProducts.map(p => `
+          <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 flex flex-col hover:bg-white/20 transition-all group">
+            <div class="w-full h-32 sm:h-24 md:h-32 rounded-lg overflow-hidden mb-3 shrink-0">
+              <img src="${p.image || '/images/default.png'}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+            </div>
+            <h4 class="text-white font-bold text-sm leading-tight mb-1 line-clamp-2 flex-grow">${p.name}</h4>
+            <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/10">
+              <span class="text-emerald-300 font-bold text-base">₹${p.price}</span>
+              <button onclick="window.RanjitCart.addToCart(${p.id})" class="bg-emerald-500 hover:bg-emerald-400 text-white p-1.5 rounded-lg transition-colors cursor-pointer z-10 relative">
+                <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        `).join('');
+        
+        if (typeof lucide !== 'undefined') lucide.createIcons();
       }
     }
   }
@@ -638,6 +629,49 @@ document.addEventListener('DOMContentLoaded', () => {
     symptomBtns[0].classList.add('border-primary', 'bg-emerald-50');
   }
 
+  // ─── Global Search Logic ──────────────────────────────────────
+  const searchInput = document.getElementById('global-search-input');
+  const searchResults = document.getElementById('global-search-results');
+  
+  if (searchInput && searchResults) {
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) {
+        searchResults.innerHTML = '<div class="text-center text-gray-400 py-10">Start typing to search our catalogue...</div>';
+        return;
+      }
+      
+      const allProducts = window.RanjitCart ? window.RanjitCart.PRODUCTS : [];
+      const matches = allProducts.filter(p => {
+        const nameMatch = p.name && p.name.toLowerCase().includes(q);
+        const catMatch = p.category && p.category.toLowerCase().includes(q);
+        const tagsMatch = p.categories && Array.isArray(p.categories) && p.categories.some(c => c.toLowerCase().includes(q));
+        return nameMatch || catMatch || tagsMatch;
+      });
+      
+      if (matches.length === 0) {
+        searchResults.innerHTML = '<div class="text-center text-gray-400 py-10">No products found for "'+q+'"</div>';
+        return;
+      }
+
+      searchResults.innerHTML = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' + matches.map(p => `
+        <div class="bg-white rounded-xl p-3 border border-gray-100 flex items-center gap-3 hover:bg-gray-50 transition-colors shadow-sm">
+          <img src="${p.image || '/images/default.png'}" alt="${p.name}" class="w-16 h-16 rounded-lg object-cover">
+          <div class="flex-grow">
+            <h4 class="text-gray-900 font-bold text-sm line-clamp-2">${p.name}</h4>
+            <span class="text-emerald-600 font-bold text-sm">₹${p.price}</span>
+          </div>
+          <button onclick="window.RanjitCart.addToCart(${p.id});" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 p-2 rounded-lg transition-colors shrink-0" title="Add to Cart">
+            <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+          </button>
+        </div>
+      `).join('') + '</div>';
+      
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
+  }
+
   // ─── Initialize E-Commerce Cart System ─────────────────────
+  window.RanjitCart = Cart;
   Cart.init();
 });

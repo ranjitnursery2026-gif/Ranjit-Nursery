@@ -35,24 +35,92 @@
     </nav>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Header -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div>
-                <h1 class="text-3xl font-outfit font-bold text-gray-900">Product Management</h1>
-                <p class="text-gray-500 mt-1">Manage your catalog, add new products, and toggle stock availability in real-time.</p>
-            </div>
-            <button onclick="window.openAddModal()" class="bg-primary hover:bg-green-800 text-white px-5 py-2.5 rounded-lg font-semibold shadow-sm flex items-center gap-2 transition-colors">
-                <i data-lucide="plus" class="w-5 h-5"></i> Add New Product
+        <!-- Navigation Tabs -->
+        <div class="flex space-x-6 border-b border-gray-200 mb-8">
+            <button id="nav-products" onclick="window.switchAdminView('products')" class="pb-3 text-lg font-bold text-primary border-b-2 border-primary transition-colors flex items-center gap-2">
+                <i data-lucide="package" class="w-5 h-5"></i> Products
+            </button>
+            <button id="nav-orders" onclick="window.switchAdminView('orders')" class="pb-3 text-lg font-medium text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors flex items-center gap-2">
+                <i data-lucide="shopping-bag" class="w-5 h-5"></i> Orders
+            </button>
+            <button id="nav-pincodes" onclick="window.switchAdminView('pincodes')" class="pb-3 text-lg font-medium text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors flex items-center gap-2">
+                <i data-lucide="map-pin" class="w-5 h-5"></i> Delivery Areas
             </button>
         </div>
 
-        <!-- Tabs -->
-        <div class="flex space-x-1 bg-gray-100 p-1 rounded-xl mb-6 overflow-x-auto border border-gray-200">
-            <button class="admin-tab active bg-white text-primary font-semibold shadow-sm rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="all">All Products</button>
-            <button class="admin-tab text-gray-600 hover:text-gray-900 font-medium rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="plants">Plants</button>
-            <button class="admin-tab text-gray-600 hover:text-gray-900 font-medium rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="seeds">Seeds</button>
-            <button class="admin-tab text-gray-600 hover:text-gray-900 font-medium rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="fertilizers">Fertilizers & Medicines</button>
-            <button class="admin-tab text-gray-600 hover:text-gray-900 font-medium rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="tools">Tools & Pots</button>
+        <!-- PRODUCTS VIEW -->
+        <div id="view-products" class="space-y-6">
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-3xl font-outfit font-bold text-gray-900">Product Management</h1>
+                    <p class="text-gray-500 mt-1">Manage your catalog, add new products, and toggle stock availability in real-time.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="bulk-delete-btn" onclick="window.bulkDeleteProducts()" class="hidden bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-4 py-2.5 rounded-lg font-semibold shadow-sm flex items-center gap-2 transition-colors">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i> Delete Selected
+                    </button>
+                    <button onclick="window.openAddModal()" class="bg-primary hover:bg-green-800 text-white px-5 py-2.5 rounded-lg font-semibold shadow-sm flex items-center gap-2 transition-colors">
+                        <i data-lucide="plus" class="w-5 h-5"></i> Add New Product
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                        <i data-lucide="box" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Total Products</p>
+                        <h3 id="stat-total" class="text-2xl font-bold text-gray-900">0</h3>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+                        <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Out of Stock</p>
+                        <h3 id="stat-oos" class="text-2xl font-bold text-gray-900">0</h3>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                        <i data-lucide="layers" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Categories</p>
+                        <h3 id="stat-cats" class="text-2xl font-bold text-gray-900">0</h3>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                        <i data-lucide="indian-rupee" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Inventory Value</p>
+                        <h3 id="stat-value" class="text-2xl font-bold text-gray-900">₹0</h3>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Filters & Search -->
+        <div class="flex flex-col md:flex-row justify-between gap-4">
+            <!-- Tabs -->
+            <div class="flex space-x-1 bg-gray-100 p-1 rounded-xl overflow-x-auto border border-gray-200">
+                <button class="admin-tab active bg-white text-primary font-semibold shadow-sm rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="all">All Products</button>
+                <button class="admin-tab text-gray-600 hover:text-gray-900 font-medium rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="plants">Plants</button>
+                <button class="admin-tab text-gray-600 hover:text-gray-900 font-medium rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="seeds">Seeds</button>
+                <button class="admin-tab text-gray-600 hover:text-gray-900 font-medium rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="fertilizers">Fertilizers & Medicines</button>
+                <button class="admin-tab text-gray-600 hover:text-gray-900 font-medium rounded-lg px-4 py-2 text-sm whitespace-nowrap transition-all" data-tab="tools">Tools</button>
+            </div>
+            <!-- Search -->
+            <div class="relative w-full md:w-64">
+                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                <input type="text" id="admin-search" placeholder="Search products..." class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm">
+            </div>
         </div>
 
         <!-- Products Table -->
@@ -61,6 +129,9 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase tracking-wider text-gray-500 font-semibold">
+                            <th class="px-6 py-4 w-12 text-center">
+                                <input type="checkbox" id="select-all-cb" onchange="window.toggleAllProducts(this)" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
+                            </th>
                             <th class="px-6 py-4">Product</th>
                             <th class="px-6 py-4">Categories</th>
                             <th class="px-6 py-4">Price</th>
@@ -70,11 +141,66 @@
                     </thead>
                     <tbody id="admin-product-list" class="divide-y divide-gray-100">
                         <!-- Products will be injected here -->
-                        <tr><td colspan="5" class="px-6 py-8 text-center text-gray-400">Loading catalog...</td></tr>
+                        <tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">Loading catalog...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        </div> <!-- End of View Products -->
+
+        <!-- ORDERS VIEW -->
+        <div id="view-orders" class="space-y-6 hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-3xl font-outfit font-bold text-gray-900">Order Management</h1>
+                    <p class="text-gray-500 mt-1">Track customer orders, update statuses, and view purchase history.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase tracking-wider text-gray-500 font-semibold">
+                                <th class="px-6 py-4">Order ID</th>
+                                <th class="px-6 py-4">Customer</th>
+                                <th class="px-6 py-4">Date</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4 text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-order-list" class="divide-y divide-gray-100">
+                            <!-- Orders will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div> <!-- End of View Orders -->
+
+        <!-- PINCODES VIEW -->
+        <div id="view-pincodes" class="space-y-6 hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-3xl font-outfit font-bold text-gray-900">Delivery Areas</h1>
+                    <p class="text-gray-500 mt-1">Manage serviceable pincodes for delivery.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <form id="add-pincode-form" class="flex gap-2" onsubmit="event.preventDefault(); window.addPincode();">
+                        <input type="text" id="new-pincode" placeholder="e.g. 769001" required maxlength="6" pattern="[0-9]{6}" class="border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all w-36">
+                        <button type="submit" class="bg-primary hover:bg-green-800 text-white px-5 py-2.5 rounded-lg font-semibold shadow-sm flex items-center gap-2 transition-colors">
+                            <i data-lucide="plus" class="w-5 h-5"></i> Add
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div id="pincodes-grid" class="flex flex-wrap gap-3">
+                    <!-- Pincode chips will be injected here -->
+                    <div class="text-gray-400">Loading pincodes...</div>
+                </div>
+            </div>
+        </div> <!-- End of View Pincodes -->
     </div>
 
     <!-- Add Product Modal -->
@@ -116,9 +242,10 @@
                             <input type="number" id="p-stock" required min="0" placeholder="e.g. 10" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
                         </div>
 
-                        <div class="space-y-1 md:col-span-2">
+                        <div class="space-y-1 md:col-span-2 relative">
                             <label class="text-sm font-semibold text-gray-700">Categories (Comma separated) *</label>
-                            <input type="text" id="p-categories" required placeholder="e.g. Indoor Plants, Air Purifying, Pet Friendly" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                            <input type="text" id="p-categories" autocomplete="off" required placeholder="e.g. Indoor Plants, Air Purifying, Pet Friendly" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                            <div id="category-suggestions" class="absolute left-0 right-0 top-[72px] z-[110] bg-white border border-gray-200 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] max-h-48 overflow-y-auto hidden"></div>
                         </div>
 
                         <div class="space-y-1 md:col-span-2">

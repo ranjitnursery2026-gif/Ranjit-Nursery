@@ -45,3 +45,49 @@ INSERT INTO public.products (id, name, categories, price, image, description, ba
 (28, 'Succulent Gift Box (Set of 3)', '["Corporate Gifts","Birthday Gifts","Gifts Under ₹999","Cactus and Succulents"]'::jsonb, 599, '/images/succulent_box.png', 'Assorted premium succulents planted in cute ceramic pots, beautifully packaged.', NULL, true),
 (29, 'Balcony Garden Starter Kit', '["Balcony and Terrace Garden","Garden Kits","Value For Money Packs","Trending in Gardening"]'::jsonb, 1299, '/images/about_potted_1781686303406.png', 'Complete kit: 5 pots, 5 flowering plants, potting soil, and basic tools.', 'Bestseller', true),
 (30, 'Indoor Air Purifier Pack', '["Air Purifying Plants'' Packs","Top 4 Plants'' Packs","Indoor Garden","Value For Money Packs"]'::jsonb, 899, '/images/about_potted_1781686303406.png', 'Set of 4 best air-purifying plants: Snake Plant, Areca Palm, Money Plant, and Spider Plant.', 'Specialty', true);
+
+-- 3. Create the orders table
+CREATE TABLE IF NOT EXISTS public.orders (
+  id text PRIMARY KEY,
+  customer_name text NOT NULL,
+  customer_phone text NOT NULL,
+  customer_address text NOT NULL,
+  items jsonb NOT NULL DEFAULT '[]'::jsonb,
+  total_amount numeric NOT NULL,
+  shipping_method text,
+  utr text,
+  status text NOT NULL DEFAULT 'Processing',
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 4. Create the pincodes table (Delivery Areas)
+CREATE TABLE IF NOT EXISTS public.pincodes (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  code text NOT NULL UNIQUE,
+  is_active boolean DEFAULT true,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Allow public read access (for the frontend to check if a pincode is valid)
+ALTER TABLE public.pincodes ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public read access on pincodes" ON public.pincodes;
+CREATE POLICY "Allow public read access on pincodes" ON public.pincodes
+  FOR SELECT USING (true);
+
+-- Allow anonymous insert/update/delete for the Admin Panel
+DROP POLICY IF EXISTS "Allow anonymous all access on pincodes" ON public.pincodes;
+CREATE POLICY "Allow anonymous all access on pincodes" ON public.pincodes
+  FOR ALL USING (true) WITH CHECK (true);
+
+-- Insert the initial 32 pincodes provided by you
+INSERT INTO public.pincodes (code, is_active) VALUES
+  ('769001', true), ('769002', true), ('769003', true), ('769004', true),
+  ('769005', true), ('769006', true), ('769007', true), ('769008', true),
+  ('769009', true), ('769010', true), ('769011', true), ('769012', true),
+  ('769013', true), ('769014', true), ('769015', true), ('769016', true),
+  ('769017', true), ('769041', true), ('769042', true), ('769043', true),
+  ('770012', true), ('770015', true), ('770016', true), ('770017', true),
+  ('770018', true), ('770020', true), ('770021', true), ('770032', true),
+  ('770033', true), ('770035', true), ('770036', true), ('770037', true)
+ON CONFLICT (code) DO NOTHING;
