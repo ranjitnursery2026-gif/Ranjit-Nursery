@@ -1,7 +1,9 @@
 import './style.css'
 import { supabase } from './supabaseClient.js'
 import * as Cart from './cart.js'
-import { categoryData } from './categoryData.js'
+import { categoryData as fallbackCategoryData } from './categoryData.js'
+
+let categoryData = fallbackCategoryData;
 
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize Lucide icons
@@ -87,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       waMsg += `━━━━━━━━━━━━━━━━━━\n`;
 
-      const whatsappUrl = `https://wa.me/919692905128?text=${encodeURIComponent(waMsg)}`;
+      const whatsappUrl = `https://wa.me/${Cart.inquiryWhatsapp || '919692905128'}?text=${encodeURIComponent(waMsg)}`;
       window.open(whatsappUrl, '_blank');
 
       // Success feedback
@@ -108,9 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let hoverTimeout;
   let activeCategoryKey = Object.keys(categoryData)[0]; // Default to first
 
-  if (categoriesTab && megaMenuContainer && megaMenuGrid && megaMenuRootList) {
-    
-    // 1. Render Left Sidebar of Mega Menu
+  // Function to render the Desktop Mega Menu Sidebar
+  function renderSidebar() {
+    if (!megaMenuRootList) return;
     megaMenuRootList.innerHTML = Object.keys(categoryData).map(categoryKey => `
       <li>
         <button data-category="${categoryKey}" class="mega-root-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm flex items-center justify-between transition-colors ${categoryKey === activeCategoryKey ? 'bg-white text-primary shadow-sm border border-gray-100' : 'text-gray-600 hover:bg-gray-100'}">
@@ -134,51 +136,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
-
-    renderMegaMenu(activeCategoryKey);
-
-    // Desktop Hover Logic for the Tab
-    categoriesTab.addEventListener('mouseenter', () => {
-      clearTimeout(hoverTimeout);
-      megaMenuContainer.classList.remove('hidden', 'pointer-events-none');
-      setTimeout(() => {
-        megaMenuContainer.classList.remove('opacity-0');
-      }, 10);
-    });
-    
-    categoriesTab.addEventListener('mouseleave', () => {
-      hoverTimeout = setTimeout(() => {
-        hideMegaMenu();
-      }, 300);
-    });
-
-    megaMenuContainer.addEventListener('mouseenter', () => {
-      clearTimeout(hoverTimeout);
-    });
-    
-    megaMenuContainer.addEventListener('mouseleave', () => {
-      hoverTimeout = setTimeout(() => {
-        hideMegaMenu();
-      }, 300);
-    });
   }
 
-  // 2. Render Mobile Accordion Items
-  if (mobileAccordion) {
+  // Function to render the Mobile Accordion
+  function renderMobileCategories() {
+    if (!mobileAccordion) return;
+    mobileAccordion.innerHTML = '';
     Object.keys(categoryData).forEach(categoryKey => {
       const accItem = document.createElement('div');
       accItem.className = 'border-b border-gray-100';
       
-      // Accordion Header
       const accHeader = document.createElement('button');
       accHeader.className = 'w-full px-3 py-3 text-base font-bold text-gray-900 flex justify-between items-center text-left';
       accHeader.innerHTML = `<span>${categoryKey}</span> <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 transition-transform duration-200"></i>`;
       
-      // Accordion Body
       const accBody = document.createElement('div');
       accBody.className = 'hidden px-3 pb-3 space-y-4 max-h-0 overflow-hidden transition-all duration-300';
       
-      // Populate Body
       const columns = categoryData[categoryKey];
       accBody.innerHTML = columns.map(col => `
         <div>
@@ -191,11 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `).join('');
 
-      // Accordion Click Logic
       accHeader.addEventListener('click', () => {
         const isExpanded = !accBody.classList.contains('hidden') && accBody.style.maxHeight !== '0px';
         
-        // Close all other accordions first
         document.querySelectorAll('#mobile-category-accordion .accordion-body').forEach(body => {
           body.style.maxHeight = '0px';
           setTimeout(() => body.classList.add('hidden'), 300);
@@ -216,7 +188,54 @@ document.addEventListener('DOMContentLoaded', () => {
       accItem.appendChild(accBody);
       mobileAccordion.appendChild(accItem);
     });
+    if (typeof lucide !== 'undefined') lucide.createIcons();
   }
+
+  // Fetch categories asynchronously and init everything
+  async function initCategories() {
+    try {
+      const { data, error } = await supabase.from('store_category_data').select('data').eq('id', 1).single();
+      if (!error && data && data.data) {
+        categoryData = data.data;
+      }
+    } catch (err) {
+      console.error("Failed to fetch categories, using fallback:", err);
+    }
+    
+    activeCategoryKey = Object.keys(categoryData)[0];
+    
+    if (categoriesTab && megaMenuContainer && megaMenuGrid && megaMenuRootList) {
+      renderSidebar();
+      renderMegaMenu(activeCategoryKey);
+    }
+    
+    if (mobileAccordion) {
+      renderMobileCategories();
+    }
+  }
+
+  // Bind desktop hover events
+  if (categoriesTab && megaMenuContainer) {
+    categoriesTab.addEventListener('mouseenter', () => {
+      clearTimeout(hoverTimeout);
+      megaMenuContainer.classList.remove('hidden', 'pointer-events-none');
+      setTimeout(() => {
+        megaMenuContainer.classList.remove('opacity-0');
+      }, 10);
+    });
+    
+    categoriesTab.addEventListener('mouseleave', () => {
+      hoverTimeout = setTimeout(() => hideMegaMenu(), 300);
+    });
+
+    megaMenuContainer.addEventListener('mouseenter', () => clearTimeout(hoverTimeout));
+    megaMenuContainer.addEventListener('mouseleave', () => {
+      hoverTimeout = setTimeout(() => hideMegaMenu(), 300);
+    });
+  }
+
+  // Start initialization
+  initCategories();
 
   function renderMegaMenu(categoryKey) {
     const columns = categoryData[categoryKey];

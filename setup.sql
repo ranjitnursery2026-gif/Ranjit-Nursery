@@ -10,8 +10,12 @@ CREATE TABLE IF NOT EXISTS public.products (
   description text,
   badge text,
   is_available boolean NOT NULL DEFAULT true,
+  availability_status text DEFAULT 'In Stock',
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- ADD COLUMN FOR EXISTING DATABASES
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS availability_status text DEFAULT 'In Stock';
 
 -- 2. Insert existing products
 INSERT INTO public.products (id, name, categories, price, image, description, badge, is_available) VALUES
@@ -44,7 +48,8 @@ INSERT INTO public.products (id, name, categories, price, image, description, ba
 (27, 'Bamboo Plant in Glass Vase', '["Lucky Bamboos","Corporate Gifts","Gifts Under ₹499","Plants For Office Desk","Indoor Plants"]'::jsonb, 399, '/images/bamboo_vase.png', 'Two-layer lucky bamboo in a premium clear glass vase. Requires only water.', 'Specialty', true),
 (28, 'Succulent Gift Box (Set of 3)', '["Corporate Gifts","Birthday Gifts","Gifts Under ₹999","Cactus and Succulents"]'::jsonb, 599, '/images/succulent_box.png', 'Assorted premium succulents planted in cute ceramic pots, beautifully packaged.', NULL, true),
 (29, 'Balcony Garden Starter Kit', '["Balcony and Terrace Garden","Garden Kits","Value For Money Packs","Trending in Gardening"]'::jsonb, 1299, '/images/about_potted_1781686303406.png', 'Complete kit: 5 pots, 5 flowering plants, potting soil, and basic tools.', 'Bestseller', true),
-(30, 'Indoor Air Purifier Pack', '["Air Purifying Plants'' Packs","Top 4 Plants'' Packs","Indoor Garden","Value For Money Packs"]'::jsonb, 899, '/images/about_potted_1781686303406.png', 'Set of 4 best air-purifying plants: Snake Plant, Areca Palm, Money Plant, and Spider Plant.', 'Specialty', true);
+(30, 'Indoor Air Purifier Pack', '["Air Purifying Plants'' Packs","Top 4 Plants'' Packs","Indoor Garden","Value For Money Packs"]'::jsonb, 899, '/images/about_potted_1781686303406.png', 'Set of 4 best air-purifying plants: Snake Plant, Areca Palm, Money Plant, and Spider Plant.', 'Specialty', true)
+ON CONFLICT (id) DO NOTHING;
 
 -- 3. Create the orders table
 CREATE TABLE IF NOT EXISTS public.orders (
@@ -60,16 +65,41 @@ CREATE TABLE IF NOT EXISTS public.orders (
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- Alter table to add new columns if they don't exist
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS payment_method text DEFAULT 'upi';
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS pincode text;
+
+-- Enable RLS and add policies for orders table
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow anonymous insert on orders" ON public.orders;
+CREATE POLICY "Allow anonymous insert on orders" ON public.orders
+  FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow anonymous select on orders" ON public.orders;
+CREATE POLICY "Allow anonymous select on orders" ON public.orders
+  FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow anonymous update on orders" ON public.orders;
+CREATE POLICY "Allow anonymous update on orders" ON public.orders
+  FOR UPDATE USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow anonymous delete on orders" ON public.orders;
+CREATE POLICY "Allow anonymous delete on orders" ON public.orders
+  FOR DELETE USING (true);
+
 -- 4. Create the pincodes table (Delivery Areas)
 CREATE TABLE IF NOT EXISTS public.pincodes (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   code text NOT NULL UNIQUE,
   is_active boolean DEFAULT true,
+  is_cod_available boolean DEFAULT false,
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
 -- Allow public read access (for the frontend to check if a pincode is valid)
 ALTER TABLE public.pincodes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.pincodes ADD COLUMN IF NOT EXISTS is_cod_available boolean DEFAULT false;
 
 DROP POLICY IF EXISTS "Allow public read access on pincodes" ON public.pincodes;
 CREATE POLICY "Allow public read access on pincodes" ON public.pincodes
@@ -91,3 +121,156 @@ INSERT INTO public.pincodes (code, is_active) VALUES
   ('770018', true), ('770020', true), ('770021', true), ('770032', true),
   ('770033', true), ('770035', true), ('770036', true), ('770037', true)
 ON CONFLICT (code) DO NOTHING;
+
+-- 5. Create store settings table
+CREATE TABLE IF NOT EXISTS public.store_settings (
+  id integer PRIMARY KEY,
+  order_whatsapp text NOT NULL,
+  inquiry_whatsapp text NOT NULL,
+  services_whatsapp text NOT NULL,
+  admin_password text NOT NULL
+);
+
+-- Ensure columns exist if table was already created
+ALTER TABLE public.store_settings ADD COLUMN IF NOT EXISTS services_whatsapp text DEFAULT '916371900967';
+ALTER TABLE public.store_settings ADD COLUMN IF NOT EXISTS admin_password text DEFAULT 'Ranjit@123';
+ALTER TABLE public.store_settings ADD COLUMN IF NOT EXISTS featured_title text DEFAULT 'Our Core Products';
+ALTER TABLE public.store_settings ADD COLUMN IF NOT EXISTS featured_subtitle text DEFAULT 'Explore our diverse collection of premium plants, gardening supplies, and exotic specialities perfect for any space.';
+ALTER TABLE public.store_settings ADD COLUMN IF NOT EXISTS featured_category text DEFAULT '';
+
+-- Allow public read access on settings
+ALTER TABLE public.store_settings ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public read access on settings" ON public.store_settings;
+CREATE POLICY "Allow public read access on settings" ON public.store_settings
+  FOR SELECT USING (true);
+
+-- Allow anonymous update/insert for Admin Panel
+DROP POLICY IF EXISTS "Allow anonymous all access on settings" ON public.store_settings;
+CREATE POLICY "Allow anonymous all access on settings" ON public.store_settings
+  FOR ALL USING (true) WITH CHECK (true);
+
+-- Insert default settings
+INSERT INTO public.store_settings (id, order_whatsapp, inquiry_whatsapp, services_whatsapp, admin_password) 
+VALUES (1, '919692905128', '917735227575', '916371900967', 'Ranjit@123')
+ON CONFLICT (id) DO NOTHING;
+
+-- 6. Create product reviews table
+CREATE TABLE IF NOT EXISTS public.reviews (
+  id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  product_id integer REFERENCES public.products(id) ON DELETE CASCADE,
+  order_id text NOT NULL,
+  customer_name text NOT NULL,
+  rating integer CHECK (rating >= 1 AND rating <= 5) NOT NULL,
+  comment text,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Allow public read access on reviews
+ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public read access on reviews" ON public.reviews;
+CREATE POLICY "Allow public read access on reviews" ON public.reviews
+  FOR SELECT USING (true);
+
+-- Allow public to insert reviews
+DROP POLICY IF EXISTS "Allow public insert on reviews" ON public.reviews;
+CREATE POLICY "Allow public insert on reviews" ON public.reviews
+  FOR INSERT WITH CHECK (true);
+
+-- Allow admin to delete reviews
+DROP POLICY IF EXISTS "Allow anonymous delete on reviews" ON public.reviews;
+CREATE POLICY "Allow anonymous delete on reviews" ON public.reviews
+  FOR DELETE USING (true);
+
+-- 7. Create dynamic categories table
+CREATE TABLE IF NOT EXISTS public.store_category_data (
+  id integer PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+  data jsonb NOT NULL DEFAULT '{}'::jsonb
+);
+
+ALTER TABLE public.store_category_data ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public read access on store_category_data" ON public.store_category_data;
+CREATE POLICY "Allow public read access on store_category_data" ON public.store_category_data
+  FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow anonymous update on store_category_data" ON public.store_category_data;
+CREATE POLICY "Allow anonymous update on store_category_data" ON public.store_category_data
+  FOR UPDATE USING (true);
+
+DROP POLICY IF EXISTS "Allow anonymous insert on store_category_data" ON public.store_category_data;
+CREATE POLICY "Allow anonymous insert on store_category_data" ON public.store_category_data
+  FOR INSERT WITH CHECK (true);
+
+-- Insert default category data if not exists
+INSERT INTO public.store_category_data (id, data) 
+VALUES (1, '{
+  "Plants": [
+    {
+      "title": "By Type",
+      "links": ["Indoor Plants", "Outdoor Plants", "Fruit Plants", "Bonsai & Bamboo", "Palm Trees", "Creepers & Climbers", "Succulents & Cacti"]
+    },
+    {
+      "title": "By Benefit",
+      "links": ["Air Purifying", "Low Maintenance", "Pet Friendly", "Aromatic Plants", "Vastu & Feng Shui", "Medicinal Plants"]
+    },
+    {
+      "title": "By Placement",
+      "links": ["Balcony Plants", "Office Desk Plants", "Hanging Plants", "Ground Cover"]
+    }
+  ],
+  "Flowers": [
+    {
+      "title": "By Season",
+      "links": ["Summer Flowers", "Winter Flowers", "Monsoon Flowers", "Year-Round Flowers"]
+    },
+    {
+      "title": "By Type",
+      "links": ["Roses", "Orchids", "Jasmine & Mogra", "Marigold & Hibiscus", "Lilies & Bulbs"]
+    },
+    {
+      "title": "Usage & Decor",
+      "links": ["Cut Flowers", "Wedding & Event Floral", "Pooja Flowers"]
+    }
+  ],
+  "Seeds": [
+    {
+      "title": "Vegetables",
+      "links": ["Summer Vegetables", "Winter Vegetables", "Leafy Greens", "Root Vegetables", "Exotic Vegetables"]
+    },
+    {
+      "title": "Fruits & Herbs",
+      "links": ["Fruit Seeds", "Herb Seeds", "Microgreens"]
+    },
+    {
+      "title": "Flower Seeds",
+      "links": ["Summer Flower Seeds", "Winter Flower Seeds", "Wildflower Mix"]
+    }
+  ],
+  "Fertilizers & Medicines": [
+    {
+      "title": "Plant Nutrition",
+      "links": ["Organic Compost", "Liquid Fertilizers", "Potting Soil Mix", "Cocopeat & Perlite", "Cow Dung Manure", "Seaweed Extract"]
+    },
+    {
+      "title": "Plant Protection",
+      "links": ["Neem Oil", "Organic Pesticides", "Fungicides", "Root Hormones", "Weed Control"]
+    }
+  ],
+  "Tools & Accessories": [
+    {
+      "title": "Planters & Pots",
+      "links": ["Plastic Pots", "Ceramic & Terracotta Pots", "Hanging Baskets", "Grow Bags", "Metal Planters"]
+    },
+    {
+      "title": "Gardening Tools",
+      "links": ["Pruners & Cutters", "Trowels & Spades", "Watering Cans & Sprayers", "Gardening Gloves", "Rakes & Hoes"]
+    },
+    {
+      "title": "Setup & Support",
+      "links": ["Plant Stands", "Moss Poles", "Trellis & Supports", "Decorative Pebbles"]
+    }
+  ]
+}'::jsonb)
+ON CONFLICT (id) DO NOTHING;

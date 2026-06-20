@@ -11,6 +11,13 @@ export let PRODUCTS = [];
 let cart = [];
 let appliedCoupon = null;
 export let allowedPincodes = [];
+export let allowedPincodesData = [];
+export let verifiedPincode = null;
+
+// ─── Global Store Settings ───────────────────────────────────
+export let orderWhatsapp = '919692905128';
+export let inquiryWhatsapp = '917735227575';
+export let servicesWhatsapp = '916371900967';
 
 const VALID_COUPONS = {
   'WELCOME10': { type: 'percent', value: 10, minSpend: 0 },
@@ -124,7 +131,14 @@ export function updateQty(productId, delta) {
 }
 
 export function getCartTotal() {
-  return cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  return cart.reduce((sum, item) => {
+    let itemTotal = item.price * item.qty;
+    // B2B Wholesale Discount: 20% off if qty >= 50
+    if (item.qty >= 50) {
+      itemTotal = itemTotal * 0.8;
+    }
+    return sum + itemTotal;
+  }, 0);
 }
 
 export function getCartCount() {
@@ -263,6 +277,46 @@ export function renderProducts() {
         `;
       }
 
+      const availStatus = p.availability_status || 'In Stock';
+      let actionButtonsHTML = '';
+      
+      if (availStatus === 'Coming Soon') {
+          actionButtonsHTML = `<div class="w-full bg-orange-500 text-white font-bold py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-center shadow-md flex items-center justify-center gap-1 md:gap-2 text-[11px] md:text-sm"><i data-lucide="clock" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Coming Soon</span><span class="sm:hidden">Soon</span></div>`;
+      } else if (availStatus === 'Not Available') {
+          actionButtonsHTML = `<div class="w-full bg-gray-100 text-gray-500 font-bold py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-center border border-gray-200 flex items-center justify-center gap-1 md:gap-2 text-[11px] md:text-sm shadow-sm"><i data-lucide="slash" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Not Available</span><span class="sm:hidden">N/A</span></div>`;
+      } else if (availStatus === 'Out of Stock' || p.is_available === false || (p.stock !== undefined && p.stock !== null ? p.stock : 10) <= 0) {
+          actionButtonsHTML = `<div class="w-full bg-red-50 text-red-600 font-bold py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-center border border-red-100 flex items-center justify-center gap-1 md:gap-2 text-[11px] md:text-sm"><i data-lucide="x-circle" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Out of Stock</span><span class="sm:hidden">Sold Out</span></div>`;
+      } else {
+          // IN STOCK
+          const primaryButtons = `${isCarpetGrass 
+              ? `<div class="flex-1 bg-emerald-50 text-emerald-700 font-semibold py-1.5 md:py-2.5 rounded-lg md:rounded-xl border border-emerald-200 flex items-center justify-center gap-1 md:gap-1.5 text-[11px] md:text-sm shadow-sm">
+                  <i data-lucide="check-circle" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Available</span>
+                </div>`
+              : `<button onclick="window.RanjitCart.addToCart(${p.id})" class="flex-1 bg-primary hover:bg-emerald-800 text-white font-semibold py-1.5 md:py-2.5 rounded-lg md:rounded-xl transition-all text-[11px] md:text-sm flex items-center justify-center gap-1 md:gap-1.5 shadow-md hover:shadow-lg">
+                  <i data-lucide="shopping-cart" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Add to Cart</span><span class="sm:hidden">Add</span>
+                </button>`
+            }
+            ${isCarpetGrass
+              ? `<a href="tel:+917978809687" class="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold py-1.5 md:py-2.5 rounded-lg md:rounded-xl border border-amber-200 flex items-center justify-center gap-1 md:gap-1.5 text-[11px] md:text-sm shadow-sm transition-colors">
+                  <i data-lucide="phone-call" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Contact</span><span class="sm:hidden">Call</span>
+                </a>`
+              : `<div class="flex-1 bg-amber-50 text-amber-700 font-semibold py-1.5 md:py-2.5 rounded-lg md:rounded-xl border border-amber-200 flex items-center justify-center gap-1 md:gap-1.5 text-[11px] md:text-sm shadow-sm">
+                  <i data-lucide="home" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">In Stock: </span><span class="sm:hidden">Left: </span>${p.stock !== undefined && p.stock !== null ? p.stock : 10}
+                </div>`
+            }`;
+
+          actionButtonsHTML = `
+            <div class="flex flex-col gap-1 w-full">
+              <div class="flex gap-2 w-full">
+                ${primaryButtons}
+              </div>
+              <a href="https://wa.me/${window.RanjitCart ? window.RanjitCart.inquiryWhatsapp : inquiryWhatsapp}?text=Hi,%20I%20am%20looking%20for%20bulk/wholesale%20rates%20for%20${encodeURIComponent(p.name)}." target="_blank" class="w-full text-center text-blue-600 hover:text-blue-800 font-bold py-1 flex items-center justify-center gap-1 text-[10px] md:text-xs transition-colors mt-0.5">
+                <i data-lucide="message-circle" class="w-3 h-3"></i> Request Wholesale Price
+              </a>
+            </div>
+          `;
+      }
+
       return `
         <div class="bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group animate-on-scroll opacity-0 translate-y-8 ${delayClass} flex flex-col">
           <div class="relative h-36 md:h-56 overflow-hidden shrink-0">
@@ -272,34 +326,20 @@ export function renderProducts() {
           </div>
           <div class="p-3 md:p-5 flex flex-col flex-grow">
             <div>
-              <div class="flex items-start justify-between mb-1 md:mb-2 gap-2">
+              <div class="flex items-start justify-between mb-1 gap-2">
                 <span class="text-[9px] md:text-xs font-bold uppercase tracking-wider text-primary/70 mt-1 truncate">${displayCategory}</span>
                 ${priceHTML}
               </div>
-              <h3 class="text-sm md:text-lg font-outfit font-bold text-gray-900 mb-1 md:mb-2 leading-snug line-clamp-2">${p.name}</h3>
-              <p class="text-gray-500 text-sm mb-4 line-clamp-2 hidden md:block">${p.description}</p>
+              <h3 class="text-sm md:text-base font-outfit font-bold text-gray-900 mb-1 leading-snug line-clamp-2">${p.name}</h3>
+              <div class="flex items-center gap-1 mb-1.5">
+                <i data-lucide="star" class="w-3 h-3 text-amber-500 ${p.avgRating > 0 ? 'fill-amber-500' : ''}"></i>
+                <span class="text-[10px] md:text-xs font-bold text-gray-700">${p.avgRating > 0 ? p.avgRating.toFixed(1) : 'New'}</span>
+                ${p.reviewCount > 0 ? `<span class="text-[9px] md:text-[10px] text-gray-400 ml-0.5">(${p.reviewCount})</span>` : ''}
+              </div>
+              <p class="text-gray-500 text-[10px] md:text-xs mb-2 line-clamp-1">${p.description || ''}</p>
             </div>
-            
-            <div class="flex gap-1.5 md:gap-2 mt-auto pt-2">
-              ${(p.is_available === false || (p.stock !== undefined && p.stock !== null ? p.stock : 10) <= 0)
-                ? `<div class="w-full bg-red-50 text-red-600 font-bold py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-center border border-red-100 flex items-center justify-center gap-1 md:gap-2 text-[11px] md:text-sm"><i data-lucide="x-circle" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Out of Stock</span></div>`
-                : `${isCarpetGrass 
-                    ? `<div class="flex-1 bg-emerald-50 text-emerald-700 font-semibold py-1.5 md:py-2.5 rounded-lg md:rounded-xl border border-emerald-200 flex items-center justify-center gap-1 md:gap-1.5 text-[11px] md:text-sm shadow-sm">
-                        <i data-lucide="check-circle" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Available</span>
-                      </div>`
-                    : `<button onclick="window.RanjitCart.addToCart(${p.id})" class="flex-1 bg-primary hover:bg-emerald-800 text-white font-semibold py-1.5 md:py-2.5 rounded-lg md:rounded-xl transition-all text-[11px] md:text-sm flex items-center justify-center gap-1 md:gap-1.5 shadow-md hover:shadow-lg">
-                        <i data-lucide="shopping-cart" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Add to Cart</span><span class="sm:hidden">Add</span>
-                      </button>`
-                  }
-                  ${isCarpetGrass
-                    ? `<a href="tel:+917978809687" class="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold py-1.5 md:py-2.5 rounded-lg md:rounded-xl border border-amber-200 flex items-center justify-center gap-1 md:gap-1.5 text-[11px] md:text-sm shadow-sm transition-colors">
-                        <i data-lucide="phone-call" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Contact</span><span class="sm:hidden">Call</span>
-                      </a>`
-                    : `<div class="flex-1 bg-amber-50 text-amber-700 font-semibold py-1.5 md:py-2.5 rounded-lg md:rounded-xl border border-amber-200 flex items-center justify-center gap-1 md:gap-1.5 text-[11px] md:text-sm shadow-sm">
-                        <i data-lucide="home" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">In Stock: </span><span class="sm:hidden">Left: </span>${p.stock !== undefined && p.stock !== null ? p.stock : 10}
-                      </div>`
-                  }`
-              }
+            <div class="mt-auto pt-3 border-t border-gray-50 w-full">
+              ${actionButtonsHTML}
             </div>
           </div>
         </div>`;
@@ -350,33 +390,58 @@ function renderCartDrawerItems() {
     list.innerHTML = '';
     if (emptyMsg) emptyMsg.classList.remove('hidden');
     if (subtotalEl) subtotalEl.textContent = '₹0';
-    if (checkoutBtn) checkoutBtn.disabled = true;
+    if (checkoutBtn) {
+      checkoutBtn.disabled = true;
+      checkoutBtn.innerHTML = '<i data-lucide="credit-card" class="w-5 h-5"></i> Proceed to Checkout';
+    }
     return;
   }
 
   if (emptyMsg) emptyMsg.classList.add('hidden');
-  if (checkoutBtn) checkoutBtn.disabled = false;
+  
+  if (checkoutBtn) {
+    if (!verifiedPincode) {
+      checkoutBtn.disabled = true;
+      checkoutBtn.innerHTML = '<i data-lucide="map-pin" class="w-5 h-5"></i> Verify Pincode to Proceed';
+    } else {
+      checkoutBtn.disabled = false;
+      checkoutBtn.innerHTML = '<i data-lucide="credit-card" class="w-5 h-5"></i> Proceed to Checkout';
+    }
+  }
 
-  list.innerHTML = cart.map(item => `
-    <div class="flex items-center gap-3 bg-gray-50 rounded-2xl p-3 border border-gray-100 transition-all hover:border-primary/20">
-      <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover flex-shrink-0 shadow-sm" />
-      <div class="flex-1 min-w-0">
-        <h4 class="font-semibold text-gray-900 text-sm truncate">${item.name}</h4>
-        <p class="text-primary font-bold text-sm">₹${item.price}</p>
-        <div class="flex items-center gap-2 mt-1">
-          <button onclick="window.RanjitCart.updateQty(${item.id}, -1)" class="w-7 h-7 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm flex items-center justify-center transition-colors">−</button>
-          <span class="font-bold text-sm w-6 text-center">${item.qty}</span>
-          <button onclick="window.RanjitCart.updateQty(${item.id}, 1)" class="w-7 h-7 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary font-bold text-sm flex items-center justify-center transition-colors">+</button>
+  list.innerHTML = cart.map(item => {
+    const originalPrice = item.price * item.qty;
+    let finalPrice = originalPrice;
+    let b2bBadge = '';
+    
+    if (item.qty >= 50) {
+      finalPrice = originalPrice * 0.8;
+      b2bBadge = `<span class="bg-amber-100 text-amber-800 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider block mt-1 w-max shadow-sm">B2B Discount (20% Off)</span>`;
+    }
+
+    return `
+      <div class="flex items-center gap-3 bg-gray-50 rounded-2xl p-3 border border-gray-100 transition-all hover:border-primary/20">
+        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover flex-shrink-0 shadow-sm" />
+        <div class="flex-1 min-w-0">
+          <h4 class="font-semibold text-gray-900 text-sm truncate">${item.name}</h4>
+          <p class="text-primary font-bold text-sm">₹${item.price}</p>
+          ${b2bBadge}
+          <div class="flex items-center gap-2 mt-1">
+            <button onclick="window.RanjitCart.updateQty(${item.id}, -1)" class="w-7 h-7 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm flex items-center justify-center transition-colors">−</button>
+            <span class="font-bold text-sm w-6 text-center">${item.qty}</span>
+            <button onclick="window.RanjitCart.updateQty(${item.id}, 1)" class="w-7 h-7 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary font-bold text-sm flex items-center justify-center transition-colors">+</button>
+          </div>
+        </div>
+        <div class="text-right flex flex-col items-end gap-1">
+          ${item.qty >= 50 ? `<span class="text-xs text-gray-400 line-through font-semibold">₹${originalPrice}</span>` : ''}
+          <span class="font-bold text-gray-900 text-sm">₹${finalPrice}</span>
+          <button onclick="window.RanjitCart.removeFromCart(${item.id})" class="text-red-400 hover:text-red-600 transition-colors p-1" title="Remove">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
         </div>
       </div>
-      <div class="text-right flex flex-col items-end gap-1">
-        <span class="font-bold text-gray-900 text-sm">₹${item.price * item.qty}</span>
-        <button onclick="window.RanjitCart.removeFromCart(${item.id})" class="text-red-400 hover:text-red-600 transition-colors p-1" title="Remove">
-          <i data-lucide="trash-2" class="w-4 h-4"></i>
-        </button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   if (subtotalEl) subtotalEl.textContent = `₹${getCartTotal().toLocaleString('en-IN')}`;
   if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -510,6 +575,14 @@ export function openCheckoutModal() {
   // Render order summary inside the modal
   renderCheckoutSummary();
 
+  const checkoutPincodeInput = document.getElementById('checkout-pincode');
+  if (checkoutPincodeInput && verifiedPincode) {
+    checkoutPincodeInput.value = verifiedPincode;
+    checkoutPincodeInput.dispatchEvent(new Event('input'));
+  }
+
+  generateCaptcha();
+
   modal.classList.remove('hidden');
   setTimeout(() => {
     modal.classList.remove('opacity-0');
@@ -551,6 +624,42 @@ export async function placeOrder() {
     return;
   }
 
+  // Rate Limiting Check (Max 2 orders per 30 mins)
+  const rateLimitKey = 'ranjitNursery_orderLogs';
+  const logs = JSON.parse(localStorage.getItem(rateLimitKey) || '[]');
+  const now = Date.now();
+  const recentLogs = logs.filter(time => now - time < 30 * 60 * 1000);
+  if (recentLogs.length >= 2) {
+    alert('You have reached the maximum order limit for now. Please try again after 30 minutes to prevent spam.');
+    return;
+  }
+
+  // Captcha Check
+  const captchaInput = document.getElementById('captcha-answer');
+  const captchaError = document.getElementById('captcha-error');
+  if (captchaInput && window.currentCaptchaAnswer) {
+    if (parseInt(captchaInput.value) !== window.currentCaptchaAnswer) {
+      if (captchaError) captchaError.classList.remove('hidden');
+      captchaInput.focus();
+      return;
+    } else {
+      if (captchaError) captchaError.classList.add('hidden');
+    }
+  }
+
+  const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value || 'upi';
+  const utrError = document.getElementById('utr-error');
+
+  if (paymentMethod === 'upi') {
+    if (!utr || utr.length !== 12 || !/^\\d{12}$/.test(utr)) {
+      if (utrError) utrError.classList.remove('hidden');
+      document.getElementById('checkout-utr')?.focus();
+      return;
+    } else {
+      if (utrError) utrError.classList.add('hidden');
+    }
+  }
+
   // Pincode Validation
   if (allowedPincodes.length > 0 && !allowedPincodes.includes(custPincode)) {
     if (pincodeError) {
@@ -568,6 +677,10 @@ export async function placeOrder() {
   btn.disabled = true;
 
   try {
+    // Log order for rate limiting
+    logs.push(now);
+    localStorage.setItem(rateLimitKey, JSON.stringify(logs));
+
     // 1. Calculate Costs
     let shippingCost = 0;
     if (shipping && shipping.includes('Standard')) shippingCost = 50;
@@ -583,26 +696,27 @@ export async function placeOrder() {
 
     const total = (subtotal + shippingCost) - discountAmount;
     
-    // Generate Order ID
-    const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    // Generate Order ID (Local Time)
+    const d = new Date();
+    const dateStr = d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
     const randStr = Math.floor(1000 + Math.random() * 9000);
     const orderId = `ORD-${dateStr}-${randStr}`;
 
     // 2. Insert into Supabase 'orders' table
     if (supabase) {
-      const orderData = {
+      const { error } = await supabase.from('orders').insert({
         id: orderId,
         customer_name: custName,
         customer_phone: custPhone,
         customer_address: custAddr,
+        pincode: custPincode,
+        shipping_method: shipping || 'Standard',
         items: cart,
         total_amount: total,
-        shipping_method: shipping || 'Standard',
-        utr: utr || null,
+        payment_method: paymentMethod,
+        utr: paymentMethod === 'upi' ? utr : null,
         status: 'Processing'
-      };
-
-      const { error } = await supabase.from('orders').insert([orderData]);
+      });
       if (error) {
         console.error("Supabase order insert error:", error);
         throw new Error("Failed to save order to database.");
@@ -637,14 +751,18 @@ export async function placeOrder() {
     }
     
     msg += `*Total Amount: ₹${total.toLocaleString('en-IN', {maximumFractionDigits:0})}*\n`;
-    if (utr) {
+    msg += `*Payment Method:* ${paymentMethod === 'upi' ? 'UPI' : 'Cash on Delivery (COD)'}\n`;
+    if (paymentMethod === 'upi' && utr) {
       msg += `*UPI Txn Ref / UTR:* ${utr}\n`;
+    }
+    if (paymentMethod === 'cod') {
+      msg += `\n*Note:* Please call me to verify this COD order.\n`;
     }
     msg += `━━━━━━━━━━━━━━━━━━\n`;
     msg += `Thank you for ordering from Ranjit Nursery! 🙏`;
 
     const encoded = encodeURIComponent(msg);
-    window.open(`https://wa.me/919692905128?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/${orderWhatsapp}?text=${encoded}`, '_blank');
 
     // 4. Deduct stock in Supabase
     cart.forEach(async (item) => {
@@ -694,12 +812,30 @@ export function buyNow(productId) {
 export async function initProducts() {
   if (!supabase) return;
   try {
-    const { data, error } = await supabase.from('products').select('*').order('id', { ascending: true });
-    if (!error && data && data.length > 0) {
-      PRODUCTS = data;
+    const { data: productsData, error: pError } = await supabase.from('products').select('*').order('name', { ascending: true });
+    if (pError) throw pError;
+    
+    const { data: reviewsData, error: rError } = await supabase.from('reviews').select('*');
+    if (rError) throw rError;
+
+    if (productsData && productsData.length > 0) {
+      PRODUCTS = productsData.map(p => {
+        const pReviews = reviewsData ? reviewsData.filter(r => r.product_id === p.id) : [];
+        const reviewCount = pReviews.length;
+        const avgRating = reviewCount > 0 
+          ? (pReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount).toFixed(1)
+          : 0;
+          
+        return {
+          ...p,
+          reviews: pReviews,
+          reviewCount: reviewCount,
+          avgRating: parseFloat(avgRating)
+        };
+      });
     }
   } catch (err) {
-    console.error("Failed to fetch products from Supabase. Using local fallback.", err);
+    console.error("Failed to fetch products or reviews from Supabase.", err);
   }
 }
 
@@ -709,11 +845,38 @@ export async function init() {
   
   if (supabase) {
     try {
-      const { data, error } = await supabase.from('pincodes').select('code').eq('is_active', true);
+      const { data, error } = await supabase.from('pincodes').select('code, is_cod_available').eq('is_active', true);
       if (!error && data) {
+        allowedPincodesData = data;
         allowedPincodes = data.map(p => p.code);
       }
-    } catch (e) { console.error("Error fetching pincodes", e); }
+
+      // Fetch global settings
+      const { data: settingsData, error: settingsError } = await supabase.from('store_settings').select('*').eq('id', 1).single();
+      if (!settingsError && settingsData) {
+        orderWhatsapp = settingsData.order_whatsapp || orderWhatsapp;
+        inquiryWhatsapp = settingsData.inquiry_whatsapp || inquiryWhatsapp;
+        servicesWhatsapp = settingsData.services_whatsapp || servicesWhatsapp;
+        
+        // Dynamically update UI links that rely on servicesWhatsapp
+        if (window.RanjitCart) window.RanjitCart.servicesWhatsapp = servicesWhatsapp;
+        document.querySelectorAll('a[href*="916371900967"]').forEach(link => {
+            link.href = link.href.replace('916371900967', servicesWhatsapp);
+            if (link.textContent.includes('6371900967')) {
+                link.textContent = link.textContent.replace('6371900967', servicesWhatsapp.slice(2)); // assume +91
+            }
+        });
+
+        // Apply featured section settings if on landing page
+        const isProductsPage = window.location.pathname.includes('products');
+        if (!isProductsPage) {
+            const titleEl = document.getElementById('featured-title');
+            const subtitleEl = document.getElementById('featured-subtitle');
+            if (titleEl && settingsData.featured_title) titleEl.textContent = settingsData.featured_title;
+            if (subtitleEl && settingsData.featured_subtitle) subtitleEl.textContent = settingsData.featured_subtitle;
+        }
+      }
+    } catch (e) { console.error("Error fetching initial data", e); }
   }
 
   loadCart();
@@ -721,14 +884,22 @@ export async function init() {
   // Check URL for category filters
   const urlParams = new URLSearchParams(window.location.search);
   const categoryParam = urlParams.get('category');
+  const isProductsPage = window.location.pathname.includes('products');
   
   if (categoryParam) {
     currentCategoryFilter = categoryParam;
     isViewAll = false;
+  } else if (isProductsPage) {
+    isViewAll = true;
   } else {
-    const isProductsPage = window.location.pathname.includes('products');
-    if (isProductsPage) {
-      isViewAll = true;
+    // If we're on the landing page without a URL param, check if admin set a featured category
+    if (supabase) {
+        try {
+            const { data: settingsData } = await supabase.from('store_settings').select('featured_category').eq('id', 1).single();
+            if (settingsData && settingsData.featured_category && settingsData.featured_category.trim() !== '') {
+                currentCategoryFilter = settingsData.featured_category.trim();
+            }
+        } catch (e) {}
     }
   }
 
@@ -781,6 +952,32 @@ export async function init() {
         if (allowedPincodes.includes(val)) {
           if(pincodeIcon) pincodeIcon.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>';
           if(pincodeErr) pincodeErr.classList.add('hidden');
+          
+          // COD Availability Check
+          const pinObj = allowedPincodesData.find(p => p.code === val);
+          const codBox = document.getElementById('cod-payment-box');
+          const codRadio = document.querySelector('input[name="payment-method"][value="cod"]');
+          const codLabel = document.getElementById('cod-payment-label');
+          const codSubtext = document.getElementById('cod-payment-subtext');
+          
+          if (codBox && codRadio && pinObj) {
+            if (pinObj.is_cod_available) {
+              codBox.classList.remove('opacity-50', 'bg-gray-50');
+              codRadio.disabled = false;
+              if (codLabel) codLabel.classList.remove('cursor-not-allowed');
+              if (codSubtext) codSubtext.classList.add('hidden');
+            } else {
+              codBox.classList.add('opacity-50', 'bg-gray-50');
+              codRadio.disabled = true;
+              if (codLabel) codLabel.classList.add('cursor-not-allowed');
+              if (codSubtext) codSubtext.classList.remove('hidden');
+              // Revert to UPI if they had COD selected somehow
+              if (codRadio.checked) {
+                document.querySelector('input[name="payment-method"][value="upi"]').checked = true;
+                if(window.RanjitCart.togglePaymentMethod) window.RanjitCart.togglePaymentMethod();
+              }
+            }
+          }
         } else {
           if(pincodeIcon) pincodeIcon.innerHTML = '<i data-lucide="x-circle" class="w-5 h-5 text-red-500"></i>';
           if(pincodeErr) pincodeErr.classList.remove('hidden');
@@ -804,55 +1001,257 @@ export async function init() {
   if (viewAllBtn) viewAllBtn.addEventListener('click', showAllProducts);
 }
 
-// Expose to global for inline onclick handlers
-window.RanjitCart = {
-  addToCart,
-  removeFromCart,
-  updateQty,
-  buyNow,
-  openCartDrawer,
-  closeCartDrawer,
-  openCheckoutModal,
-  closeCheckoutModal,
-  placeOrder,
-  filterProducts,
-  clearFilter,
-  showAllProducts,
-  applyCoupon,
-  checkDrawerPincode: function() {
-    const input = document.getElementById('drawer-pincode');
-    const msg = document.getElementById('drawer-pincode-msg');
-    
-    if (!input) {
-      alert("Input field not found!");
-      return;
-    }
-    if (!msg) {
-      alert("Message element not found!");
-      return;
-    }
-
-    const val = input.value.trim();
-    if (val.length !== 6 || !/^\d{6}$/.test(val)) {
-      msg.textContent = "Please enter a valid 6-digit pincode.";
-      msg.className = "text-xs mt-2 font-semibold text-amber-500 block";
-      return;
-    }
-
-    if (typeof allowedPincodes === 'undefined' || !Array.isArray(allowedPincodes)) {
-      msg.textContent = "Still loading delivery areas. Please try again in a few seconds.";
-      msg.className = "text-xs mt-2 font-semibold text-amber-500 block";
-      return;
-    }
-
-    if (allowedPincodes.includes(val)) {
-      msg.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4 inline mr-1"></i>Great! Delivery is available in your area.';
-      msg.className = "text-sm mt-3 font-semibold text-emerald-600 flex items-center bg-emerald-50 p-2 rounded-lg border border-emerald-100";
-    } else {
-      msg.innerHTML = '<i data-lucide="x-circle" class="w-4 h-4 inline mr-1"></i>Sorry, we don\'t deliver to this area yet.';
-      msg.className = "text-sm mt-3 font-semibold text-red-600 flex items-center bg-red-50 p-2 rounded-lg border border-red-100";
-    }
-    
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+export function togglePaymentMethod() {
+  const method = document.querySelector('input[name="payment-method"]:checked')?.value;
+  const upiSec = document.getElementById('upi-payment-section');
+  const codSec = document.getElementById('cod-payment-section');
+  
+  if (!upiSec || !codSec) return;
+  
+  if (method === 'upi') {
+    upiSec.classList.remove('hidden');
+    codSec.classList.add('hidden');
+  } else if (method === 'cod') {
+    upiSec.classList.add('hidden');
+    codSec.classList.remove('hidden');
   }
-};
+}
+
+export function generateCaptcha() {
+  const num1 = Math.floor(Math.random() * 10) + 1;
+  const num2 = Math.floor(Math.random() * 10) + 1;
+  window.currentCaptchaAnswer = num1 + num2;
+  
+  const qEl = document.getElementById('captcha-question');
+  if (qEl) qEl.textContent = `${num1} + ${num2} = `;
+  
+  const aEl = document.getElementById('captcha-answer');
+  if (aEl) aEl.value = '';
+  
+  const err = document.getElementById('captcha-error');
+  if (err) err.classList.add('hidden');
+}
+
+export function checkDrawerPincode() {
+  const input = document.getElementById('drawer-pincode');
+  const msg = document.getElementById('drawer-pincode-msg');
+  
+  if (!input) {
+    alert("Input field not found!");
+    return;
+  }
+  if (!msg) {
+    alert("Message element not found!");
+    return;
+  }
+
+  const val = input.value.trim();
+  if (val.length !== 6 || !/^\d{6}$/.test(val)) {
+    msg.textContent = "Please enter a valid 6-digit pincode.";
+    msg.className = "text-xs mt-2 font-semibold text-amber-500 block";
+    return;
+  }
+
+  if (typeof allowedPincodes === 'undefined' || !Array.isArray(allowedPincodes)) {
+    msg.textContent = "Still loading delivery areas. Please try again in a few seconds.";
+    msg.className = "text-xs mt-2 font-semibold text-amber-500 block";
+    return;
+  }
+
+  if (allowedPincodes.includes(val)) {
+    verifiedPincode = val;
+    msg.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4 inline mr-1"></i>Great! Delivery is available in your area.';
+    msg.className = "text-sm mt-3 font-semibold text-emerald-600 flex items-center bg-emerald-50 p-2 rounded-lg border border-emerald-100";
+    renderCartDrawerItems();
+  } else {
+    verifiedPincode = null;
+    msg.innerHTML = '<i data-lucide="x-circle" class="w-4 h-4 inline mr-1"></i>Sorry, we don\'t deliver to this area yet.';
+    msg.className = "text-sm mt-3 font-semibold text-red-600 flex items-center bg-red-50 p-2 rounded-lg border border-red-100";
+    renderCartDrawerItems();
+  }
+  
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+// ─── TRACK ORDER & REVIEWS ───────────────────────────────────
+
+export async function trackOrder() {
+  const orderId = document.getElementById('track-order-id').value.trim().toUpperCase();
+  const phone = document.getElementById('track-order-phone').value.trim();
+  const btn = document.getElementById('track-order-btn');
+  const resultDiv = document.getElementById('track-order-result');
+
+  if (!orderId || !phone) return;
+
+  btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Tracking...`;
+  btn.disabled = true;
+
+  try {
+    const { data: order, error } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('id', orderId)
+      .eq('customer_phone', phone)
+      .single();
+
+    if (error || !order) {
+      resultDiv.innerHTML = `<p class="text-red-500 font-semibold text-center"><i data-lucide="alert-circle" class="w-5 h-5 inline"></i> Order not found. Check your Order ID and Phone Number.</p>`;
+      resultDiv.classList.remove('hidden');
+      return;
+    }
+
+    // Render Order Details
+    let statusColor = 'gray';
+    if(order.status === 'Processing') statusColor = 'amber';
+    if(order.status === 'Shipped') statusColor = 'blue';
+    if(order.status === 'Delivered') statusColor = 'emerald';
+    if(order.status === 'Cancelled') statusColor = 'red';
+
+    const itemsHTML = order.items.map(item => {
+      // Find the product to get the image
+      const product = PRODUCTS.find(p => p.id === item.id) || item;
+      const productImg = product.image || '';
+      
+      const reviewBtn = order.status === 'Delivered' 
+        ? `<button onclick="window.RanjitCart.openWriteReview(${item.id}, '${item.name.replace(/'/g, "\\'")}', '${(product.categories && product.categories.length > 0 ? product.categories[0] : 'General')}', '${productImg}', '${order.id}', '${order.customer_name.replace(/'/g, "\\'")}')" class="mt-2 text-xs font-bold text-amber-600 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"><i data-lucide="star" class="w-3 h-3 fill-amber-600"></i> Write Review</button>` 
+        : '';
+
+      return `
+        <div class="flex gap-4 p-3 bg-white rounded-lg border border-gray-100 items-center">
+          <img src="${productImg}" class="w-16 h-16 object-cover rounded shadow-sm">
+          <div class="flex-1">
+            <h4 class="font-bold text-gray-900 text-sm">${item.name}</h4>
+            <p class="text-xs text-gray-500">Qty: ${item.qty} × ₹${item.price}</p>
+            ${reviewBtn}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    resultDiv.innerHTML = `
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+          <div>
+            <p class="text-xs text-gray-500 font-semibold uppercase">Order Status</p>
+            <h3 class="text-lg font-outfit font-bold text-${statusColor}-600">${order.status}</h3>
+          </div>
+          <div class="text-right">
+            <p class="text-xs text-gray-500 font-semibold uppercase">Total</p>
+            <h3 class="text-lg font-outfit font-bold text-gray-900">₹${order.total_amount}</h3>
+          </div>
+        </div>
+        <div class="p-4 space-y-3 max-h-64 overflow-y-auto custom-scrollbar">
+          ${itemsHTML}
+        </div>
+      </div>
+    `;
+    resultDiv.classList.remove('hidden');
+
+  } catch (err) {
+    console.error("Error tracking order", err);
+    resultDiv.innerHTML = `<p class="text-red-500 font-semibold text-center">An error occurred.</p>`;
+    resultDiv.classList.remove('hidden');
+  } finally {
+    btn.innerHTML = `<i data-lucide="search" class="w-5 h-5"></i> Track Order`;
+    btn.disabled = false;
+    if(typeof lucide !== 'undefined') lucide.createIcons();
+  }
+}
+
+export function openWriteReview(productId, productName, productCat, productImg, orderId, customerName) {
+  document.getElementById('review-product-id').value = productId;
+  document.getElementById('review-order-id').value = orderId;
+  document.getElementById('review-customer-name').value = customerName;
+  document.getElementById('review-product-name').textContent = productName;
+  document.getElementById('review-product-cat').textContent = productCat;
+  document.getElementById('review-product-img').src = productImg;
+  
+  // Reset stars
+  document.getElementById('review-rating').value = '';
+  document.querySelectorAll('.star-btn i').forEach(icon => {
+    icon.classList.remove('fill-amber-500');
+  });
+  document.getElementById('review-comment').value = '';
+  document.getElementById('review-rating-error').classList.add('hidden');
+
+  if (typeof window.closeModal === 'function') {
+    window.closeModal('track-order-modal');
+  } else {
+    document.getElementById('track-order-modal').classList.add('hidden');
+  }
+  
+  if (typeof window.openModal === 'function') {
+    window.openModal('write-review-modal');
+  } else {
+    document.getElementById('write-review-modal').classList.remove('hidden');
+  }
+}
+
+export async function submitReview() {
+  const productId = document.getElementById('review-product-id').value;
+  const orderId = document.getElementById('review-order-id').value;
+  const customerName = document.getElementById('review-customer-name').value;
+  const rating = document.getElementById('review-rating').value;
+  const comment = document.getElementById('review-comment').value.trim();
+  
+  if (!rating) {
+    document.getElementById('review-rating-error').classList.remove('hidden');
+    return;
+  }
+
+  const btn = document.getElementById('submit-review-btn');
+  btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Submitting...`;
+  btn.disabled = true;
+
+  try {
+    const { error } = await supabase.from('reviews').insert({
+      product_id: parseInt(productId),
+      order_id: orderId,
+      customer_name: customerName,
+      rating: parseInt(rating),
+      comment: comment
+    });
+
+    if (error) throw error;
+
+    if (typeof window.closeModal === 'function') {
+      window.closeModal('write-review-modal');
+    } else {
+      document.getElementById('write-review-modal').classList.add('hidden');
+    }
+    showToast("Review submitted successfully! Thank you.");
+    
+    // Refresh products to show updated rating
+    initProducts().then(() => renderProducts());
+    
+  } catch (err) {
+    console.error("Error submitting review", err);
+    alert("Failed to submit review.");
+  } finally {
+    btn.innerHTML = `Submit Review`;
+    btn.disabled = false;
+  }
+}
+
+// Attach event listeners for Star Rating in Write Review Modal
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.star-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const rating = parseInt(e.currentTarget.dataset.rating);
+        document.getElementById('review-rating').value = rating;
+        document.getElementById('review-rating-error').classList.add('hidden');
+        
+        document.querySelectorAll('.star-btn i').forEach((icon, index) => {
+          if (index < rating) {
+            icon.classList.add('fill-amber-500', 'text-amber-500');
+            icon.classList.remove('text-gray-300');
+          } else {
+            icon.classList.remove('fill-amber-500', 'text-amber-500');
+            icon.classList.add('text-gray-300');
+          }
+        });
+      });
+    });
+  });
+}

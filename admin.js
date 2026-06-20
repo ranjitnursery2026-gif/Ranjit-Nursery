@@ -14,6 +14,15 @@ let allCategories = [];
 
 // Initialize Admin Dashboard
 async function initAdmin() {
+    if (sessionStorage.getItem('admin_auth') !== 'true') {
+        document.getElementById('admin-login').classList.remove('hidden');
+        document.getElementById('admin-dashboard').classList.add('hidden');
+        return;
+    }
+    
+    document.getElementById('admin-login').classList.add('hidden');
+    document.getElementById('admin-dashboard').classList.remove('hidden');
+
     if (!supabase) {
         productListEl.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-red-500 font-medium">Supabase Connection Error. Check supabase.js configuration.</td></tr>`;
         return;
@@ -21,13 +30,53 @@ async function initAdmin() {
     await fetchProducts();
 }
 
+window.loginAdmin = async () => {
+    const pwdInput = document.getElementById('admin-password-input');
+    const errEl = document.getElementById('login-error');
+    const btn = document.getElementById('login-btn');
+    const pwd = pwdInput.value.trim();
+    
+    if(!pwd) return;
+    
+    btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Verifying...`;
+    btn.disabled = true;
+    errEl.classList.add('hidden');
+    
+    try {
+        const { data, error } = await supabase.from('store_settings').select('admin_password').eq('id', 1).single();
+        if (error) throw error;
+        
+        if (data && data.admin_password === pwd) {
+            sessionStorage.setItem('admin_auth', 'true');
+            initAdmin(); // reload dashboard
+        } else {
+            errEl.classList.remove('hidden');
+            pwdInput.value = '';
+        }
+    } catch(err) {
+        console.error("Login error:", err);
+        alert("Database connection error or settings missing. Run setup.sql first.");
+    } finally {
+        btn.innerHTML = `<i data-lucide="log-in" class="w-5 h-5"></i> Access Dashboard`;
+        btn.disabled = false;
+        if(typeof lucide !== 'undefined') lucide.createIcons();
+    }
+};
+
+window.logoutAdmin = () => {
+    sessionStorage.removeItem('admin_auth');
+    document.getElementById('admin-login').classList.remove('hidden');
+    document.getElementById('admin-dashboard').classList.add('hidden');
+    document.getElementById('admin-password-input').value = '';
+};
+
 // Fetch all products
 async function fetchProducts() {
     try {
         const { data, error } = await supabase
             .from('products')
             .select('*')
-            .order('id', { ascending: false });
+            .order('name', { ascending: true });
 
         if (error) throw error;
         products = data || [];
@@ -88,11 +137,21 @@ function renderProducts() {
         
         const catText = (cats && cats.length) ? cats.slice(0,2).join(', ') + (cats.length > 2 ? '...' : '') : 'None';
         
-        const isAvailable = p.is_available;
+        const availStatus = p.availability_status || 'In Stock';
         const stockCount = p.stock !== undefined && p.stock !== null ? p.stock : 10;
-        const statusBadge = isAvailable && stockCount > 0
-            ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> In Stock (${stockCount})</span>`
-            : `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 text-red-700 text-xs font-bold border border-red-100"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Out of Stock</span>`;
+        
+        let statusBadge = '';
+        if (availStatus === 'In Stock') {
+            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> In Stock (${stockCount})</span>`;
+        } else if (availStatus === 'Out of Stock') {
+            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 text-red-700 text-xs font-bold border border-red-100"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Out of Stock</span>`;
+        } else if (availStatus === 'Coming Soon') {
+            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500 text-white text-xs font-bold shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-white"></span> Coming Soon</span>`;
+        } else if (availStatus === 'Not Available') {
+            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-50 text-gray-700 text-xs font-bold border border-gray-200"><span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Not Available</span>`;
+        } else {
+            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-50 text-gray-700 text-xs font-bold border border-gray-200">${availStatus}</span>`;
+        }
 
         const isCarpetGrass = p.name.toLowerCase().includes('carpet grass');
         let priceText = `₹${p.price}`;
@@ -127,12 +186,6 @@ function renderProducts() {
                     <div class="flex items-center justify-end gap-2">
                         <button onclick="window.openEditModal(${p.id})" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
                             <i data-lucide="edit-2" class="w-4 h-4"></i> Edit
-                        </button>
-                        <button onclick="toggleStock(${p.id}, ${!isAvailable})" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
-                            isAvailable ? 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 hover:text-red-600' : 'bg-primary text-white hover:bg-green-800'
-                        }">
-                            <i data-lucide="${isAvailable ? 'x-circle' : 'check-circle'}" class="w-4 h-4"></i>
-                            ${isAvailable ? 'Out of Stock' : 'Mark In Stock'}
                         </button>
                         <button onclick="window.deleteProduct(${p.id})" class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors bg-white border border-gray-200 text-gray-400 hover:bg-red-50 hover:text-red-600 hover:border-red-200" title="Delete Product">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -236,6 +289,11 @@ window.openEditModal = (id) => {
     document.getElementById('p-badge').value = product.badge || '';
     document.getElementById('p-stock').value = product.stock !== undefined && product.stock !== null ? product.stock : 10;
     
+    const availElement = document.getElementById('p-availability');
+    if(availElement) {
+        availElement.value = product.availability_status || 'In Stock';
+    }
+    
     let cats = product.categories;
     if (typeof cats === 'string') {
         try { cats = JSON.parse(cats); } catch(e) { cats = []; }
@@ -266,13 +324,15 @@ form.addEventListener('submit', async (e) => {
         const image = document.getElementById('p-image').value;
         const desc = document.getElementById('p-desc').value || null;
         const badge = document.getElementById('p-badge').value || null;
+        const availElement = document.getElementById('p-availability');
+        const availability_status = availElement ? availElement.value : 'In Stock';
         const categoriesRaw = document.getElementById('p-categories').value;
         
         const categories = categoriesRaw.split(',').map(c => c.trim()).filter(Boolean);
 
         if (idVal) {
             // UPDATE EXISTING
-            const updateProduct = { name, price, mrp, stock, image, description: desc, badge, categories };
+            const updateProduct = { name, price, mrp, stock, image, description: desc, badge, categories, availability_status };
             const { error } = await supabase.from('products').update(updateProduct).eq('id', parseInt(idVal));
             if (error) throw error;
             showToast("Product updated successfully!");
@@ -290,7 +350,8 @@ form.addEventListener('submit', async (e) => {
                 description: desc,
                 badge,
                 categories,
-                is_available: true
+                is_available: true,
+                availability_status
             };
             const { error } = await supabase.from('products').insert([newProduct]);
             if (error) throw error;
@@ -411,6 +472,11 @@ window.switchAdminView = (viewName) => {
     document.getElementById('view-products').classList.add('hidden');
     document.getElementById('view-orders').classList.add('hidden');
     document.getElementById('view-pincodes').classList.add('hidden');
+    document.getElementById('view-settings').classList.add('hidden');
+    const viewReviews = document.getElementById('view-reviews');
+    if(viewReviews) viewReviews.classList.add('hidden');
+    const viewCategories = document.getElementById('view-categories');
+    if(viewCategories) viewCategories.classList.add('hidden');
     
     const resetNav = (id) => {
         const el = document.getElementById(id);
@@ -423,6 +489,9 @@ window.switchAdminView = (viewName) => {
     resetNav('nav-products');
     resetNav('nav-orders');
     resetNav('nav-pincodes');
+    resetNav('nav-settings');
+    resetNav('nav-reviews');
+    resetNav('nav-categories');
 
     if (viewName === 'products') {
         document.getElementById('view-products').classList.remove('hidden');
@@ -449,7 +518,36 @@ window.switchAdminView = (viewName) => {
             nav.classList.replace('border-transparent', 'border-primary');
             nav.classList.add('font-bold');
         }
-        fetchAdminPincodes();
+        window.fetchAdminPincodes();
+    } else if (viewName === 'settings') {
+        document.getElementById('view-settings').classList.remove('hidden');
+        const nav = document.getElementById('nav-settings');
+        if (nav) {
+            nav.classList.replace('text-gray-500', 'text-primary');
+            nav.classList.replace('border-transparent', 'border-primary');
+            nav.classList.add('font-bold');
+        }
+        window.fetchSettings();
+    } else if (viewName === 'reviews') {
+        const viewReviews = document.getElementById('view-reviews');
+        if(viewReviews) viewReviews.classList.remove('hidden');
+        const nav = document.getElementById('nav-reviews');
+        if (nav) {
+            nav.classList.replace('text-gray-500', 'text-primary');
+            nav.classList.replace('border-transparent', 'border-primary');
+            nav.classList.add('font-bold');
+        }
+        fetchReviews();
+    } else if (viewName === 'categories') {
+        const viewCategories = document.getElementById('view-categories');
+        if(viewCategories) viewCategories.classList.remove('hidden');
+        const nav = document.getElementById('nav-categories');
+        if (nav) {
+            nav.classList.replace('text-gray-500', 'text-primary');
+            nav.classList.replace('border-transparent', 'border-primary');
+            nav.classList.add('font-bold');
+        }
+        window.fetchCategoryData();
     }
 };
 
@@ -514,10 +612,32 @@ function renderOrders() {
                     </select>
                 </td>
                 <td class="px-6 py-4 text-right font-bold text-gray-900 whitespace-nowrap">₹${o.total_amount.toLocaleString('en-IN')}</td>
+                <td class="px-6 py-4 text-center">
+                    <button onclick="window.deleteOrder('${o.id}')" class="text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full p-1.5 transition-colors focus:outline-none" title="Delete Order">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </td>
             </tr>
         `;
     }).join('');
+    
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 }
+
+window.deleteOrder = async (id) => {
+    if(!supabase || !confirm(`Are you sure you want to permanently delete order ${id}?`)) return;
+    try {
+        const { error } = await supabase.from('orders').delete().eq('id', id);
+        if (error) throw error;
+        
+        realOrders = realOrders.filter(o => o.id !== id);
+        renderOrders();
+        showToast(`Order ${id} deleted successfully!`);
+    } catch (err) {
+        console.error("Error deleting order:", err);
+        alert("Failed to delete order.");
+    }
+};
 
 window.updateOrderStatus = async (id, newStatus) => {
     if(!supabase) return;
@@ -540,6 +660,19 @@ window.updateOrderStatus = async (id, newStatus) => {
 
 // Start
 document.addEventListener('DOMContentLoaded', initAdmin);
+
+window.toggleCod = async (id, newStatus) => {
+    if (!supabase) return;
+    try {
+        const { error } = await supabase.from('pincodes').update({ is_cod_available: newStatus }).eq('id', id);
+        if (error) throw error;
+        showToast(`COD ${newStatus ? 'enabled' : 'disabled'} for pincode.`);
+        await fetchAdminPincodes();
+    } catch (err) {
+        console.error("Error toggling COD:", err);
+        alert("Failed to toggle COD: " + err.message);
+    }
+};
 
 // ─── PINCODE MANAGEMENT ──────────────────────────────────────
 let adminPincodes = [];
@@ -575,8 +708,12 @@ function renderPincodes() {
         <div class="flex items-center gap-2 px-3 py-1.5 rounded-full border ${p.is_active ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-gray-50 border-gray-200 text-gray-500'} font-semibold text-sm shadow-sm transition-all hover:shadow-md">
             <i data-lucide="map-pin" class="w-4 h-4"></i>
             ${p.code}
+            <div class="h-4 w-px bg-gray-300 mx-1"></div>
+            <button onclick="window.toggleCod('${p.id}', ${!p.is_cod_available})" class="flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold transition-colors ${p.is_cod_available ? 'bg-emerald-200 text-emerald-900 hover:bg-emerald-300' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}" title="${p.is_cod_available ? 'Disable COD' : 'Enable COD'}">
+                <i data-lucide="${p.is_cod_available ? 'check' : 'x'}" class="w-3 h-3"></i> COD
+            </button>
             <button onclick="window.deletePincode('${p.id}')" class="ml-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full p-0.5 transition-colors focus:outline-none" title="Remove">
-                <i data-lucide="x" class="w-4 h-4"></i>
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
         </div>
     `).join('');
@@ -623,6 +760,104 @@ window.deletePincode = async (id) => {
     } catch (err) {
         console.error("Error deleting pincode:", err);
         alert("Failed to delete pincode.");
+    }
+};
+
+// ─── SETTINGS MANAGEMENT ─────────────────────────────────────
+window.fetchSettings = async () => {
+    if (!supabase) return;
+    try {
+        const { data, error } = await supabase.from('store_settings').select('*').eq('id', 1).single();
+        if (error && error.code !== 'PGRST116') throw error; // ignore no rows error
+        if (data) {
+            const orderWa = document.getElementById('setting-order-whatsapp');
+            const inquiryWa = document.getElementById('setting-inquiry-whatsapp');
+            const servicesWa = document.getElementById('setting-services-whatsapp');
+            const adminPwd = document.getElementById('setting-admin-password');
+            if (orderWa) orderWa.value = data.order_whatsapp || '';
+            if (inquiryWa) inquiryWa.value = data.inquiry_whatsapp || '';
+            if (servicesWa) servicesWa.value = data.services_whatsapp || '';
+            if (adminPwd) adminPwd.value = data.admin_password || '';
+
+            const featuredTitle = document.getElementById('setting-featured-title');
+            const featuredSubtitle = document.getElementById('setting-featured-subtitle');
+            const featuredCategory = document.getElementById('setting-featured-category');
+            if (featuredTitle) featuredTitle.value = data.featured_title || 'Our Core Products';
+            if (featuredSubtitle) featuredSubtitle.value = data.featured_subtitle || 'Explore our diverse collection of premium plants, gardening supplies, and exotic specialities perfect for any space.';
+            if (featuredCategory) featuredCategory.value = data.featured_category || '';
+        }
+    } catch (err) {
+        console.error("Error fetching settings:", err);
+    }
+};
+
+window.saveSettings = async () => {
+    if (!supabase) return;
+    const btn = document.getElementById('save-settings-btn');
+    const orderWa = document.getElementById('setting-order-whatsapp').value.trim();
+    const inquiryWa = document.getElementById('setting-inquiry-whatsapp').value.trim();
+    const servicesWa = document.getElementById('setting-services-whatsapp').value.trim();
+    const adminPwd = document.getElementById('setting-admin-password').value.trim();
+
+    if (!orderWa || !inquiryWa || !servicesWa || !adminPwd) {
+        alert("All fields are required.");
+        return;
+    }
+
+    btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Saving...`;
+    btn.disabled = true;
+
+    try {
+        const { error } = await supabase.from('store_settings').upsert({
+            id: 1,
+            order_whatsapp: orderWa,
+            inquiry_whatsapp: inquiryWa,
+            services_whatsapp: servicesWa,
+            admin_password: adminPwd
+        });
+        if (error) throw error;
+        showToast("Settings saved successfully!");
+    } catch (err) {
+        console.error("Error saving settings:", err);
+        alert("Failed to save settings. Ensure setup.sql was executed.");
+    } finally {
+        btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Save Settings`;
+        btn.disabled = false;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+};
+
+window.saveFeaturedSettings = async () => {
+    if (!supabase) return;
+    const btn = document.querySelector('#featured-settings-form button[type="submit"]');
+    const title = document.getElementById('setting-featured-title').value.trim();
+    const subtitle = document.getElementById('setting-featured-subtitle').value.trim();
+    const category = document.getElementById('setting-featured-category').value.trim();
+
+    if (!title) {
+        alert("Section Title is required.");
+        return;
+    }
+
+    btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Saving...`;
+    btn.disabled = true;
+
+    try {
+        const { error } = await supabase.from('store_settings').update({
+            featured_title: title,
+            featured_subtitle: subtitle,
+            featured_category: category
+        }).eq('id', 1);
+        
+        if (error) throw error;
+        showToast("Featured section settings saved successfully!");
+    } catch (err) {
+        console.error("Error saving featured settings:", err);
+        alert("Failed to save settings. Ensure setup.sql was executed.");
+    } finally {
+        btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Save Featured Settings`;
+        btn.disabled = false;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 };
 
@@ -673,3 +908,239 @@ if (catInput && catSuggestions) {
         }
     });
 }
+
+// ─── REVIEWS MANAGEMENT ──────────────────────────────────────
+
+let allReviews = [];
+
+async function fetchReviews() {
+    const reviewList = document.getElementById('admin-reviews-list');
+    if (!reviewList || !supabase) return;
+
+    reviewList.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-400"><i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto mb-2"></i> Loading reviews...</td></tr>`;
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    try {
+        const { data, error } = await supabase
+            .from('reviews')
+            .select('*, products(name, image)')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        allReviews = data || [];
+        renderReviews();
+    } catch (err) {
+        console.error("Error fetching reviews:", err);
+        reviewList.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-red-500 font-medium">Failed to load reviews.</td></tr>`;
+    }
+}
+
+function renderReviews() {
+    const reviewList = document.getElementById('admin-reviews-list');
+    if (!reviewList) return;
+    
+    if (allReviews.length === 0) {
+        reviewList.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No reviews found.</td></tr>`;
+        return;
+    }
+
+    reviewList.innerHTML = allReviews.map(r => {
+        const dateStr = new Date(r.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+        const product = r.products || { name: 'Unknown Product', image: '' };
+        
+        let starsHTML = '';
+        for (let i = 1; i <= 5; i++) {
+            starsHTML += `<i data-lucide="star" class="w-3 h-3 ${i <= r.rating ? 'text-amber-500 fill-amber-500' : 'text-gray-300'}"></i>`;
+        }
+
+        return `
+            <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <img src="${product.image}" class="w-10 h-10 rounded-md object-cover border border-gray-100">
+                        <span class="font-bold text-gray-900 text-sm">${product.name}</span>
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="text-sm font-bold text-gray-900">${r.customer_name}</div>
+                    <div class="text-xs text-gray-500 uppercase">ORD: ${r.order_id}</div>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-0.5 mb-1">${starsHTML}</div>
+                    <p class="text-sm text-gray-700 italic max-w-xs truncate" title="${r.comment || ''}">"${r.comment || 'No comment'}"</p>
+                </td>
+                <td class="px-6 py-4 text-gray-500 text-sm whitespace-nowrap">${dateStr}</td>
+                <td class="px-6 py-4 text-center">
+                    <button onclick="window.deleteReview(${r.id})" class="text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full p-1.5 transition-colors focus:outline-none" title="Delete Review">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+    
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+window.deleteReview = async (id) => {
+    if(!supabase || !confirm("Are you sure you want to permanently delete this review?")) return;
+    try {
+        const { error } = await supabase.from('reviews').delete().eq('id', id);
+        if (error) throw error;
+        
+        allReviews = allReviews.filter(r => r.id !== id);
+        renderReviews();
+        showToast("Review deleted successfully!");
+    } catch (err) {
+        console.error("Error deleting review:", err);
+        alert("Failed to delete review.");
+    }
+};
+
+// ─── CATEGORY MANAGEMENT ─────────────────────────────────────
+
+let currentCategoryData = {};
+
+window.fetchCategoryData = async () => {
+    const container = document.getElementById('category-builder-container');
+    const loader = document.getElementById('category-loading');
+    if (!container || !supabase) return;
+    
+    container.innerHTML = '';
+    loader.classList.remove('hidden');
+
+    try {
+        const { data, error } = await supabase.from('store_category_data').select('data').eq('id', 1).single();
+        if (error) throw error;
+        currentCategoryData = data.data || {};
+        window.renderCategoryBuilder();
+    } catch (err) {
+        console.error("Error fetching categories:", err);
+        alert("Failed to load categories.");
+    } finally {
+        loader.classList.add('hidden');
+    }
+};
+
+window.renderCategoryBuilder = () => {
+    const container = document.getElementById('category-builder-container');
+    if (!container) return;
+    
+    let html = '';
+    
+    Object.keys(currentCategoryData).forEach(rootKey => {
+        const groups = currentCategoryData[rootKey];
+        
+        let groupsHtml = '';
+        groups.forEach((group, gIndex) => {
+            groupsHtml += `
+                <div class="border border-gray-100 rounded-lg p-4 bg-white shadow-sm relative group mb-4">
+                    <button onclick="window.deleteGroup('${rootKey.replace(/'/g, "\\'")}', ${gIndex})" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1" title="Delete Group">
+                        <i data-lucide="trash" class="w-4 h-4"></i>
+                    </button>
+                    <div class="mb-3">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Group Title</label>
+                        <input type="text" value="${group.title}" onchange="window.updateGroupTitle('${rootKey.replace(/'/g, "\\'")}', ${gIndex}, this.value)" class="w-full border-b border-gray-200 focus:border-primary outline-none py-1 font-bold text-gray-800 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Links (Comma separated)</label>
+                        <textarea rows="2" onchange="window.updateGroupLinks('${rootKey.replace(/'/g, "\\'")}', ${gIndex}, this.value)" class="w-full border border-gray-200 rounded p-2 text-sm text-gray-600 focus:ring-1 focus:ring-primary outline-none resize-none transition-shadow">${group.links.join(', ')}</textarea>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 relative">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 border-b border-gray-200 pb-3 gap-3">
+                    <input type="text" value="${rootKey}" onchange="window.updateRootKey('${rootKey.replace(/'/g, "\\'")}', this.value)" class="text-xl font-bold text-gray-900 bg-transparent border-b-2 border-transparent focus:border-primary outline-none px-1 py-0.5 w-full sm:w-1/2 transition-colors">
+                    <div class="flex items-center gap-2">
+                        <button onclick="window.addGroup('${rootKey.replace(/'/g, "\\'")}')" class="text-sm font-semibold text-primary hover:text-green-800 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Add Group
+                        </button>
+                        <button onclick="window.deleteRootCategory('${rootKey.replace(/'/g, "\\'")}')" class="text-sm font-semibold text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i> Delete Root
+                        </button>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    ${groupsHtml}
+                </div>
+            </div>
+        `;
+    });
+    
+    if (Object.keys(currentCategoryData).length === 0) {
+        html = `<div class="text-center py-10 border-2 border-dashed border-gray-200 rounded-xl text-gray-500">No categories found. Click "Add Root Category" to begin.</div>`;
+    }
+    
+    container.innerHTML = html;
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+};
+
+window.addRootCategory = () => {
+    let name = "New Category";
+    let counter = 1;
+    while(currentCategoryData[name]) {
+        name = "New Category " + counter;
+        counter++;
+    }
+    currentCategoryData[name] = [];
+    window.renderCategoryBuilder();
+};
+
+window.deleteRootCategory = (rootKey) => {
+    if(confirm(`Delete the entire category "${rootKey}"?`)) {
+        delete currentCategoryData[rootKey];
+        window.renderCategoryBuilder();
+    }
+};
+
+window.updateRootKey = (oldKey, newKey) => {
+    if(oldKey === newKey || !newKey.trim()) return;
+    if(currentCategoryData[newKey]) {
+        alert("A category with this name already exists.");
+        window.renderCategoryBuilder(); // revert UI
+        return;
+    }
+    // Maintain object order by recreating
+    const newData = {};
+    Object.keys(currentCategoryData).forEach(k => {
+        if(k === oldKey) newData[newKey] = currentCategoryData[oldKey];
+        else newData[k] = currentCategoryData[k];
+    });
+    currentCategoryData = newData;
+    window.renderCategoryBuilder();
+};
+
+window.addGroup = (rootKey) => {
+    currentCategoryData[rootKey].push({ title: "New Group", links: [] });
+    window.renderCategoryBuilder();
+};
+
+window.deleteGroup = (rootKey, gIndex) => {
+    if(confirm("Delete this group?")) {
+        currentCategoryData[rootKey].splice(gIndex, 1);
+        window.renderCategoryBuilder();
+    }
+};
+
+window.updateGroupTitle = (rootKey, gIndex, title) => {
+    currentCategoryData[rootKey][gIndex].title = title.trim();
+};
+
+window.updateGroupLinks = (rootKey, gIndex, linksStr) => {
+    currentCategoryData[rootKey][gIndex].links = linksStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
+};
+
+window.saveCategoryData = async () => {
+    if (!supabase) return;
+    try {
+        const { error } = await supabase.from('store_category_data').update({ data: currentCategoryData }).eq('id', 1);
+        if (error) throw error;
+        showToast("Category data saved successfully!");
+    } catch (err) {
+        console.error("Error saving categories:", err);
+        alert("Failed to save category data.");
+    }
+};

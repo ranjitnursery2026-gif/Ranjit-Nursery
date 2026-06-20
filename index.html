@@ -54,10 +54,15 @@
           <a href="#services" class="text-gray-600 hover:text-primary transition-colors">Services</a>
           <a href="#contact" class="text-gray-600 hover:text-primary transition-colors">Contact</a>
           
-          <div class="flex items-center gap-3 border-l border-gray-200 pl-4 ml-2">
+          <div class="flex items-center gap-2 lg:gap-3 border-l border-gray-200 pl-3 ml-1 lg:pl-4 lg:ml-2">
             <!-- Search Icon -->
-            <button class="text-gray-600 hover:text-primary transition-colors p-2" title="Search Products" onclick="document.getElementById('search-modal').classList.remove('hidden')">
+            <button class="text-gray-600 hover:text-primary transition-colors p-2" title="Search Products" onclick="window.openModal('search-modal')">
               <i data-lucide="search" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Track Order -->
+            <button class="text-gray-600 hover:text-primary transition-colors p-2 flex items-center gap-1 font-semibold text-sm" title="Track Order" onclick="window.openModal('track-order-modal')">
+              <i data-lucide="truck" class="w-5 h-5"></i> <span class="hidden xl:inline">Track Order</span>
             </button>
 
             <!-- Cart Icon -->
@@ -77,7 +82,7 @@
 
         <!-- Mobile menu button -->
         <div class="md:hidden flex items-center gap-2">
-          <button class="text-gray-600 hover:text-primary transition-colors p-2" title="Search Products" onclick="document.getElementById('search-modal').classList.remove('hidden')">
+          <button class="text-gray-600 hover:text-primary transition-colors p-2" title="Search Products" onclick="window.openModal('search-modal')">
             <i data-lucide="search" class="w-5 h-5"></i>
           </button>
           <button class="cart-icon-btn relative text-gray-600 hover:text-primary transition-colors p-2">
@@ -133,6 +138,8 @@
           class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100">Products</a>
         <a href="#services"
           class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100">Services</a>
+        <a href="#" onclick="window.openModal('track-order-modal'); document.getElementById('mobile-menu').classList.add('hidden'); event.preventDefault();"
+          class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100 flex items-center gap-2"><i data-lucide="truck" class="w-4 h-4 text-primary"></i> Track Order</a>
         <a href="#contact"
           class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100">Contact</a>
       </div>
@@ -618,12 +625,10 @@
 
   <!-- Product Categories Section -->
   <section id="products" class="py-24 bg-gray-50 relative min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div
-        class="text-center max-w-3xl mx-auto mb-10 animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-        <h2 class="text-4xl md:text-5xl font-outfit font-bold text-gray-900 mb-4">Our Core Products</h2>
-        <p class="text-gray-600 text-lg">Explore our diverse collection of premium plants, gardening supplies, and
-          exotic specialities perfect for any space.</p>
+    <div class="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="text-center max-w-3xl mx-auto mb-10 animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+        <h2 id="featured-title" class="text-4xl md:text-5xl font-outfit font-bold text-gray-900 mb-4">Our Core Products</h2>
+        <p id="featured-subtitle" class="text-gray-600 text-lg">Explore our diverse collection of premium plants, gardening supplies, and exotic specialities perfect for any space.</p>
       </div>
 
 
@@ -1258,7 +1263,7 @@
     <div class="border-t border-gray-100 p-6 bg-gray-50/95 backdrop-blur-sm relative z-10">
       
       <!-- Pincode Checker -->
-      <div class="mb-5 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+      <div id="drawer-pincode-container" class="mb-5 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"><i data-lucide="map-pin" class="w-3 h-3 inline"></i> Check Delivery Availability</label>
         <div class="flex gap-2">
           <input type="text" id="drawer-pincode" maxlength="6" pattern="[0-9]{6}" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary outline-none text-sm" placeholder="Enter 6-digit Pincode">
@@ -1379,33 +1384,72 @@
         <!-- Payment Section -->
         <div>
           <h4 class="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
-            <i data-lucide="smartphone" class="w-4 h-4 text-primary"></i> Payment via UPI
+            <i data-lucide="wallet" class="w-4 h-4 text-primary"></i> Payment Method
           </h4>
-          <div
-            class="bg-gradient-to-br from-emerald-50 to-blue-50 rounded-2xl p-6 border border-emerald-100 text-center">
-            <!-- Actual QR Code Image -->
-            <div class="w-56 h-auto mx-auto bg-white rounded-2xl p-2 mb-4 shadow-md border border-emerald-200">
-              <img src="/images/upi_qr_code.png" alt="Ranjit Nursery Payment QR Code"
-                class="w-full h-auto rounded-xl" />
-            </div>
-            <p class="text-gray-600 text-sm font-medium mb-1">Scan QR Code via <strong class="text-primary">PhonePe /
-                GPay / Paytm</strong></p>
-            <p class="text-gray-400 text-xs mb-3">to complete payment</p>
+          
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <label class="cursor-pointer">
+              <input type="radio" name="payment-method" value="upi" class="peer hidden" checked onchange="window.RanjitCart.togglePaymentMethod()">
+              <div class="rounded-xl border-2 border-gray-100 p-3 text-center peer-checked:border-primary peer-checked:bg-emerald-50 transition-colors">
+                <i data-lucide="smartphone" class="w-6 h-6 mx-auto mb-1 text-gray-600 peer-checked:text-primary"></i>
+                <span class="font-bold text-sm text-gray-700">UPI Payment</span>
+              </div>
+            </label>
+            <label class="cursor-pointer" id="cod-payment-label">
+              <input type="radio" name="payment-method" value="cod" class="peer hidden" onchange="window.RanjitCart.togglePaymentMethod()">
+              <div class="rounded-xl border-2 border-gray-100 p-3 text-center peer-checked:border-primary peer-checked:bg-emerald-50 transition-colors opacity-50 bg-gray-50" id="cod-payment-box">
+                <i data-lucide="banknote" class="w-6 h-6 mx-auto mb-1 text-gray-400" id="cod-payment-icon"></i>
+                <span class="font-bold text-sm text-gray-400" id="cod-payment-text">Cash on Delivery</span>
+                <span class="block text-[10px] text-red-500 font-bold mt-1" id="cod-payment-subtext">Not available for this Pincode</span>
+              </div>
+            </label>
+          </div>
 
-            <!-- UPI ID Info -->
-            <div class="bg-white/90 rounded-lg p-3 inline-block border border-emerald-200 mt-2 min-w-[200px] shadow-sm">
-              <span class="text-xs text-emerald-600 font-semibold uppercase tracking-wider block mb-1">Or pay directly
-                to UPI ID</span>
-              <span class="font-bold text-gray-900 text-base tracking-wider break-all user-select-all cursor-pointer"
-                title="Copy to clipboard">7735227575@ibl</span>
+          <!-- UPI Section -->
+          <div id="upi-payment-section">
+            <div class="bg-gradient-to-br from-emerald-50 to-blue-50 rounded-2xl p-6 border border-emerald-100 text-center">
+              <!-- Actual QR Code Image -->
+              <div class="w-56 h-auto mx-auto bg-white rounded-2xl p-2 mb-4 shadow-md border border-emerald-200">
+                <img src="/images/upi_qr_code.png" alt="Ranjit Nursery Payment QR Code"
+                  class="w-full h-auto rounded-xl" />
+              </div>
+              <p class="text-gray-600 text-sm font-medium mb-1">Scan QR Code via <strong class="text-primary">PhonePe / GPay / Paytm</strong></p>
+              <p class="text-gray-400 text-xs mb-3">to complete payment</p>
+
+              <!-- UPI ID Info -->
+              <div class="bg-white/90 rounded-lg p-3 inline-block border border-emerald-200 mt-2 min-w-[200px] shadow-sm">
+                <span class="text-xs text-emerald-600 font-semibold uppercase tracking-wider block mb-1">Or pay directly to UPI ID</span>
+                <span class="font-bold text-gray-900 text-base tracking-wider break-all user-select-all cursor-pointer" title="Copy to clipboard">7735227575@ibl</span>
+              </div>
+            </div>
+            <div class="mt-4">
+              <label class="block text-sm font-medium text-gray-600 mb-1">Enter UPI Transaction Ref No. / UTR No. *</label>
+              <input type="text" id="checkout-utr" maxlength="12" pattern="[0-9]{12}"
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none"
+                placeholder="e.g. 412345678901 (12 digits)">
+              <p id="utr-error" class="text-xs text-red-500 mt-1 hidden font-semibold">Please enter a valid 12-digit UTR number.</p>
             </div>
           </div>
-          <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-600 mb-1">Enter UPI Transaction Ref No. / UTR No.</label>
-            <input type="text" id="checkout-utr"
-              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none"
-              placeholder="e.g. 412345678901">
+          
+          <!-- COD Section -->
+          <div id="cod-payment-section" class="hidden">
+            <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100 flex items-start gap-3">
+              <i data-lucide="info" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+              <p class="text-sm text-emerald-800 font-medium">You have selected Cash on Delivery. Your order will be confirmed after a brief verification call from our team.</p>
+            </div>
           </div>
+        </div>
+
+        <!-- Anti-Spam Captcha -->
+        <div class="mt-8 bg-gray-50 rounded-xl p-4 border border-gray-200">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Human Verification</label>
+          <div class="flex items-center gap-3">
+            <div class="bg-white px-4 py-2 rounded-lg border border-gray-300 font-bold text-lg tracking-widest text-gray-800 shadow-inner select-none" id="captcha-question">
+              <!-- JS will fill this, e.g. 5 + 3 = -->
+            </div>
+            <input type="text" id="captcha-answer" maxlength="2" class="w-20 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary text-center font-bold outline-none" placeholder="?">
+          </div>
+          <p id="captcha-error" class="text-xs text-red-500 mt-2 hidden font-semibold">Incorrect answer. Please try again.</p>
         </div>
       </div>
       <!-- Modal Footer -->
@@ -1418,13 +1462,95 @@
     </div>
   </div>
 
+  <!-- Track Order Modal -->
+  <div id="track-order-modal" class="fixed inset-0 z-[110] hidden bg-gray-900/80 backdrop-blur-sm flex justify-center items-center pt-20 px-4 opacity-0 transition-opacity duration-300 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-transform duration-300">
+      <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="text-2xl font-outfit font-bold text-gray-900">Track Your Order</h2>
+        <button onclick="window.closeModal('track-order-modal')" class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-6 bg-gray-50">
+        <form id="track-order-form" onsubmit="event.preventDefault(); window.RanjitCart.trackOrder();" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Order ID</label>
+              <input type="text" id="track-order-id" placeholder="ORD-YYYYMMDD-XXXX" required class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary font-mono text-sm uppercase">
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Phone Number</label>
+              <input type="tel" id="track-order-phone" placeholder="10-digit number" required class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary font-mono text-sm">
+            </div>
+          </div>
+          <button type="submit" id="track-order-btn" class="w-full bg-primary hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+            <i data-lucide="search" class="w-5 h-5"></i> Track Order
+          </button>
+        </form>
+        
+        <div id="track-order-result" class="mt-8 hidden">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Write Review Modal -->
+  <div id="write-review-modal" class="fixed inset-0 z-[120] hidden bg-gray-900/90 backdrop-blur-sm flex justify-center items-center px-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-transform duration-300">
+      <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="text-xl font-outfit font-bold text-gray-900 flex items-center gap-2"><i data-lucide="star" class="w-5 h-5 text-amber-500 fill-amber-500"></i> Write a Review</h2>
+        <button onclick="window.closeModal('write-review-modal')" class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-6">
+        <form id="write-review-form" onsubmit="event.preventDefault(); window.RanjitCart.submitReview();" class="space-y-4">
+          <input type="hidden" id="review-product-id">
+          <input type="hidden" id="review-order-id">
+          <input type="hidden" id="review-customer-name">
+          
+          <div class="flex items-center gap-4 bg-gray-50 p-3 rounded-lg border border-gray-100 mb-4">
+            <img id="review-product-img" src="" class="w-12 h-12 object-cover rounded shadow-sm">
+            <div>
+              <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider" id="review-product-cat"></p>
+              <h3 class="font-bold text-gray-900" id="review-product-name"></h3>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2 text-center">How would you rate this product?</label>
+            <div class="flex items-center justify-center gap-2" id="star-rating-container">
+              <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors" data-rating="1"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
+              <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors" data-rating="2"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
+              <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors" data-rating="3"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
+              <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors" data-rating="4"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
+              <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors" data-rating="5"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
+            </div>
+            <input type="hidden" id="review-rating" required>
+            <p id="review-rating-error" class="text-red-500 text-xs text-center mt-1 hidden">Please select a star rating.</p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Your Feedback (Optional)</label>
+            <textarea id="review-comment" rows="3" placeholder="Tell us what you liked about it..." class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm resize-none"></textarea>
+          </div>
+
+          <button type="submit" id="submit-review-btn" class="w-full bg-primary hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+            Submit Review
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Search Modal -->
   <div id="search-modal" class="fixed inset-0 z-[110] hidden bg-gray-900/80 backdrop-blur-sm flex justify-center items-start pt-20 px-4 opacity-0 transition-opacity duration-300">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden transform scale-95 transition-transform duration-300">
       <div class="p-4 border-b border-gray-100 flex items-center gap-3">
         <i data-lucide="search" class="w-6 h-6 text-gray-400"></i>
         <input type="text" id="global-search-input" class="w-full text-xl font-medium outline-none bg-transparent placeholder-gray-300 text-gray-800" placeholder="Search for plants, seeds, fertilizers..." autocomplete="off" autofocus>
-        <button onclick="closeSearchModal()" class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+        <button onclick="window.closeModal('search-modal')" class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -1435,27 +1561,34 @@
   </div>
 
   <script>
-    function closeSearchModal() {
-      const modal = document.getElementById('search-modal');
+    window.openModal = function(id) {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modal.classList.add('opacity-100');
+        if (id === 'search-modal') {
+          const input = document.getElementById('global-search-input');
+          if(input) input.focus();
+        }
+      }, 10);
+    };
+
+    window.closeModal = function(id) {
+      const modal = document.getElementById(id);
+      if (!modal) return;
       modal.classList.remove('opacity-100');
       modal.classList.add('opacity-0');
-      setTimeout(() => modal.classList.add('hidden'), 300);
-      document.getElementById('global-search-input').value = '';
-      document.getElementById('global-search-results').innerHTML = '<div class="text-center text-gray-400 py-10">Start typing to search our catalogue...</div>';
-    }
-
-    // Initialize search modal open animation
-    const originalRemove = DOMTokenList.prototype.remove;
-    DOMTokenList.prototype.remove = function() {
-      const res = originalRemove.apply(this, arguments);
-      if (arguments[0] === 'hidden' && this === document.getElementById('search-modal').classList) {
-        setTimeout(() => {
-          document.getElementById('search-modal').classList.remove('opacity-0');
-          document.getElementById('search-modal').classList.add('opacity-100');
-          document.getElementById('global-search-input').focus();
-        }, 10);
-      }
-      return res;
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        if (id === 'search-modal') {
+          const input = document.getElementById('global-search-input');
+          const results = document.getElementById('global-search-results');
+          if(input) input.value = '';
+          if(results) results.innerHTML = '<div class="text-center text-gray-400 py-10">Start typing to search our catalogue...</div>';
+        }
+      }, 300);
     };
   </script>
 

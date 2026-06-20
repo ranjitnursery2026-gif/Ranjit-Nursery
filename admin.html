@@ -19,6 +19,29 @@
     </script>
 </head>
 <body class="bg-gray-50 font-inter text-gray-800 antialiased">
+    <!-- Login Screen -->
+    <div id="admin-login" class="flex flex-col items-center justify-center min-h-screen w-full px-4 bg-gray-50">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm border border-gray-100 text-center">
+            <div class="mx-auto bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                <i data-lucide="lock" class="w-8 h-8 text-primary"></i>
+            </div>
+            <h2 class="text-2xl font-outfit font-bold text-gray-900 mb-2">Admin Login</h2>
+            <p class="text-sm text-gray-500 mb-6">Enter your password to access the dashboard.</p>
+            
+            <form onsubmit="event.preventDefault(); window.loginAdmin();" class="space-y-4">
+                <div>
+                    <input type="password" id="admin-password-input" placeholder="Enter password..." required class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-center tracking-widest font-mono">
+                    <p id="login-error" class="text-red-500 text-xs font-semibold mt-2 hidden">Incorrect password.</p>
+                </div>
+                <button type="submit" id="login-btn" class="w-full bg-primary hover:bg-green-800 text-white px-4 py-3 rounded-lg font-bold shadow-md transition-colors flex items-center justify-center gap-2">
+                    <i data-lucide="log-in" class="w-5 h-5"></i> Access Dashboard
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="admin-dashboard" class="hidden">
     <!-- Navbar -->
     <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,9 +50,14 @@
                     <i data-lucide="leaf" class="text-primary w-6 h-6"></i>
                     <span class="font-outfit font-bold text-xl text-gray-900">Ranjit Nursery <span class="text-primary">Admin</span></span>
                 </div>
-                <a href="/" class="text-sm font-medium text-gray-500 hover:text-gray-900 flex items-center gap-2">
-                    <i data-lucide="external-link" class="w-4 h-4"></i> View Live Store
-                </a>
+                <div class="flex items-center gap-4">
+                    <a href="/" class="text-sm font-medium text-gray-500 hover:text-gray-900 flex items-center gap-2">
+                        <i data-lucide="external-link" class="w-4 h-4"></i> View Live Store
+                    </a>
+                    <button onclick="window.logoutAdmin()" class="text-sm font-medium text-red-500 hover:text-red-700 flex items-center gap-2 border border-red-200 bg-red-50 px-3 py-1.5 rounded-lg transition-colors">
+                        <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
@@ -40,11 +68,20 @@
             <button id="nav-products" onclick="window.switchAdminView('products')" class="pb-3 text-lg font-bold text-primary border-b-2 border-primary transition-colors flex items-center gap-2">
                 <i data-lucide="package" class="w-5 h-5"></i> Products
             </button>
+            <button id="nav-categories" onclick="window.switchAdminView('categories')" class="pb-3 text-lg font-medium text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors flex items-center gap-2">
+                <i data-lucide="layers" class="w-5 h-5"></i> Categories
+            </button>
             <button id="nav-orders" onclick="window.switchAdminView('orders')" class="pb-3 text-lg font-medium text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors flex items-center gap-2">
                 <i data-lucide="shopping-bag" class="w-5 h-5"></i> Orders
             </button>
             <button id="nav-pincodes" onclick="window.switchAdminView('pincodes')" class="pb-3 text-lg font-medium text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors flex items-center gap-2">
                 <i data-lucide="map-pin" class="w-5 h-5"></i> Delivery Areas
+            </button>
+            <button id="nav-settings" onclick="window.switchAdminView('settings')" class="pb-3 text-lg font-medium text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors flex items-center gap-2">
+                <i data-lucide="settings" class="w-5 h-5"></i> Settings
+            </button>
+            <button id="nav-reviews" onclick="window.switchAdminView('reviews')" class="pb-3 text-lg font-medium text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors flex items-center gap-2">
+                <i data-lucide="star" class="w-5 h-5 fill-transparent hover:fill-amber-500 hover:text-amber-500"></i> Reviews
             </button>
         </div>
 
@@ -167,6 +204,7 @@
                                 <th class="px-6 py-4">Date</th>
                                 <th class="px-6 py-4">Status</th>
                                 <th class="px-6 py-4 text-right">Total</th>
+                                <th class="px-6 py-4 w-10"></th>
                             </tr>
                         </thead>
                         <tbody id="admin-order-list" class="divide-y divide-gray-100">
@@ -201,7 +239,146 @@
                 </div>
             </div>
         </div> <!-- End of View Pincodes -->
-    </div>
+
+        <!-- SETTINGS VIEW -->
+        <div id="view-settings" class="hidden space-y-6">
+            <div>
+                <h1 class="text-3xl font-outfit font-bold text-gray-900">Global Settings</h1>
+                <p class="text-gray-500 mt-1">Manage contact numbers and platform configurations.</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 max-w-2xl">
+                <form id="settings-form" onsubmit="event.preventDefault(); window.saveSettings();" class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                            <i data-lucide="phone" class="w-4 h-4 text-emerald-600"></i> Order WhatsApp Number
+                        </label>
+                        <p class="text-xs text-gray-500">Number that receives new order notifications (with country code, e.g., 919876543210).</p>
+                        <input type="text" id="setting-order-whatsapp" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                            <i data-lucide="message-circle" class="w-4 h-4 text-blue-600"></i> Wholesale Inquiry Number
+                        </label>
+                        <p class="text-xs text-gray-500">Number that receives bulk/B2B inquiries from product cards.</p>
+                        <input type="text" id="setting-inquiry-whatsapp" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                            <i data-lucide="wrench" class="w-4 h-4 text-amber-600"></i> Services & Maintenance Number
+                        </label>
+                        <p class="text-xs text-gray-500">Number that receives Gardening and Maintenance service requests.</p>
+                        <input type="text" id="setting-services-whatsapp" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                            <i data-lucide="lock" class="w-4 h-4 text-purple-600"></i> Admin Panel Password
+                        </label>
+                        <p class="text-xs text-gray-500">Change the password required to access this dashboard.</p>
+                        <input type="text" id="setting-admin-password" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-mono">
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-100 flex justify-end">
+                        <button type="submit" id="save-settings-btn" class="bg-primary hover:bg-green-800 text-white px-6 py-2.5 rounded-lg font-semibold shadow-sm flex items-center gap-2 transition-colors">
+                            <i data-lucide="save" class="w-5 h-5"></i> Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 max-w-2xl mt-6">
+                <form id="featured-settings-form" onsubmit="event.preventDefault(); window.saveFeaturedSettings();" class="space-y-6">
+                    <div>
+                        <h2 class="text-xl font-outfit font-bold text-gray-900 mb-1">Landing Page: Featured Section</h2>
+                        <p class="text-sm text-gray-500 mb-4">Control the title and which products are displayed in the main grid on the home page.</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-gray-700">Section Title</label>
+                        <p class="text-xs text-gray-500">e.g., "Our Core Products", "Winter Special Flowers"</p>
+                        <input type="text" id="setting-featured-title" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-gray-700">Section Subtitle</label>
+                        <p class="text-xs text-gray-500">A short description under the title.</p>
+                        <textarea id="setting-featured-subtitle" rows="2" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none"></textarea>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-gray-700">Featured Category (Tag)</label>
+                        <p class="text-xs text-gray-500">Leave blank to show all products, or enter a specific tag like "Indoor Plants" or "Winter Flowers".</p>
+                        <input type="text" id="setting-featured-category" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-100 flex justify-end">
+                        <button type="submit" class="bg-primary hover:bg-green-800 text-white px-6 py-2.5 rounded-lg font-semibold shadow-sm flex items-center gap-2 transition-colors">
+                            <i data-lucide="save" class="w-5 h-5"></i> Save Featured Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div> <!-- End of View Settings -->
+        <!-- CATEGORIES VIEW -->
+        <div id="view-categories" class="space-y-6 hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-3xl font-outfit font-bold text-gray-900">Category Management</h1>
+                    <p class="text-gray-500 mt-1">Manage the store's mega menu categories, groups, and tags.</p>
+                </div>
+                <button onclick="window.saveCategoryData()" class="bg-primary hover:bg-green-800 text-white px-5 py-2.5 rounded-lg font-semibold shadow-sm flex items-center gap-2 transition-colors">
+                    <i data-lucide="save" class="w-5 h-5"></i> Save Categories
+                </button>
+            </div>
+
+            <div class="flex items-center gap-3 mt-4">
+                <button onclick="window.addRootCategory()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-semibold shadow-sm flex items-center gap-2 transition-colors border border-gray-200">
+                    <i data-lucide="plus" class="w-4 h-4"></i> Add Root Category
+                </button>
+            </div>
+
+            <div id="category-builder-container" class="space-y-6">
+                <!-- Dynamic cards will be injected here -->
+            </div>
+            
+            <div id="category-loading" class="text-center text-gray-400 py-10">
+                <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-3"></i>
+                <p>Loading Category Builder...</p>
+            </div>
+        </div>
+
+        <!-- REVIEWS VIEW -->
+        <div id="view-reviews" class="space-y-6 hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-3xl font-outfit font-bold text-gray-900">Customer Reviews</h1>
+                    <p class="text-gray-500 mt-1">Manage verified customer reviews.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase tracking-wider text-gray-500 font-semibold">
+                                <th class="px-6 py-4">Product</th>
+                                <th class="px-6 py-4">Customer</th>
+                                <th class="px-6 py-4">Rating & Review</th>
+                                <th class="px-6 py-4">Date</th>
+                                <th class="px-6 py-4 w-10 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-reviews-list" class="divide-y divide-gray-100">
+                            <!-- Reviews injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- End of Main Wrapper -->
 
     <!-- Add Product Modal -->
     <div id="addProductModal" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
@@ -238,8 +415,18 @@
                         </div>
 
                         <div class="space-y-1">
-                            <label class="text-sm font-semibold text-gray-700">In Stock Units *</label>
-                            <input type="number" id="p-stock" required min="0" placeholder="e.g. 10" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                            <label class="text-sm font-semibold text-gray-700">In Stock Units</label>
+                            <input type="number" id="p-stock" min="0" placeholder="e.g. 10" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-sm font-semibold text-gray-700">Availability Status *</label>
+                            <select id="p-availability" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                                <option value="In Stock">In Stock</option>
+                                <option value="Out of Stock">Out of Stock</option>
+                                <option value="Coming Soon">Coming Soon</option>
+                                <option value="Not Available">Not Available</option>
+                            </select>
                         </div>
 
                         <div class="space-y-1 md:col-span-2 relative">
