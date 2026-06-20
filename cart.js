@@ -213,7 +213,18 @@ export function renderProducts() {
   // Filter & Slice products
   let displayProducts = PRODUCTS;
   if (currentCategoryFilter) {
-    displayProducts = PRODUCTS.filter(p => p.categories && p.categories.includes(currentCategoryFilter));
+    const filterLower = currentCategoryFilter.toLowerCase();
+    displayProducts = PRODUCTS.filter(p => {
+      if (!p.categories) return false;
+      let cats = p.categories;
+      if (typeof cats === 'string') {
+        try { cats = JSON.parse(cats); } catch(e) { cats = []; }
+      }
+      if (Array.isArray(cats)) {
+        return cats.some(c => c.toLowerCase().includes(filterLower));
+      }
+      return false;
+    });
   } else if (!isViewAll) {
     displayProducts = PRODUCTS.slice(0, 8); // Show only top 8 on default landing view
   }
@@ -651,7 +662,7 @@ export async function placeOrder() {
   const utrError = document.getElementById('utr-error');
 
   if (paymentMethod === 'upi') {
-    if (!utr || utr.length !== 12 || !/^\\d{12}$/.test(utr)) {
+    if (!utr || utr.length !== 12 || !/^\d{12}$/.test(utr)) {
       if (utrError) utrError.classList.remove('hidden');
       document.getElementById('checkout-utr')?.focus();
       return;

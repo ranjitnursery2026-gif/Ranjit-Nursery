@@ -142,52 +142,52 @@ function renderProducts() {
         
         let statusBadge = '';
         if (availStatus === 'In Stock') {
-            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> In Stock (${stockCount})</span>`;
+            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-500/20"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> In Stock (${stockCount})</span>`;
         } else if (availStatus === 'Out of Stock') {
-            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 text-red-700 text-xs font-bold border border-red-100"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Out of Stock</span>`;
+            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 text-xs font-bold border border-red-100 dark:border-red-500/20"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Out of Stock</span>`;
         } else if (availStatus === 'Coming Soon') {
             statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500 text-white text-xs font-bold shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-white"></span> Coming Soon</span>`;
         } else if (availStatus === 'Not Available') {
-            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-50 text-gray-700 text-xs font-bold border border-gray-200"><span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Not Available</span>`;
+            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-400 text-xs font-bold border border-gray-200 dark:border-gray-700"><span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Not Available</span>`;
         } else {
-            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-50 text-gray-700 text-xs font-bold border border-gray-200">${availStatus}</span>`;
+            statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-400 text-xs font-bold border border-gray-200 dark:border-gray-700">${availStatus}</span>`;
         }
 
         const isCarpetGrass = p.name.toLowerCase().includes('carpet grass');
-        let priceText = `₹${p.price}`;
+        let priceText = `<span class="text-gray-900 dark:text-white">₹${p.price}</span>`;
         if (isCarpetGrass) {
-            priceText = `<div class="flex flex-col"><span class="text-sm font-bold text-gray-900">₹3 to ₹15</span><span class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">per sq. ft.</span></div>`;
+            priceText = `<div class="flex flex-col"><span class="text-sm font-bold text-gray-900 dark:text-white">₹3 to ₹15</span><span class="text-[10px] text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider">per sq. ft.</span></div>`;
         } else if (p.mrp && p.mrp > p.price) {
-            priceText = `<div class="flex flex-col"><span class="text-sm font-semibold text-gray-900">₹${p.price}</span><span class="text-xs text-gray-400 line-through">₹${p.mrp}</span></div>`;
+            priceText = `<div class="flex flex-col"><span class="text-sm font-semibold text-gray-900 dark:text-white">₹${p.price}</span><span class="text-xs text-gray-400 dark:text-gray-500 line-through">₹${p.mrp}</span></div>`;
         }
 
         return `
-            <tr class="hover:bg-gray-50 transition-colors group">
+            <tr class="hover:bg-gray-50/80 dark:hover:bg-gray-800/50 transition-colors group">
                 <td class="px-6 py-4 text-center">
-                    <input type="checkbox" value="${p.id}" onchange="window.toggleProductSelection(${p.id}, this.checked)" ${selectedProductIds.has(p.id) ? 'checked' : ''} class="product-cb w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
+                    <input type="checkbox" value="${p.id}" onchange="window.toggleProductSelection(${p.id}, this.checked)" ${selectedProductIds.has(p.id) ? 'checked' : ''} class="product-cb w-4 h-4 text-primary rounded border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-primary">
                 </td>
                 <td class="px-6 py-4">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0 border border-gray-200">
+                        <div class="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-800 overflow-hidden flex-shrink-0 border border-gray-200 dark:border-gray-700">
                             <img src="${p.image || 'https://via.placeholder.com/150'}" alt="${p.name}" class="w-full h-full object-cover">
                         </div>
                         <div>
-                            <div class="font-bold text-gray-900">${p.name}</div>
-                            <div class="text-xs text-gray-500 mt-0.5">ID: ${p.id} ${p.badge ? `• <span class="text-primary font-medium">${p.badge}</span>` : ''}</div>
+                            <div class="font-bold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-green-400 transition-colors">${p.name}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">ID: ${p.id} ${p.badge ? `• <span class="text-primary dark:text-green-400 font-medium">${p.badge}</span>` : ''}</div>
                         </div>
                     </div>
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-600">${catText}</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">${catText}</td>
                 <td class="px-6 py-4">${priceText}</td>
                 <td class="px-6 py-4 text-center">
                     ${statusBadge}
                 </td>
                 <td class="px-6 py-4 text-right">
                     <div class="flex items-center justify-end gap-2">
-                        <button onclick="window.openEditModal(${p.id})" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                        <button onclick="window.openEditModal(${p.id})" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400">
                             <i data-lucide="edit-2" class="w-4 h-4"></i> Edit
                         </button>
-                        <button onclick="window.deleteProduct(${p.id})" class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors bg-white border border-gray-200 text-gray-400 hover:bg-red-50 hover:text-red-600 hover:border-red-200" title="Delete Product">
+                        <button onclick="window.deleteProduct(${p.id})" class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-500/30" title="Delete Product">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -469,87 +469,61 @@ window.bulkDeleteProducts = async () => {
 
 // View Switcher
 window.switchAdminView = (viewName) => {
-    document.getElementById('view-products').classList.add('hidden');
-    document.getElementById('view-orders').classList.add('hidden');
-    document.getElementById('view-pincodes').classList.add('hidden');
-    document.getElementById('view-settings').classList.add('hidden');
-    const viewReviews = document.getElementById('view-reviews');
-    if(viewReviews) viewReviews.classList.add('hidden');
-    const viewCategories = document.getElementById('view-categories');
-    if(viewCategories) viewCategories.classList.add('hidden');
-    
-    const resetNav = (id) => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.classList.replace('text-primary', 'text-gray-500');
-            el.classList.replace('border-primary', 'border-transparent');
-            el.classList.remove('font-bold');
-        }
-    };
-    resetNav('nav-products');
-    resetNav('nav-orders');
-    resetNav('nav-pincodes');
-    resetNav('nav-settings');
-    resetNav('nav-reviews');
-    resetNav('nav-categories');
+    // Hide all views
+    ['products', 'categories', 'orders', 'pincodes', 'settings', 'reviews'].forEach(v => {
+        const viewEl = document.getElementById(`view-${v}`);
+        if(viewEl) viewEl.classList.add('hidden');
+    });
 
-    if (viewName === 'products') {
-        document.getElementById('view-products').classList.remove('hidden');
-        const nav = document.getElementById('nav-products');
-        if (nav) {
-            nav.classList.replace('text-gray-500', 'text-primary');
-            nav.classList.replace('border-transparent', 'border-primary');
-            nav.classList.add('font-bold');
+    const inactiveClasses = ['font-medium', 'text-gray-500', 'hover:text-gray-900', 'hover:bg-gray-100', 'dark:text-gray-400', 'dark:hover:text-white', 'dark:hover:bg-gray-800'];
+    const activeClasses = ['font-semibold', 'text-primary', 'bg-primary/10', 'dark:bg-primary/20', 'dark:text-green-400', 'shadow-sm'];
+
+    // Reset all nav buttons
+    ['products', 'categories', 'orders', 'pincodes', 'settings', 'reviews'].forEach(v => {
+        const navEl = document.getElementById(`nav-${v}`);
+        if (navEl) {
+            navEl.classList.remove(...activeClasses);
+            navEl.classList.add(...inactiveClasses);
         }
-    } else if (viewName === 'orders') {
-        document.getElementById('view-orders').classList.remove('hidden');
-        const nav = document.getElementById('nav-orders');
-        if (nav) {
-            nav.classList.replace('text-gray-500', 'text-primary');
-            nav.classList.replace('border-transparent', 'border-primary');
-            nav.classList.add('font-bold');
-        }
-        fetchOrders();
-    } else if (viewName === 'pincodes') {
-        document.getElementById('view-pincodes').classList.remove('hidden');
-        const nav = document.getElementById('nav-pincodes');
-        if (nav) {
-            nav.classList.replace('text-gray-500', 'text-primary');
-            nav.classList.replace('border-transparent', 'border-primary');
-            nav.classList.add('font-bold');
-        }
-        window.fetchAdminPincodes();
-    } else if (viewName === 'settings') {
-        document.getElementById('view-settings').classList.remove('hidden');
-        const nav = document.getElementById('nav-settings');
-        if (nav) {
-            nav.classList.replace('text-gray-500', 'text-primary');
-            nav.classList.replace('border-transparent', 'border-primary');
-            nav.classList.add('font-bold');
-        }
-        window.fetchSettings();
-    } else if (viewName === 'reviews') {
-        const viewReviews = document.getElementById('view-reviews');
-        if(viewReviews) viewReviews.classList.remove('hidden');
-        const nav = document.getElementById('nav-reviews');
-        if (nav) {
-            nav.classList.replace('text-gray-500', 'text-primary');
-            nav.classList.replace('border-transparent', 'border-primary');
-            nav.classList.add('font-bold');
-        }
-        fetchReviews();
-    } else if (viewName === 'categories') {
-        const viewCategories = document.getElementById('view-categories');
-        if(viewCategories) viewCategories.classList.remove('hidden');
-        const nav = document.getElementById('nav-categories');
-        if (nav) {
-            nav.classList.replace('text-gray-500', 'text-primary');
-            nav.classList.replace('border-transparent', 'border-primary');
-            nav.classList.add('font-bold');
-        }
-        window.fetchCategoryData();
+    });
+
+    // Show active view and highlight button
+    const activeView = document.getElementById(`view-${viewName}`);
+    if(activeView) activeView.classList.remove('hidden');
+
+    const activeNav = document.getElementById(`nav-${viewName}`);
+    if (activeNav) {
+        activeNav.classList.remove(...inactiveClasses);
+        activeNav.classList.add(...activeClasses);
+    }
+
+    // Trigger data fetching for specific views
+    if (viewName === 'orders') fetchOrders();
+    if (viewName === 'pincodes') window.fetchAdminPincodes();
+    if (viewName === 'settings') window.fetchSettings();
+    if (viewName === 'reviews') fetchReviews();
+    if (viewName === 'categories') window.fetchCategoryData();
+};
+
+window.toggleAdminTheme = () => {
+    const isDark = document.body.classList.contains('dark');
+    if (isDark) {
+        document.body.classList.remove('dark');
+        localStorage.setItem('admin_theme', 'light');
+        document.getElementById('theme-toggle-text').textContent = 'Dark Mode';
+    } else {
+        document.body.classList.add('dark');
+        localStorage.setItem('admin_theme', 'dark');
+        document.getElementById('theme-toggle-text').textContent = 'Light Mode';
     }
 };
+
+// Initialize Theme
+if (localStorage.getItem('admin_theme') === 'dark') {
+    document.body.classList.add('dark');
+    const toggleText = document.getElementById('theme-toggle-text');
+    if (toggleText) toggleText.textContent = 'Light Mode';
+}
 
 let realOrders = [];
 
