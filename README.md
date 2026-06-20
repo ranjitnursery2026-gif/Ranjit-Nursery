@@ -67,5 +67,5 @@ Visit `http://localhost:8080` to view the store.
 
 ## 🔒 Default Admin Credentials
 To access the `/admin.html` page locally or in production, you will be prompted for a password.
-*   **Default Password:** `Ranjit@123`
+*   **Default Password:** `**********`
 *(Note: You can change this password at any time from within the Admin Dashboard Settings tab).*
