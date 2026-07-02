@@ -20,10 +20,19 @@ export let inquiryWhatsapp = '917735227575';
 export let servicesWhatsapp = '916371900967';
 
 const VALID_COUPONS = {
-  'WELCOME10': { type: 'percent', value: 10, minSpend: 0 },
-  'SAVE10': { type: 'percent', value: 10, minSpend: 700 },
-  'MEGA16': { type: 'percent', value: 16, minSpend: 1000 }
+  'WELCOME10': { type: 'percent', value: 10, minSpend: 0, desc: '10% OFF on all orders' },
+  'SAVE10': { type: 'percent', value: 10, minSpend: 700, desc: '10% OFF on orders above ₹700' },
+  'MEGA16': { type: 'percent', value: 16, minSpend: 1000, desc: '16% OFF on orders above ₹1000' },
+  'FREESHIP': { type: 'shipping', value: 0, minSpend: 1500, desc: 'Free Delivery on orders above ₹1500' }
 };
+
+export function setPromoCode(code) {
+  const inputEl = document.getElementById('promo-code-input');
+  if (inputEl) {
+    inputEl.value = code;
+    applyCoupon();
+  }
+}
 
 export function applyCoupon() {
   const inputEl = document.getElementById('promo-code-input');
@@ -502,16 +511,58 @@ function renderCheckoutSummary() {
   // Smart Coupon Suggestion Engine
   if (dynamicBanner) {
     dynamicBanner.classList.remove('hidden');
-    if (subtotal >= 1000) {
-      dynamicBanner.innerHTML = `<i data-lucide="party-popper" class="w-4 h-4 text-amber-500 shrink-0"></i> <span>Awesome! Use code <strong class="bg-emerald-200 px-1.5 py-0.5 rounded text-emerald-900">MEGA16</strong> for 16% OFF!</span>`;
-      dynamicBanner.className = "mb-3 text-xs sm:text-sm font-bold px-3 py-2 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-start gap-2";
-    } else if (subtotal >= 700) {
-      dynamicBanner.innerHTML = `<i data-lucide="gift" class="w-4 h-4 text-emerald-500 shrink-0"></i> <span>Yay! Use code <strong class="bg-emerald-200 px-1.5 py-0.5 rounded text-emerald-900">SAVE10</strong> for 10% OFF! <span class="block mt-1 font-medium opacity-80 text-xs">Add ₹${(1000 - subtotal).toLocaleString('en-IN')} more to unlock 16% OFF</span></span>`;
-      dynamicBanner.className = "mb-3 text-xs sm:text-sm font-bold px-3 py-2 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-start gap-2";
-    } else {
-      dynamicBanner.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4 text-blue-500 shrink-0"></i> <span>New here? Use <strong class="bg-blue-200 px-1.5 py-0.5 rounded text-blue-900">WELCOME10</strong> for 10% OFF! <span class="block mt-1 font-medium opacity-80 text-xs">Add ₹${(700 - subtotal).toLocaleString('en-IN')} more to unlock better deals</span></span>`;
-      dynamicBanner.className = "mb-3 text-xs sm:text-sm font-bold px-3 py-2 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 flex items-start gap-2";
-    }
+    dynamicBanner.className = "mb-4 flex gap-3 overflow-x-auto custom-scrollbar pb-2 snap-x";
+    
+    const availableCoupons = Object.entries(VALID_COUPONS).map(([code, details]) => {
+      const isEligible = subtotal >= details.minSpend;
+      const progress = isEligible ? 100 : Math.min(100, (subtotal / details.minSpend) * 100);
+      const remaining = isEligible ? 0 : details.minSpend - subtotal;
+      
+      let icon = 'tag';
+      let color = 'blue';
+      if (details.type === 'shipping') { icon = 'truck'; color = 'purple'; }
+      else if (details.value >= 15) { icon = 'party-popper'; color = 'amber'; }
+      else if (details.minSpend > 0) { icon = 'gift'; color = 'emerald'; }
+      
+      const applyAction = isEligible 
+        ? `onclick="window.RanjitCart.setPromoCode('${code}')"` 
+        : `onclick="alert('Add ₹${remaining.toLocaleString('en-IN')} more to unlock this offer.')"`;
+        
+      return `
+        <div class="snap-center shrink-0 w-64 bg-white border ${isEligible ? `border-${color}-200` : 'border-gray-200'} rounded-xl p-3 shadow-sm relative overflow-hidden group cursor-pointer transition-all ${isEligible ? 'hover:border-primary hover:shadow-md' : 'opacity-70'}" ${applyAction}>
+          <div class="flex items-center justify-between mb-1.5">
+            <div class="flex items-center gap-1.5">
+              <div class="w-6 h-6 rounded-full bg-${color}-50 flex items-center justify-center border border-${color}-100">
+                <i data-lucide="${icon}" class="w-3 h-3 text-${color}-500"></i>
+              </div>
+              <span class="font-bold text-gray-900 text-sm tracking-wide">${code}</span>
+            </div>
+            ${isEligible 
+              ? `<span class="text-[10px] font-bold text-white bg-primary px-2 py-0.5 rounded-full shadow-sm">APPLY</span>` 
+              : `<span class="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full"><i data-lucide="lock" class="w-3 h-3 inline"></i> LOCKED</span>`
+            }
+          </div>
+          <p class="text-[11px] text-gray-600 font-medium line-clamp-1">${details.desc}</p>
+          
+          ${!isEligible ? `
+            <div class="mt-2">
+              <div class="w-full bg-gray-100 rounded-full h-1.5 mb-1 overflow-hidden">
+                <div class="bg-gray-400 h-1.5 rounded-full" style="width: ${progress}%"></div>
+              </div>
+              <p class="text-[9px] text-gray-500 font-bold text-right">Add ₹${remaining.toLocaleString('en-IN')} more</p>
+            </div>
+          ` : ''}
+          
+          ${isEligible ? `
+            <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+              <i data-lucide="${icon}" class="w-16 h-16 text-${color}-600 transform -rotate-12"></i>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }).join('');
+    
+    dynamicBanner.innerHTML = availableCoupons;
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
