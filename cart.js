@@ -925,7 +925,6 @@ export async function init() {
         servicesWhatsapp = settingsData.services_whatsapp || servicesWhatsapp;
         
         // Dynamically update UI links that rely on servicesWhatsapp
-        if (window.RanjitCart) window.RanjitCart.servicesWhatsapp = servicesWhatsapp;
         document.querySelectorAll('a[href*="916371900967"]').forEach(link => {
             link.href = link.href.replace('916371900967', servicesWhatsapp);
             if (link.textContent.includes('6371900967')) {

@@ -1,5 +1,5 @@
 import './style.css'
-import { supabase } from './supabaseClient.js'
+import { supabase } from './supabase.js'
 import * as Cart from './cart.js'
 import { categoryData as fallbackCategoryData } from './categoryData.js'
 
