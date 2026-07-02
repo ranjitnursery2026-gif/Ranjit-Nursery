@@ -63,6 +63,20 @@ window.loginAdmin = async () => {
     }
 };
 
+window.toggleAdminSidebar = () => {
+    const sidebar = document.getElementById('admin-sidebar');
+    const overlay = document.getElementById('admin-sidebar-overlay');
+    if (!sidebar || !overlay) return;
+
+    if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+    } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+    }
+};
+
 window.logoutAdmin = () => {
     sessionStorage.removeItem('admin_auth');
     document.getElementById('admin-login').classList.remove('hidden');
@@ -495,6 +509,14 @@ window.switchAdminView = (viewName) => {
     if (activeNav) {
         activeNav.classList.remove(...inactiveClasses);
         activeNav.classList.add(...activeClasses);
+    }
+
+    // Close sidebar on mobile
+    if (window.innerWidth < 768) {
+        const sidebar = document.getElementById('admin-sidebar');
+        const overlay = document.getElementById('admin-sidebar-overlay');
+        if (sidebar) sidebar.classList.add('-translate-x-full');
+        if (overlay) overlay.classList.add('hidden');
     }
 
     // Trigger data fetching for specific views
