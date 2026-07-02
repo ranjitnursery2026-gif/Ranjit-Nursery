@@ -367,8 +367,8 @@
                 <span class="font-bold text-sm text-gray-700">UPI Payment</span>
               </div>
             </label>
-            <label class="cursor-pointer" id="cod-payment-label">
-              <input type="radio" name="payment-method" value="cod" class="peer hidden" onchange="window.RanjitCart.togglePaymentMethod()">
+            <label class="cursor-not-allowed" id="cod-payment-label">
+              <input type="radio" name="payment-method" value="cod" class="peer hidden" disabled onchange="window.RanjitCart.togglePaymentMethod()">
               <div class="rounded-xl border-2 border-gray-100 p-3 text-center peer-checked:border-primary peer-checked:bg-emerald-50 transition-colors opacity-50 bg-gray-50" id="cod-payment-box">
                 <i data-lucide="banknote" class="w-6 h-6 mx-auto mb-1 text-gray-400" id="cod-payment-icon"></i>
                 <span class="font-bold text-sm text-gray-400" id="cod-payment-text">Cash on Delivery</span>
