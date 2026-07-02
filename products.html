@@ -16,8 +16,8 @@
 </head>
 <body class="antialiased bg-gray-50 text-gray-800 overflow-x-hidden pt-32">
   
-  <!-- Navbar -->
-  <nav class="fixed w-full z-50 top-0 transition-all duration-300 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm" id="navbar">
+  <!-- Desktop Navbar -->
+  <nav class="fixed w-full z-50 top-0 transition-all duration-300 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm hidden md:block" id="navbar">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
         <div class="flex items-center gap-2">
@@ -100,8 +100,36 @@
     </div>
   </nav>
 
+  <!-- Mobile App Header -->
+  <header class="md:hidden bg-white fixed top-0 w-full z-40 border-b border-gray-100 px-4 py-3 shadow-sm flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <a href="index.html" class="flex items-center gap-2">
+        <i data-lucide="leaf" class="text-primary h-6 w-6"></i>
+        <h1 class="text-xl font-outfit font-bold text-primary leading-none">Products</h1>
+      </a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="text-gray-600 p-1" onclick="window.openModal('search-modal')">
+        <i data-lucide="search" class="w-6 h-6"></i>
+      </button>
+      <button class="cart-icon-btn relative text-gray-600 p-1">
+        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+        <span class="cart-badge hidden absolute -top-1 -right-1 bg-accent text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Category Strip -->
+  <div class="md:hidden fixed top-[53px] w-full z-30 bg-white border-b border-gray-100 shadow-sm overflow-x-auto custom-scrollbar flex gap-2 px-4 py-2">
+    <button onclick="window.RanjitCart.clearFilter()" class="shrink-0 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-full transition-colors">All</button>
+    <button onclick="window.RanjitCart.filterProducts('Indoor Plants')" class="shrink-0 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-100 transition-colors">Indoor</button>
+    <button onclick="window.RanjitCart.filterProducts('Outdoor Plants')" class="shrink-0 px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-full border border-green-100 transition-colors">Outdoor</button>
+    <button onclick="window.RanjitCart.filterProducts('Seeds')" class="shrink-0 px-3 py-1 bg-orange-50 text-orange-700 text-xs font-bold rounded-full border border-orange-100 transition-colors">Seeds</button>
+    <button onclick="window.RanjitCart.filterProducts('Pots')" class="shrink-0 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full border border-blue-100 transition-colors">Pots</button>
+  </div>
+
   <!-- Products Main Layout -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen flex flex-col md:flex-row gap-8">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:py-10 pb-24 md:pb-10 min-h-screen flex flex-col md:flex-row gap-8">
     
     <!-- Left Sidebar (Desktop) -->
     <aside class="w-full md:w-64 flex-shrink-0 hidden md:block">
@@ -131,7 +159,7 @@
       </div>
 
       <!-- Dynamic Product Grid -->
-      <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+      <div id="products-grid" class="products-grid-container grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
         <!-- Products injected by cart.js -->
       </div>
       
@@ -165,6 +193,30 @@
       </div>
     </div>
   </footer>
+
+  <!-- ================= BOTTOM NAVIGATION BAR (MOBILE) ================= -->
+  <nav class="md:hidden fixed bottom-0 w-full bg-white border-t border-gray-200 z-50 px-2 py-2 flex justify-between items-center pb-safe">
+    <a href="index.html" class="flex flex-col items-center justify-center w-1/4 text-gray-500 hover:text-primary transition-colors">
+      <i data-lucide="home" class="w-6 h-6"></i>
+      <span class="text-[10px] font-medium mt-1">Home</span>
+    </a>
+    <a href="products.html" class="flex flex-col items-center justify-center w-1/4 text-primary">
+      <i data-lucide="layout-grid" class="w-6 h-6"></i>
+      <span class="text-[10px] font-medium mt-1">Shop</span>
+    </a>
+    <a href="#" class="cart-icon-btn flex flex-col items-center justify-center w-1/4 text-gray-500 hover:text-primary transition-colors relative">
+      <div class="relative">
+        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+        <span class="cart-badge hidden absolute -top-1 -right-2 bg-accent text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md">0</span>
+      </div>
+      <span class="text-[10px] font-medium mt-1">Cart</span>
+    </a>
+    <a href="#" onclick="window.openModal('track-order-modal')" class="flex flex-col items-center justify-center w-1/4 text-gray-500 hover:text-primary transition-colors">
+      <i data-lucide="truck" class="w-6 h-6"></i>
+      <span class="text-[10px] font-medium mt-1">Track</span>
+    </a>
+  </nav>
+  <!-- ================= END BOTTOM NAVIGATION BAR ================= -->
 
   <!-- Scripts -->
   <script type="module" src="/main.js"></script>

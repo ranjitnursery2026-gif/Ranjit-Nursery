@@ -203,12 +203,12 @@ export function showAllProducts() {
 }
 
 export function renderProducts() {
-  const grid = document.getElementById('products-grid');
+  const grids = document.querySelectorAll('.products-grid-container');
   const emptyState = document.getElementById('products-empty-state');
   const filterStatus = document.getElementById('filter-status-container');
   const filterBadge = document.getElementById('active-filter-badge');
   
-  if (!grid) return;
+  if (grids.length === 0) return;
 
   // Filter & Slice products
   let displayProducts = PRODUCTS;
@@ -251,14 +251,14 @@ export function renderProducts() {
 
   // Update Empty State vs Grid
   if (displayProducts.length === 0) {
-    grid.classList.add('hidden');
+    grids.forEach(grid => grid.classList.add('hidden'));
     emptyState?.classList.remove('hidden');
   } else {
-    grid.classList.remove('hidden');
+    grids.forEach(grid => grid.classList.remove('hidden'));
     emptyState?.classList.add('hidden');
     
     // Render Products
-    grid.innerHTML = displayProducts.map((p, i) => {
+    const productsHTML = displayProducts.map((p, i) => {
       const delayClass = ['delay-100', 'delay-200', 'delay-300'][i % 3];
       const badgeHTML = p.badge
         ? `<div class="absolute top-4 right-4 ${p.badge === 'Specialty' ? 'bg-accent' : p.badge === 'Bestseller' ? 'bg-amber-500' : 'bg-primary'} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
@@ -356,6 +356,8 @@ export function renderProducts() {
         </div>`;
     }).join('');
 
+    grids.forEach(grid => grid.innerHTML = productsHTML);
+
     // Re-init Lucide icons for the new DOM elements
     if (typeof lucide !== 'undefined') lucide.createIcons();
 
@@ -370,7 +372,9 @@ export function renderProducts() {
       });
     }, { threshold: 0.1 });
 
-    grid.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+    grids.forEach(grid => {
+      grid.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+    });
   }
 }
 
