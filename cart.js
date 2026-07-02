@@ -1380,8 +1380,8 @@ export async function verifyOtp() {
   const email = document.getElementById('auth-email').value.trim();
   const token = document.getElementById('auth-otp').value.trim();
   
-  if (!token || token.length !== 6) {
-    alert("Please enter a valid 6-digit OTP.");
+  if (!token || token.length < 6 || token.length > 8) {
+    alert("Please enter a valid OTP.");
     return;
   }
 
