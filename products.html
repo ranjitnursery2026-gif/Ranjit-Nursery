@@ -244,9 +244,27 @@
         </div>
       </div>
     </div>
-    <div class="border-t border-gray-100 p-6 bg-gray-50/80">
-      <div class="flex justify-between items-center mb-4"><span class="text-gray-600 font-medium">Subtotal</span><span id="cart-subtotal" class="text-2xl font-outfit font-extrabold text-primary">₹0</span></div>
-      <button id="cart-checkout-btn" disabled class="w-full bg-primary hover:bg-emerald-800 disabled:bg-gray-300 text-white font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2"><i data-lucide="credit-card" class="w-5 h-5"></i> Proceed to Checkout</button>
+    <!-- Drawer Footer -->
+    <div class="border-t border-gray-100 p-6 bg-gray-50/95 backdrop-blur-sm relative z-10">
+      
+      <!-- Pincode Checker -->
+      <div id="drawer-pincode-container" class="mb-5 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"><i data-lucide="map-pin" class="w-3 h-3 inline"></i> Check Delivery Availability</label>
+        <div class="flex gap-2">
+          <input type="text" id="drawer-pincode" maxlength="6" pattern="[0-9]{6}" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary outline-none text-sm" placeholder="Enter 6-digit Pincode">
+          <button type="button" onclick="window.RanjitCart.checkDrawerPincode()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-lg text-sm font-bold transition-colors">Check</button>
+        </div>
+        <p id="drawer-pincode-msg" class="text-xs mt-2 hidden font-semibold"></p>
+      </div>
+
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-gray-600 font-medium">Subtotal</span>
+        <span id="cart-subtotal" class="text-2xl font-outfit font-extrabold text-primary">₹0</span>
+      </div>
+      <button id="cart-checkout-btn" disabled
+        class="w-full bg-primary hover:bg-emerald-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 text-base">
+        <i data-lucide="credit-card" class="w-5 h-5"></i> Proceed to Checkout
+      </button>
     </div>
   </aside>
 
