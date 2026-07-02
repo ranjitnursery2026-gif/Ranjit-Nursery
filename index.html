@@ -67,6 +67,11 @@
               <i data-lucide="truck" class="w-5 h-5"></i> <span class="hidden xl:inline">Track Order</span>
             </button>
 
+            <!-- Login / Profile -->
+            <button class="text-gray-600 hover:text-primary transition-colors p-2 flex items-center gap-1 font-semibold text-sm" title="Login / Profile" onclick="window.RanjitCart.openAuthModal()">
+              <i data-lucide="user-circle" class="w-5 h-5"></i>
+            </button>
+
             <!-- Cart Icon -->
             <button class="cart-icon-btn relative text-gray-600 hover:text-primary transition-colors p-2">
               <i data-lucide="shopping-cart" class="w-5 h-5"></i>
@@ -1242,9 +1247,8 @@
         <button class="text-gray-600 p-1" onclick="window.openModal('search-modal')">
           <i data-lucide="search" class="w-6 h-6"></i>
         </button>
-        <button class="relative text-gray-600 p-1" onclick="alert('No new notifications')">
-          <i data-lucide="bell" class="w-6 h-6"></i>
-          <span class="absolute top-1.5 right-1.5 bg-red-500 w-2 h-2 rounded-full border-2 border-white"></span>
+        <button class="text-gray-600 p-1" onclick="window.RanjitCart.openAuthModal()">
+          <i data-lucide="user-circle" class="w-6 h-6"></i>
         </button>
       </div>
     </header>
@@ -1652,6 +1656,78 @@
         
         <div id="track-order-result" class="mt-8 hidden">
           <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth / Login Modal -->
+  <div id="auth-modal" class="fixed inset-0 z-[120] hidden bg-gray-900/80 backdrop-blur-sm flex justify-center items-center px-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-transform duration-300">
+      <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="text-xl font-outfit font-bold text-gray-900 flex items-center gap-2">Login / Sign Up</h2>
+        <button onclick="window.closeModal('auth-modal')" class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-6">
+        <div id="auth-step-1">
+          <p class="text-sm text-gray-600 mb-4">Enter your email address to receive a secure login code (OTP).</p>
+          <form onsubmit="event.preventDefault(); window.RanjitCart.sendOtp();">
+            <label class="block text-sm font-bold text-gray-700 mb-1">Email Address</label>
+            <input type="email" id="auth-email" required class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm mb-4" placeholder="you@example.com">
+            <button type="submit" id="auth-send-btn" class="w-full bg-primary hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-md transition-all">Send OTP</button>
+          </form>
+        </div>
+        <div id="auth-step-2" class="hidden">
+          <p class="text-sm text-gray-600 mb-4">We've sent a 6-digit code to <strong id="auth-display-email"></strong>.</p>
+          <form onsubmit="event.preventDefault(); window.RanjitCart.verifyOtp();">
+            <label class="block text-sm font-bold text-gray-700 mb-1">Enter OTP</label>
+            <input type="text" id="auth-otp" required maxlength="6" pattern="[0-9]{6}" class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-center tracking-widest text-lg font-mono mb-4" placeholder="••••••">
+            <button type="submit" id="auth-verify-btn" class="w-full bg-primary hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-md transition-all">Verify & Login</button>
+            <button type="button" onclick="window.RanjitCart.resetAuthStep()" class="w-full mt-3 text-sm text-gray-500 font-bold hover:text-primary transition-colors">Wrong email? Go back</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Modal -->
+  <div id="profile-modal" class="fixed inset-0 z-[120] hidden bg-gray-900/80 backdrop-blur-sm flex justify-center items-center pt-20 px-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-transform duration-300 mb-10">
+      <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="text-xl font-outfit font-bold text-gray-900 flex items-center gap-2"><i data-lucide="user" class="w-5 h-5 text-primary"></i> My Profile</h2>
+        <button onclick="window.closeModal('profile-modal')" class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-6 bg-gray-50">
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+          <p class="text-sm text-gray-500 font-semibold mb-1">Logged in as</p>
+          <p class="font-bold text-gray-900" id="profile-display-email">loading...</p>
+        </div>
+
+        <form id="profile-form" onsubmit="event.preventDefault(); window.RanjitCart.updateProfile();" class="space-y-4 mb-6">
+          <h3 class="font-bold text-gray-900 text-sm uppercase tracking-wider mb-2">Saved Details (For quick checkout)</h3>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Full Name</label>
+            <input type="text" id="profile-name" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm" placeholder="Your Name">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Phone Number</label>
+            <input type="tel" id="profile-phone" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm" placeholder="+91 XXXXX XXXXX">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Default Address</label>
+            <textarea id="profile-address" rows="2" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm resize-none" placeholder="House No., Street, City, PIN"></textarea>
+          </div>
+          <button type="submit" id="profile-save-btn" class="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold py-2 rounded-lg border border-emerald-200 transition-colors text-sm">Save Details</button>
+        </form>
+
+        <div class="border-t border-gray-200 pt-4 mt-4">
+          <button type="button" onclick="window.RanjitCart.signOut()" class="w-full text-red-500 font-bold py-2 rounded-lg hover:bg-red-50 transition-colors text-sm flex items-center justify-center gap-2">
+            <i data-lucide="log-out" class="w-4 h-4"></i> Sign Out
+          </button>
         </div>
       </div>
     </div>

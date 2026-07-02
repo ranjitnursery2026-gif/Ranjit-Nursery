@@ -1321,3 +1321,179 @@ if (typeof document !== 'undefined') {
     });
   });
 }
+
+// ==========================================
+// AUTHENTICATION & PROFILE
+// ==========================================
+
+let currentUser = null;
+
+export function openAuthModal() {
+  if (currentUser) {
+    if (typeof window.openModal === 'function') window.openModal('profile-modal');
+    else document.getElementById('profile-modal').classList.remove('hidden');
+    loadUserProfile();
+  } else {
+    if (typeof window.openModal === 'function') window.openModal('auth-modal');
+    else document.getElementById('auth-modal').classList.remove('hidden');
+    resetAuthStep();
+  }
+}
+
+export function resetAuthStep() {
+  const step1 = document.getElementById('auth-step-1');
+  const step2 = document.getElementById('auth-step-2');
+  if (step1) step1.classList.remove('hidden');
+  if (step2) step2.classList.add('hidden');
+  const otpInput = document.getElementById('auth-otp');
+  if (otpInput) otpInput.value = '';
+}
+
+export async function sendOtp() {
+  const emailInput = document.getElementById('auth-email');
+  if (!emailInput) return;
+  const email = emailInput.value.trim();
+  if (!email) return;
+
+  const btn = document.getElementById('auth-send-btn');
+  const originalHtml = btn.innerHTML;
+  btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin mx-auto"></i>`;
+  btn.disabled = true;
+
+  try {
+    const { error } = await supabase.auth.signInWithOtp({ email });
+    if (error) throw error;
+
+    document.getElementById('auth-display-email').textContent = email;
+    document.getElementById('auth-step-1').classList.add('hidden');
+    document.getElementById('auth-step-2').classList.remove('hidden');
+    if (typeof showToast === 'function') showToast("OTP sent to your email!");
+  } catch (err) {
+    console.error("Auth Error:", err);
+    alert("Error sending OTP: " + err.message);
+  } finally {
+    btn.innerHTML = originalHtml;
+    btn.disabled = false;
+  }
+}
+
+export async function verifyOtp() {
+  const email = document.getElementById('auth-email').value.trim();
+  const token = document.getElementById('auth-otp').value.trim();
+  
+  if (!token || token.length !== 6) {
+    alert("Please enter a valid 6-digit OTP.");
+    return;
+  }
+
+  const btn = document.getElementById('auth-verify-btn');
+  const originalHtml = btn.innerHTML;
+  btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin mx-auto"></i>`;
+  btn.disabled = true;
+
+  try {
+    const { data, error } = await supabase.auth.verifyOtp({ email, token, type: 'email' });
+    if (error) throw error;
+    
+    if (typeof window.closeModal === 'function') window.closeModal('auth-modal');
+    else document.getElementById('auth-modal').classList.add('hidden');
+    
+    if (typeof showToast === 'function') showToast("Successfully logged in!");
+    
+    // Auth state change will handle profile loading
+  } catch (err) {
+    console.error("Verification Error:", err);
+    alert("Invalid OTP: " + err.message);
+  } finally {
+    btn.innerHTML = originalHtml;
+    btn.disabled = false;
+  }
+}
+
+export async function signOut() {
+  await supabase.auth.signOut();
+  if (typeof window.closeModal === 'function') window.closeModal('profile-modal');
+  else document.getElementById('profile-modal').classList.add('hidden');
+  if (typeof showToast === 'function') showToast("Logged out successfully.");
+}
+
+export async function loadUserProfile() {
+  if (!currentUser) return;
+  const displayEmail = document.getElementById('profile-display-email');
+  if (displayEmail) displayEmail.textContent = currentUser.email;
+
+  const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+  
+  if (data) {
+    const nameInput = document.getElementById('profile-name');
+    const phoneInput = document.getElementById('profile-phone');
+    const addrInput = document.getElementById('profile-address');
+    
+    if (nameInput) nameInput.value = data.full_name || '';
+    if (phoneInput) phoneInput.value = data.phone || '';
+    if (addrInput) addrInput.value = data.address || '';
+    
+    // Auto-fill checkout fields if they exist and are empty
+    const checkoutName = document.getElementById('checkout-name');
+    const checkoutPhone = document.getElementById('checkout-phone');
+    const checkoutAddress = document.getElementById('checkout-address');
+    
+    if (checkoutName && !checkoutName.value) checkoutName.value = data.full_name || '';
+    if (checkoutPhone && !checkoutPhone.value) checkoutPhone.value = data.phone || '';
+    if (checkoutAddress && !checkoutAddress.value) checkoutAddress.value = data.address || '';
+  }
+}
+
+export async function updateProfile() {
+  if (!currentUser) return;
+  
+  const fullName = document.getElementById('profile-name').value.trim();
+  const phone = document.getElementById('profile-phone').value.trim();
+  const address = document.getElementById('profile-address').value.trim();
+  
+  const btn = document.getElementById('profile-save-btn');
+  const originalHtml = btn.innerHTML;
+  btn.innerHTML = `Saving...`;
+  btn.disabled = true;
+
+  try {
+    const { error } = await supabase.from('profiles').update({
+      full_name: fullName,
+      phone: phone,
+      address: address
+    }).eq('id', currentUser.id);
+    
+    if (error) throw error;
+    
+    if (typeof showToast === 'function') showToast("Profile updated successfully!");
+    
+    // Sync with checkout fields
+    const checkoutName = document.getElementById('checkout-name');
+    const checkoutPhone = document.getElementById('checkout-phone');
+    const checkoutAddress = document.getElementById('checkout-address');
+    if (checkoutName) checkoutName.value = fullName;
+    if (checkoutPhone) checkoutPhone.value = phone;
+    if (checkoutAddress) checkoutAddress.value = address;
+    
+  } catch (err) {
+    console.error("Profile Error:", err);
+    alert("Error updating profile.");
+  } finally {
+    btn.innerHTML = originalHtml;
+    btn.disabled = false;
+  }
+}
+
+// Attach auth state listener
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        currentUser = session.user;
+        loadUserProfile();
+      } else {
+        currentUser = null;
+      }
+    });
+  });
+}
