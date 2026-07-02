@@ -1328,7 +1328,7 @@
           </div>
           <span class="text-[11px] font-medium text-gray-700 text-center leading-tight mt-1">Fertilizer<br>& Meds</span>
         </a>
-        <a href="#" onclick="window.openModal('track-order-modal')" class="flex flex-col items-center gap-1">
+        <a href="#" onclick="window.RanjitCart.openTrackModal()" class="flex flex-col items-center gap-1">
           <div class="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 shadow-sm">
             <i data-lucide="truck" class="w-6 h-6"></i>
           </div>
@@ -1638,6 +1638,9 @@
         </button>
       </div>
       <div class="p-6 bg-gray-50">
+        <div id="track-order-history" class="hidden space-y-4">
+          <!-- Populated by JS when logged in -->
+        </div>
         <form id="track-order-form" onsubmit="event.preventDefault(); window.RanjitCart.trackOrder();" class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>

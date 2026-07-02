@@ -1140,6 +1140,141 @@ export function checkDrawerPincode() {
 
 // ─── TRACK ORDER & REVIEWS ───────────────────────────────────
 
+export async function openTrackModal() {
+  if (typeof window.openModal === 'function') {
+    window.openModal('track-order-modal');
+  }
+
+  const historyContainer = document.getElementById('track-order-history');
+  const manualForm = document.getElementById('track-order-form');
+  const resultDiv = document.getElementById('track-order-result');
+
+  if (historyContainer && manualForm) {
+    if (currentUser) {
+      // User is logged in, show history container, hide manual form
+      manualForm.classList.add('hidden');
+      if (resultDiv) resultDiv.classList.add('hidden');
+      historyContainer.classList.remove('hidden');
+      historyContainer.innerHTML = `<div class="py-8 text-center"><i data-lucide="loader-2" class="w-8 h-8 text-primary animate-spin mx-auto mb-2"></i><p class="text-sm text-gray-500 font-medium">Loading your orders...</p></div>`;
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      
+      await fetchAndRenderOrderHistory(historyContainer);
+    } else {
+      // User is NOT logged in, show manual form, hide history container
+      manualForm.classList.remove('hidden');
+      historyContainer.classList.add('hidden');
+    }
+  }
+}
+
+async function fetchAndRenderOrderHistory(container) {
+  try {
+    // 1. Fetch user profile to get their phone number
+    const { data: profile, error: profileErr } = await supabase
+      .from('profiles')
+      .select('phone')
+      .eq('id', currentUser.id)
+      .single();
+
+    if (profileErr || !profile || !profile.phone) {
+      container.innerHTML = `
+        <div class="text-center py-6 bg-white rounded-xl border border-gray-200">
+          <i data-lucide="alert-circle" class="w-10 h-10 text-amber-500 mx-auto mb-2"></i>
+          <p class="text-gray-900 font-bold mb-1">Phone Number Required</p>
+          <p class="text-sm text-gray-500 mb-4 px-4">Please update your profile with your phone number to automatically view your order history.</p>
+          <button type="button" onclick="window.closeModal('track-order-modal'); window.openModal('profile-modal');" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold">Update Profile</button>
+        </div>
+      `;
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      return;
+    }
+
+    // 2. Fetch orders matching the phone number
+    const { data: orders, error: ordersErr } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('customer_phone', profile.phone)
+      .order('created_at', { ascending: false });
+
+    if (ordersErr) throw ordersErr;
+
+    if (!orders || orders.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-8 bg-white rounded-xl border border-gray-200 shadow-sm">
+          <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i data-lucide="shopping-bag" class="w-8 h-8 text-gray-300"></i>
+          </div>
+          <p class="text-gray-900 font-bold mb-1">No Orders Found</p>
+          <p class="text-sm text-gray-500">Looks like you haven't placed any orders with this phone number yet.</p>
+        </div>
+      `;
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      return;
+    }
+
+    // 3. Render the orders
+    container.innerHTML = orders.map(order => renderSingleOrderCard(order)).join('');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+  } catch (err) {
+    console.error("Error fetching order history:", err);
+    container.innerHTML = `<p class="text-red-500 font-semibold text-center py-4 bg-red-50 rounded-lg">Failed to load order history.</p>`;
+  }
+}
+
+function renderSingleOrderCard(order) {
+  let statusColor = 'gray';
+  if(order.status === 'Processing') statusColor = 'amber';
+  if(order.status === 'Shipped') statusColor = 'blue';
+  if(order.status === 'Delivered') statusColor = 'emerald';
+  if(order.status === 'Cancelled') statusColor = 'red';
+
+  const dateStr = new Date(order.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
+
+  const itemsHTML = (order.items || []).map(item => {
+    const product = PRODUCTS.find(p => p.id === item.id) || item;
+    const productImg = product.image || '';
+    
+    const reviewBtn = order.status === 'Delivered' 
+      ? `<button onclick="window.RanjitCart.openWriteReview(${item.id}, '${item.name.replace(/'/g, "\\'")}', '${(product.categories && product.categories.length > 0 ? product.categories[0] : 'General')}', '${productImg}', '${order.id}', '${order.customer_name.replace(/'/g, "\\'")}')" class="mt-2 text-[10px] font-bold text-amber-600 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-2 py-1 rounded transition-colors flex items-center gap-1 w-max"><i data-lucide="star" class="w-3 h-3 fill-amber-600"></i> Write Review</button>` 
+      : '';
+
+    return `
+      <div class="flex gap-3 py-2 border-b border-gray-50 last:border-0 items-start">
+        <img src="${productImg}" class="w-12 h-12 object-cover rounded shadow-sm">
+        <div class="flex-1">
+          <h4 class="font-bold text-gray-900 text-[13px] leading-tight">${item.name}</h4>
+          <p class="text-xs text-gray-500 mt-0.5">Qty: ${item.qty} × ₹${item.price}</p>
+          ${reviewBtn}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-4">
+      <div class="p-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+        <div>
+          <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Order ID: ${order.id}</p>
+          <p class="text-xs text-gray-600 font-medium">${dateStr}</p>
+        </div>
+        <div class="text-right">
+          <span class="inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-${statusColor}-100 text-${statusColor}-700">
+            ${order.status}
+          </span>
+        </div>
+      </div>
+      <div class="p-3 bg-white">
+        ${itemsHTML}
+      </div>
+      <div class="p-3 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Total Amount</span>
+        <span class="text-sm font-outfit font-bold text-gray-900">₹${order.total_amount}</span>
+      </div>
+    </div>
+  `;
+}
+
 export async function trackOrder() {
   const orderId = document.getElementById('track-order-id').value.trim().toUpperCase();
   const phone = document.getElementById('track-order-phone').value.trim();
