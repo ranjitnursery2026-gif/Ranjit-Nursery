@@ -356,33 +356,72 @@
         <!-- Payment Section -->
         <div>
           <h4 class="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
-            <i data-lucide="smartphone" class="w-4 h-4 text-primary"></i> Payment via UPI
+            <i data-lucide="smartphone" class="w-4 h-4 text-primary"></i> Payment Method
           </h4>
-          <div
-            class="bg-gradient-to-br from-emerald-50 to-blue-50 rounded-2xl p-6 border border-emerald-100 text-center">
-            <!-- Actual QR Code Image -->
-            <div class="w-56 h-auto mx-auto bg-white rounded-2xl p-2 mb-4 shadow-md border border-emerald-200">
-              <img src="/images/upi_qr_code.png" alt="Ranjit Nursery Payment QR Code"
-                class="w-full h-auto rounded-xl" />
-            </div>
-            <p class="text-gray-600 text-sm font-medium mb-1">Scan QR Code via <strong class="text-primary">PhonePe /
-                GPay / Paytm</strong></p>
-            <p class="text-gray-400 text-xs mb-3">to complete payment</p>
+          
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <label class="cursor-pointer">
+              <input type="radio" name="payment-method" value="upi" class="peer hidden" checked onchange="window.RanjitCart.togglePaymentMethod()">
+              <div class="rounded-xl border-2 border-gray-100 p-3 text-center peer-checked:border-primary peer-checked:bg-emerald-50 transition-colors">
+                <i data-lucide="smartphone" class="w-6 h-6 mx-auto mb-1 text-gray-600 peer-checked:text-primary"></i>
+                <span class="font-bold text-sm text-gray-700">UPI Payment</span>
+              </div>
+            </label>
+            <label class="cursor-pointer" id="cod-payment-label">
+              <input type="radio" name="payment-method" value="cod" class="peer hidden" onchange="window.RanjitCart.togglePaymentMethod()">
+              <div class="rounded-xl border-2 border-gray-100 p-3 text-center peer-checked:border-primary peer-checked:bg-emerald-50 transition-colors opacity-50 bg-gray-50" id="cod-payment-box">
+                <i data-lucide="banknote" class="w-6 h-6 mx-auto mb-1 text-gray-400" id="cod-payment-icon"></i>
+                <span class="font-bold text-sm text-gray-400" id="cod-payment-text">Cash on Delivery</span>
+                <span class="block text-[10px] text-red-500 font-bold mt-1" id="cod-payment-subtext">Not available for this Pincode</span>
+              </div>
+            </label>
+          </div>
 
-            <!-- UPI ID Info -->
-            <div class="bg-white/90 rounded-lg p-3 inline-block border border-emerald-200 mt-2 min-w-[200px] shadow-sm">
-              <span class="text-xs text-emerald-600 font-semibold uppercase tracking-wider block mb-1">Or pay directly
-                to UPI ID</span>
-              <span class="font-bold text-gray-900 text-base tracking-wider break-all user-select-all cursor-pointer"
-                title="Copy to clipboard">7735227575@ibl</span>
+          <!-- UPI Section -->
+          <div id="upi-payment-section">
+            <div class="bg-gradient-to-br from-emerald-50 to-blue-50 rounded-2xl p-6 border border-emerald-100 text-center">
+              <!-- Actual QR Code Image -->
+              <div class="w-56 h-auto mx-auto bg-white rounded-2xl p-2 mb-4 shadow-md border border-emerald-200">
+                <img src="/images/upi_qr_code.png" alt="Ranjit Nursery Payment QR Code"
+                  class="w-full h-auto rounded-xl" />
+              </div>
+              <p class="text-gray-600 text-sm font-medium mb-1">Scan QR Code via <strong class="text-primary">PhonePe / GPay / Paytm</strong></p>
+              <p class="text-gray-400 text-xs mb-3">to complete payment</p>
+
+              <!-- UPI ID Info -->
+              <div class="bg-white/90 rounded-lg p-3 inline-block border border-emerald-200 mt-2 min-w-[200px] shadow-sm">
+                <span class="text-xs text-emerald-600 font-semibold uppercase tracking-wider block mb-1">Or pay directly to UPI ID</span>
+                <span class="font-bold text-gray-900 text-base tracking-wider break-all user-select-all cursor-pointer" title="Copy to clipboard">7735227575@ibl</span>
+              </div>
+            </div>
+            <div class="mt-4">
+              <label class="block text-sm font-medium text-gray-600 mb-1">Enter UPI Transaction Ref No. / UTR No. *</label>
+              <input type="text" id="checkout-utr" maxlength="12" pattern="[0-9]{12}"
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none"
+                placeholder="e.g. 412345678901 (12 digits)">
+              <p id="utr-error" class="text-xs text-red-500 mt-1 hidden font-semibold">Please enter a valid 12-digit UTR number.</p>
             </div>
           </div>
-          <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-600 mb-1">Enter UPI Transaction Ref No. / UTR No.</label>
-            <input type="text" id="checkout-utr"
-              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none"
-              placeholder="e.g. 412345678901">
+          
+          <!-- COD Section -->
+          <div id="cod-payment-section" class="hidden">
+            <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100 flex items-start gap-3">
+              <i data-lucide="info" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+              <p class="text-sm text-emerald-800 font-medium">You have selected Cash on Delivery. Your order will be confirmed after a brief verification call from our team.</p>
+            </div>
           </div>
+        </div>
+
+        <!-- Anti-Spam Captcha -->
+        <div class="mt-8 bg-gray-50 rounded-xl p-4 border border-gray-200">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Human Verification</label>
+          <div class="flex items-center gap-3">
+            <div class="bg-white px-4 py-2 rounded-lg border border-gray-300 font-bold text-lg tracking-widest text-gray-800 shadow-inner select-none" id="captcha-question">
+              <!-- JS will fill this, e.g. 5 + 3 = -->
+            </div>
+            <input type="text" id="captcha-answer" maxlength="2" class="w-20 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary text-center font-bold outline-none" placeholder="?">
+          </div>
+          <p id="captcha-error" class="text-xs text-red-500 mt-2 hidden font-semibold">Incorrect answer. Please try again.</p>
         </div>
       </div>
       <!-- Modal Footer -->
