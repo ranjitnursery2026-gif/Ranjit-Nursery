@@ -484,7 +484,7 @@ window.bulkDeleteProducts = async () => {
 // View Switcher
 window.switchAdminView = (viewName) => {
     // Hide all views
-    ['products', 'categories', 'orders', 'pincodes', 'settings', 'reviews'].forEach(v => {
+    ['products', 'categories', 'orders', 'pincodes', 'settings', 'reviews', 'landing'].forEach(v => {
         const viewEl = document.getElementById(`view-${v}`);
         if(viewEl) viewEl.classList.add('hidden');
     });
@@ -493,7 +493,7 @@ window.switchAdminView = (viewName) => {
     const activeClasses = ['font-semibold', 'text-primary', 'bg-primary/10', 'dark:bg-primary/20', 'dark:text-green-400', 'shadow-sm'];
 
     // Reset all nav buttons
-    ['products', 'categories', 'orders', 'pincodes', 'settings', 'reviews'].forEach(v => {
+    ['products', 'categories', 'orders', 'pincodes', 'settings', 'reviews', 'landing'].forEach(v => {
         const navEl = document.getElementById(`nav-${v}`);
         if (navEl) {
             navEl.classList.remove(...activeClasses);
@@ -525,6 +525,7 @@ window.switchAdminView = (viewName) => {
     if (viewName === 'settings') window.fetchSettings();
     if (viewName === 'reviews') fetchReviews();
     if (viewName === 'categories') window.fetchCategoryData();
+    if (viewName === 'landing') window.fetchLandingConfig();
 };
 
 window.toggleAdminTheme = () => {
@@ -1140,3 +1141,164 @@ window.saveCategoryData = async () => {
         alert("Failed to save category data.");
     }
 };
+
+// --- LANDING PAGE CMS -----------------------------------------
+let heroSlides = [];
+let mobileBanners = [];
+let aboutData = {};
+
+window.fetchLandingConfig = async () => {
+    if (!supabase) return;
+    try {
+        const { data, error } = await supabase.from('store_settings').select('landing_config').eq('id', 1).single();
+        if (error && error.code !== 'PGRST116') throw error;
+        
+        let config = data?.landing_config || {};
+        
+        heroSlides = config.hero_slides || [];
+        mobileBanners = config.mobile_banners || [];
+        aboutData = config.about_us || { title: '', text: '', image: '' };
+        
+        document.getElementById('cms-about-title').value = aboutData.title || '';
+        document.getElementById('cms-about-image').value = aboutData.image || '';
+        document.getElementById('cms-about-text').value = aboutData.text || '';
+        
+        window.renderLandingConfig();
+    } catch (err) {
+        console.error("Error fetching landing config:", err);
+    }
+};
+
+window.renderLandingConfig = () => {
+    const heroContainer = document.getElementById('hero-slides-container');
+    const mobileContainer = document.getElementById('mobile-banners-container');
+    
+    // Render Hero Slides
+    if (heroSlides.length === 0) {
+        heroContainer.innerHTML = '<p class="text-gray-500 italic text-sm">No slides added yet.</p>';
+    } else {
+        heroContainer.innerHTML = heroSlides.map((slide, index) => 
+            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group">
+                <button onclick="window.removeHeroSlide( + "" + )" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Remove Slide">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Badge Text</label>
+                        <input type="text" value=" + "" + " onchange="window.updateHeroSlide( + "" + , 'badge', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="e.g. New Arrival">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title</label>
+                        <input type="text" value=" + "" + " onchange="window.updateHeroSlide( + "" + , 'title', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="Main Heading">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Subtitle</label>
+                        <input type="text" value=" + "" + " onchange="window.updateHeroSlide( + "" + , 'subtitle', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="Sub heading text">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Image URL</label>
+                        <input type="text" value=" + "" + " onchange="window.updateHeroSlide( + "" + , 'image', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="/images/hero1.png">
+                    </div>
+                </div>
+            </div>
+        ).join('');
+    }
+    
+    // Render Mobile Banners
+    if (mobileBanners.length === 0) {
+        mobileContainer.innerHTML = '<p class="text-gray-500 italic text-sm">No banners added yet.</p>';
+    } else {
+        mobileContainer.innerHTML = mobileBanners.map((banner, index) => 
+            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group">
+                <button onclick="window.removeMobileBanner( + "" + )" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Remove Banner">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title</label>
+                        <input type="text" value=" + "" + " onchange="window.updateMobileBanner( + "" + , 'title', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="e.g. Free Delivery">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Text</label>
+                        <input type="text" value=" + "" + " onchange="window.updateMobileBanner( + "" + , 'text', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="e.g. On orders above ?499">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Image URL</label>
+                        <input type="text" value=" + "" + " onchange="window.updateMobileBanner( + "" + , 'image', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="/images/icon.png">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Background Color (Tailwind Class)</label>
+                        <input type="text" value=" + "" + " onchange="window.updateMobileBanner( + "" + , 'bg_color', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="e.g. bg-emerald-100">
+                    </div>
+                </div>
+            </div>
+        ).join('');
+    }
+    
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+};
+
+window.addHeroSlide = () => {
+    heroSlides.push({ badge: '', title: 'New Slide', subtitle: '', image: '' });
+    window.renderLandingConfig();
+};
+
+window.removeHeroSlide = (index) => {
+    if(confirm("Remove this slide?")) {
+        heroSlides.splice(index, 1);
+        window.renderLandingConfig();
+    }
+};
+
+window.updateHeroSlide = (index, field, value) => {
+    heroSlides[index][field] = value;
+};
+
+window.addMobileBanner = () => {
+    mobileBanners.push({ title: 'New Banner', text: '', image: '', bg_color: 'bg-green-100' });
+    window.renderLandingConfig();
+};
+
+window.removeMobileBanner = (index) => {
+    if(confirm("Remove this banner?")) {
+        mobileBanners.splice(index, 1);
+        window.renderLandingConfig();
+    }
+};
+
+window.updateMobileBanner = (index, field, value) => {
+    mobileBanners[index][field] = value;
+};
+
+window.saveLandingConfig = async () => {
+    if (!supabase) return;
+    const btn = document.getElementById('save-landing-btn');
+    btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Saving...';
+    btn.disabled = true;
+    
+    aboutData = {
+        title: document.getElementById('cms-about-title').value.trim(),
+        image: document.getElementById('cms-about-image').value.trim(),
+        text: document.getElementById('cms-about-text').value.trim()
+    };
+    
+    const configData = {
+        hero_slides: heroSlides,
+        mobile_banners: mobileBanners,
+        about_us: aboutData
+    };
+    
+    try {
+        const { error } = await supabase.from('store_settings').update({ landing_config: configData }).eq('id', 1);
+        if (error) throw error;
+        showToast("Landing Page content saved successfully!");
+    } catch (err) {
+        console.error("Error saving landing config:", err);
+        alert("Failed to save changes.");
+    } finally {
+        btn.innerHTML = '<i data-lucide="save" class="w-5 h-5"></i> Save Landing Page';
+        btn.disabled = false;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+};
+

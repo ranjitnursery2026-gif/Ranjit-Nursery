@@ -562,7 +562,7 @@
         <!-- Founder Image -->
         <div
           class="relative animate-on-scroll opacity-0 -translate-x-8 transition-all duration-1000 ease-out flex justify-start md:justify-center lg:justify-end order-2 lg:order-1 mt-8 lg:mt-0 -ml-24 md:ml-0">
-          <img src="/images/founder_model_new.png" alt="Ranjit Nursery Founder"
+          <img id="dynamic-founder-image" src="/images/founder_model_new.png" alt="Ranjit Nursery Founder"
             class="w-[140%] max-w-[600px] md:max-w-[500px] lg:max-w-none lg:w-[115%] h-auto object-contain md:object-center mix-blend-multiply transform scale-[1.15] md:scale-110 lg:scale-[1.25] origin-center hover:scale-[1.2] md:hover:scale-[1.12] lg:hover:scale-[1.27] transition-transform duration-500 z-10" />
 
           <!-- Founder Badge -->
@@ -574,24 +574,24 @@
             </div>
             <div class="text-left">
               <p class="text-[8px] md:text-xs font-bold text-gray-400 uppercase tracking-widest mb-0.5 md:mb-1">Founder & CEO</p>
-              <h4 class="text-sm md:text-xl font-outfit font-extrabold text-gray-900 leading-none">RANJIT SINGH</h4>
+              <h4 id="dynamic-founder-title" class="text-sm md:text-xl font-outfit font-extrabold text-gray-900 leading-none">RANJIT SINGH</h4>
             </div>
           </div>
         </div>
 
         <!-- Content -->
-        <div class="animate-on-scroll opacity-0 translate-x-8 transition-all duration-1000 ease-out delay-200 order-1 lg:order-2">
-          <div class="text-accent font-bold tracking-wider uppercase mb-2 flex items-center gap-2">
-            <i data-lucide="sparkles" class="w-5 h-5"></i> About Us
+        <div class="order-1 lg:order-2 lg:pl-10 relative z-20">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6">
+            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+            <span class="text-sm font-bold tracking-wider uppercase">Our Roots</span>
           </div>
-          <h2 class="text-4xl md:text-5xl font-outfit font-bold text-gray-900 mb-6 leading-tight">
-            Trusted Wholesale Supplier in <span class="text-primary">Rourkela, Odisha</span>
+          <h2 class="text-4xl lg:text-5xl font-outfit font-extrabold text-gray-900 mb-6 leading-tight">
+            Cultivating <span class="text-primary">Nature's Best</span> Since 2010
           </h2>
-          <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-            Welcome to Ranjit Nursery (Rourkela's No.1 Nursery), where passion for nature meets exceptional quality.
-            We
-            are dedicated to providing the finest selection of plants and landscaping solutions to transform your homes,
-            offices, and gardens.
+          <p id="dynamic-about-text" class="text-gray-600 text-lg leading-relaxed mb-8 border-l-4 border-primary/20 pl-6 italic">
+            "What started as a small backyard passion has bloomed into one of the region's most trusted nurseries. We
+            believe every space deserves a touch of green, and we're here to make that happen with uncompromising
+            quality."
           </p>
           <ul class="space-y-4 mb-8">
             <li class="flex items-start gap-3">
@@ -1262,7 +1262,7 @@
     </div>
 
     <!-- Promo Banner (Horizontal Scroll) -->
-    <div class="px-4 py-4 overflow-x-auto custom-scrollbar flex gap-4 snap-x">
+    <div id="mobile-promo-banners" class="px-4 py-4 overflow-x-auto custom-scrollbar flex gap-4 snap-x">
       <!-- Banner 1 -->
       <div class="snap-center shrink-0 w-[85vw] max-w-[320px] rounded-2xl bg-gradient-to-r from-emerald-800 to-primary p-5 text-white relative overflow-hidden shadow-md">
         <div class="relative z-10">

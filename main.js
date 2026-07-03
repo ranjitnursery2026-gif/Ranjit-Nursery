@@ -297,70 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
-  // ─── Hero Carousel Logic ─────────────────────────────────────
-  const slides = document.querySelectorAll('.carousel-slide');
-  const dots = document.querySelectorAll('.carousel-dot');
-  if (slides.length > 0 && dots.length > 0) {
-    let currentSlide = 0;
-    let slideInterval;
-
-    function goToSlide(index) {
-      // Remove active state from current slide
-      slides[currentSlide].classList.remove('opacity-100', 'z-10');
-      slides[currentSlide].classList.add('opacity-0', 'z-0', 'pointer-events-none');
-      const currentContent = slides[currentSlide].querySelector('.slide-content');
-      if (currentContent) {
-        currentContent.classList.remove('translate-y-0', 'opacity-100');
-        currentContent.classList.add('translate-y-8', 'opacity-0');
-      }
-      
-      dots[currentSlide].classList.remove('w-10', 'opacity-100');
-      dots[currentSlide].classList.add('w-3', 'opacity-40');
-
-      // Update current slide index
-      currentSlide = index;
-
-      // Add active state to new slide
-      slides[currentSlide].classList.remove('opacity-0', 'z-0', 'pointer-events-none');
-      slides[currentSlide].classList.add('opacity-100', 'z-10');
-      
-      dots[currentSlide].classList.remove('w-3', 'opacity-40');
-      dots[currentSlide].classList.add('w-10', 'opacity-100');
-
-      // Animate new content in
-      const newContent = slides[currentSlide].querySelector('.slide-content');
-      if (newContent) {
-        setTimeout(() => {
-          newContent.classList.remove('translate-y-8', 'opacity-0');
-          newContent.classList.add('translate-y-0', 'opacity-100');
-        }, 100);
-      }
-    }
-
-    function nextSlide() {
-      goToSlide((currentSlide + 1) % slides.length);
-    }
-
-    function startSlideShow() {
-      slideInterval = setInterval(nextSlide, 5000);
-    }
-
-    function resetSlideShow() {
-      clearInterval(slideInterval);
-      startSlideShow();
-    }
-
-    dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => {
-        if (currentSlide !== index) {
-          goToSlide(index);
-          resetSlideShow();
-        }
-      });
-    });
-
-    startSlideShow();
-  }
+  // (Hero Carousel logic is now dynamically initialized)
 
   // ─── Plant Finder Quiz Logic ─────────────────────────────────
   const quizBtns = document.querySelectorAll('.quiz-btn');
@@ -693,4 +630,154 @@ document.addEventListener('DOMContentLoaded', () => {
   // ─── Initialize E-Commerce Cart System ─────────────────────
   window.RanjitCart = Cart;
   Cart.init();
+});
+
+// ─── DYNAMIC LANDING PAGE GENERATION ────────────────────────────
+window.fetchAndRenderLandingPage = async () => {
+    if (!window.supabase) return;
+    
+    // Check if we are on index.html (the homepage)
+    const isHomepage = document.getElementById('hero-carousel') || document.getElementById('mobile-promo-banners');
+    if (!isHomepage) return;
+    
+    try {
+        const { data, error } = await supabase.from('store_settings').select('landing_config').eq('id', 1).single();
+        if (error && error.code !== 'PGRST116') throw error;
+        
+        let config = data?.landing_config;
+        if (!config || Object.keys(config).length === 0) return; // No config, leave hardcoded HTML as fallback
+        
+        // Render Desktop Hero Slides
+        const heroContainer = document.getElementById('hero-carousel');
+        const dotsContainer = document.getElementById('hero-dots');
+        if (heroContainer && config.hero_slides && config.hero_slides.length > 0) {
+            heroContainer.innerHTML = config.hero_slides.map((slide, i) => `
+                <div class="carousel-slide absolute inset-0 w-full h-full transition-opacity duration-1000 ${i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}" data-index="${i}">
+                    <div class="absolute inset-0 z-0">
+                        <div class="w-full h-full bg-cover bg-center" style="background-image: url('${slide.image || ''}');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/90 to-emerald-900/60 mix-blend-multiply"></div>
+                    </div>
+                    <div class="relative z-10 h-full flex flex-col justify-center items-center text-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="slide-content transform ${i === 0 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'} transition-all duration-700 ease-out ${i === 0 ? 'mt-10 md:mt-0' : 'delay-300'}">
+                            ${slide.badge ? `<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/20 backdrop-blur-md border border-amber-500/50 text-amber-300 mb-8 mx-auto"><i data-lucide="sparkles" class="w-4 h-4"></i><span class="text-sm font-bold tracking-wider uppercase">${slide.badge}</span></div>` : ''}
+                            <h1 class="text-5xl md:text-7xl font-outfit font-extrabold text-white mb-6 leading-tight drop-shadow-lg">${slide.title}</h1>
+                            <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl font-light mx-auto drop-shadow-md">${slide.subtitle}</p>
+                            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                                <a href="products.html" class="px-8 py-4 bg-primary hover:bg-emerald-600 text-white rounded-full font-semibold text-lg transition-all shadow-xl hover:shadow-primary/40 transform hover:-translate-y-1 text-center">Explore Our Plants</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            if (dotsContainer) {
+                dotsContainer.innerHTML = config.hero_slides.map((_, i) => `
+                    <button class="carousel-dot ${i === 0 ? 'w-10 opacity-100' : 'w-3 opacity-40'} h-3 rounded-full bg-white transition-all duration-300"></button>
+                `).join('');
+            }
+            
+            // Re-initialize hero carousel logic
+            initHeroCarousel();
+        }
+        
+        // Render Mobile Promo Banners
+        const mobileBannersContainer = document.getElementById('mobile-promo-banners');
+        if (mobileBannersContainer && config.mobile_banners && config.mobile_banners.length > 0) {
+            mobileBannersContainer.innerHTML = config.mobile_banners.map(banner => `
+                <div class="snap-center shrink-0 w-[85vw] max-w-[320px] rounded-2xl ${banner.bg_color || 'bg-gradient-to-r from-emerald-800 to-primary'} p-5 text-white relative overflow-hidden shadow-md">
+                    <div class="relative z-10">
+                        <span class="bg-white/20 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">Promo</span>
+                        <h3 class="text-xl font-bold mt-2">${banner.title}</h3>
+                        <p class="text-emerald-100 text-sm mt-1 mb-3">${banner.text}</p>
+                        <a href="products.html" class="inline-block bg-white text-gray-900 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm">Shop Now</a>
+                    </div>
+                    ${banner.image ? `<img src="${banner.image}" class="absolute -right-4 -bottom-4 w-32 h-32 opacity-15 object-contain" />` : ''}
+                </div>
+            `).join('');
+        }
+        
+        // Render About Us
+        if (config.about_us) {
+            const titleEl = document.getElementById('dynamic-founder-title');
+            const imgEl = document.getElementById('dynamic-founder-image');
+            const textEl = document.getElementById('dynamic-about-text');
+            
+            if (titleEl && config.about_us.title) titleEl.textContent = config.about_us.title;
+            if (imgEl && config.about_us.image) imgEl.src = config.about_us.image;
+            if (textEl && config.about_us.text) textEl.textContent = config.about_us.text;
+        }
+        
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+        
+    } catch (err) {
+        console.error("Error fetching landing page config:", err);
+    }
+};
+
+function initHeroCarousel() {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.carousel-dot');
+    if (slides.length > 0 && dots.length > 0) {
+      let currentSlide = 0;
+      let slideInterval;
+  
+      function goToSlide(index) {
+        slides[currentSlide].classList.remove('opacity-100', 'z-10');
+        slides[currentSlide].classList.add('opacity-0', 'z-0', 'pointer-events-none');
+        const currentContent = slides[currentSlide].querySelector('.slide-content');
+        if (currentContent) {
+          currentContent.classList.remove('translate-y-0', 'opacity-100');
+          currentContent.classList.add('translate-y-8', 'opacity-0');
+        }
+        
+        dots[currentSlide].classList.remove('w-10', 'opacity-100');
+        dots[currentSlide].classList.add('w-3', 'opacity-40');
+  
+        currentSlide = index;
+  
+        slides[currentSlide].classList.remove('opacity-0', 'z-0', 'pointer-events-none');
+        slides[currentSlide].classList.add('opacity-100', 'z-10');
+        
+        dots[currentSlide].classList.remove('w-3', 'opacity-40');
+        dots[currentSlide].classList.add('w-10', 'opacity-100');
+  
+        const newContent = slides[currentSlide].querySelector('.slide-content');
+        if (newContent) {
+          setTimeout(() => {
+            newContent.classList.remove('translate-y-8', 'opacity-0');
+            newContent.classList.add('translate-y-0', 'opacity-100');
+          }, 100);
+        }
+      }
+  
+      function nextSlide() {
+        goToSlide((currentSlide + 1) % slides.length);
+      }
+  
+      function startSlideShow() {
+        if(slideInterval) clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, 5000);
+      }
+  
+      function resetSlideShow() {
+        if(slideInterval) clearInterval(slideInterval);
+        startSlideShow();
+      }
+  
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          if (currentSlide !== index) {
+            goToSlide(index);
+            resetSlideShow();
+          }
+        });
+      });
+  
+      startSlideShow();
+    }
+}
+
+// Fetch rendering immediately after DOM loads (or manually called here)
+document.addEventListener('DOMContentLoaded', () => {
+    window.fetchAndRenderLandingPage();
 });

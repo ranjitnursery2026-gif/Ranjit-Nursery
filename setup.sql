@@ -137,6 +137,7 @@ ALTER TABLE public.store_settings ADD COLUMN IF NOT EXISTS admin_password text D
 ALTER TABLE public.store_settings ADD COLUMN IF NOT EXISTS featured_title text DEFAULT 'Our Core Products';
 ALTER TABLE public.store_settings ADD COLUMN IF NOT EXISTS featured_subtitle text DEFAULT 'Explore our diverse collection of premium plants, gardening supplies, and exotic specialities perfect for any space.';
 ALTER TABLE public.store_settings ADD COLUMN IF NOT EXISTS featured_category text DEFAULT '';
+ALTER TABLE public.store_settings ADD COLUMN IF NOT EXISTS landing_config jsonb DEFAULT '{}'::jsonb;
 
 -- Allow public read access on settings
 ALTER TABLE public.store_settings ENABLE ROW LEVEL SECURITY;

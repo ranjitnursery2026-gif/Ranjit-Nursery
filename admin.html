@@ -67,6 +67,9 @@
             <button id="nav-pincodes" onclick="window.switchAdminView('pincodes')" class="w-full text-left px-4 py-3 rounded-xl font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-all flex items-center gap-3">
                 <i data-lucide="map-pin" class="w-5 h-5"></i> Delivery Areas
             </button>
+            <button id="nav-landing" onclick="window.switchAdminView('landing')" class="w-full text-left px-4 py-3 rounded-xl font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-all flex items-center gap-3">
+                <i data-lucide="layout-template" class="w-5 h-5"></i> Landing Page
+            </button>
             <button id="nav-settings" onclick="window.switchAdminView('settings')" class="w-full text-left px-4 py-3 rounded-xl font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-all flex items-center gap-3">
                 <i data-lucide="settings" class="w-5 h-5"></i> Settings
             </button>
@@ -262,6 +265,71 @@
                 </div>
             </div>
         </div> <!-- End of View Pincodes -->
+
+        <!-- LANDING PAGE VIEW -->
+        <div id="view-landing" class="hidden space-y-6">
+            <div>
+                <h1 class="text-3xl font-outfit font-bold text-gray-900 dark:text-white">Landing Page CMS</h1>
+                <p class="text-gray-500 dark:text-gray-400 mt-1">Manage the content, banners, and layout of your homepage.</p>
+            </div>
+
+            <!-- Hero Slider Management -->
+            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
+                <div class="flex items-center justify-between mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="image" class="w-5 h-5 text-primary"></i> Desktop Hero Slider
+                    </h3>
+                    <button onclick="window.addHeroSlide()" class="text-sm font-semibold text-primary hover:text-green-800 bg-green-50 hover:bg-green-100 dark:bg-green-500/10 dark:hover:bg-green-500/20 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Add Slide
+                    </button>
+                </div>
+                <div id="hero-slides-container" class="space-y-4">
+                    <!-- Slides injected by JS -->
+                </div>
+            </div>
+
+            <!-- Mobile Promo Banners -->
+            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mt-6">
+                <div class="flex items-center justify-between mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="smartphone" class="w-5 h-5 text-primary"></i> Mobile Banners
+                    </h3>
+                    <button onclick="window.addMobileBanner()" class="text-sm font-semibold text-primary hover:text-green-800 bg-green-50 hover:bg-green-100 dark:bg-green-500/10 dark:hover:bg-green-500/20 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Add Banner
+                    </button>
+                </div>
+                <div id="mobile-banners-container" class="space-y-4">
+                    <!-- Banners injected by JS -->
+                </div>
+            </div>
+
+            <!-- About Us Section -->
+            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mt-6">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <i data-lucide="user" class="w-5 h-5 text-primary"></i> About Us Section
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Founder Title</label>
+                        <input type="text" id="cms-about-title" class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-primary focus:border-primary block w-full p-2.5 transition-colors" placeholder="e.g. Ranjit Nayak">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Founder Image URL</label>
+                        <input type="text" id="cms-about-image" class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-primary focus:border-primary block w-full p-2.5 transition-colors" placeholder="/images/founder.jpg">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">About Text</label>
+                        <textarea id="cms-about-text" rows="4" class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-primary focus:border-primary block w-full p-2.5 transition-colors" placeholder="Write the about text here..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end pt-4">
+                <button onclick="window.saveLandingConfig()" id="save-landing-btn" class="bg-primary hover:bg-green-800 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-md shadow-primary/30 flex items-center gap-2">
+                    <i data-lucide="save" class="w-5 h-5"></i> Save Landing Page
+                </button>
+            </div>
+        </div>
 
         <!-- SETTINGS VIEW -->
         <div id="view-settings" class="hidden space-y-6">
