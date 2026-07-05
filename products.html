@@ -14,7 +14,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="antialiased bg-gray-50 text-gray-800 overflow-x-hidden pt-32">
+<body class="antialiased bg-gray-50 text-gray-800 overflow-x-hidden pt-0 md:pt-32">
   
   <!-- Desktop Navbar -->
   <nav class="fixed w-full z-50 top-0 transition-all duration-300 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm hidden md:block" id="navbar">
@@ -170,14 +170,14 @@
     <main class="flex-1 min-w-0 p-3 md:p-0 bg-white md:bg-transparent min-h-[calc(100vh-130px)]">
       
       <!-- Filter Status UI -->
-      <div id="filter-status-container" class="hidden flex-wrap items-center justify-between mb-8 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-        <div class="flex items-center gap-0">
-          <i data-lucide="filter" class="w-5 h-5 text-primary"></i>
-          <span class="text-gray-600 text-sm">Showing results for:</span>
-          <span id="active-filter-badge" class="bg-emerald-100 text-primary font-bold px-3 py-1 rounded-full text-sm">Category Name</span>
+      <div id="filter-status-container" class="hidden flex-wrap items-center justify-between mb-4 bg-white p-2.5 md:p-4 rounded-xl md:rounded-2xl shadow-sm border border-gray-100 gap-2">
+        <div class="flex items-center gap-1.5 md:gap-2 flex-wrap">
+          <i data-lucide="filter" class="w-4 h-4 md:w-5 md:h-5 text-primary"></i>
+          <span class="text-gray-600 text-xs md:text-sm">Showing results for:</span>
+          <span id="active-filter-badge" class="bg-emerald-100 text-primary font-bold px-2.5 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-sm">Category Name</span>
         </div>
-        <button id="clear-filter-btn" class="text-sm font-semibold text-gray-500 hover:text-red-500 transition-colors flex items-center gap-1">
-          <i data-lucide="x-circle" class="w-4 h-4"></i> Clear Filter
+        <button id="clear-filter-btn" class="text-xs md:text-sm font-semibold text-gray-500 hover:text-red-500 transition-colors flex items-center gap-1">
+          <i data-lucide="x-circle" class="w-3.5 h-3.5 md:w-4 md:h-4"></i> Clear Filter
         </button>
       </div>
 
