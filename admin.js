@@ -1186,62 +1186,62 @@ window.renderLandingConfig = () => {
     if (heroSlides.length === 0) {
         heroContainer.innerHTML = '<p class="text-gray-500 italic text-sm">No slides added yet.</p>';
     } else {
-        heroContainer.innerHTML = heroSlides.map((slide, index) => 
+        heroContainer.innerHTML = heroSlides.map((slide, index) => `
             <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group">
-                <button onclick="window.removeHeroSlide( + "" + )" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Remove Slide">
+                <button onclick="window.removeHeroSlide(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Remove Slide">
                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Badge Text</label>
-                        <input type="text" value=" + "" + " onchange="window.updateHeroSlide( + "" + , 'badge', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="e.g. New Arrival">
+                        <input type="text" value="${slide.badge || ''}" onchange="window.updateHeroSlide(${index}, 'badge', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="e.g. New Arrival">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title</label>
-                        <input type="text" value=" + "" + " onchange="window.updateHeroSlide( + "" + , 'title', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="Main Heading">
+                        <input type="text" value="${slide.title || ''}" onchange="window.updateHeroSlide(${index}, 'title', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="Main Heading">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Subtitle</label>
-                        <input type="text" value=" + "" + " onchange="window.updateHeroSlide( + "" + , 'subtitle', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="Sub heading text">
+                        <input type="text" value="${slide.subtitle || ''}" onchange="window.updateHeroSlide(${index}, 'subtitle', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="Sub heading text">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Image URL</label>
-                        <input type="text" value=" + "" + " onchange="window.updateHeroSlide( + "" + , 'image', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="/images/hero1.png">
+                        <input type="text" value="${slide.image || ''}" onchange="window.updateHeroSlide(${index}, 'image', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="/images/hero1.png">
                     </div>
                 </div>
             </div>
-        ).join('');
+        `).join('');
     }
     
     // Render Mobile Banners
     if (mobileBanners.length === 0) {
         mobileContainer.innerHTML = '<p class="text-gray-500 italic text-sm">No banners added yet.</p>';
     } else {
-        mobileContainer.innerHTML = mobileBanners.map((banner, index) => 
+        mobileContainer.innerHTML = mobileBanners.map((banner, index) => `
             <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group">
-                <button onclick="window.removeMobileBanner( + "" + )" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Remove Banner">
+                <button onclick="window.removeMobileBanner(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Remove Banner">
                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title</label>
-                        <input type="text" value=" + "" + " onchange="window.updateMobileBanner( + "" + , 'title', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="e.g. Free Delivery">
+                        <input type="text" value="${banner.title || ''}" onchange="window.updateMobileBanner(${index}, 'title', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="e.g. Free Delivery">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Text</label>
-                        <input type="text" value=" + "" + " onchange="window.updateMobileBanner( + "" + , 'text', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="e.g. On orders above ?499">
+                        <input type="text" value="${banner.text || ''}" onchange="window.updateMobileBanner(${index}, 'text', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="e.g. On orders above ?499">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Image URL</label>
-                        <input type="text" value=" + "" + " onchange="window.updateMobileBanner( + "" + , 'image', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="/images/icon.png">
+                        <input type="text" value="${banner.image || ''}" onchange="window.updateMobileBanner(${index}, 'image', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="/images/icon.png">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Background Color (Tailwind Class)</label>
-                        <input type="text" value=" + "" + " onchange="window.updateMobileBanner( + "" + , 'bg_color', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="e.g. bg-emerald-100">
+                        <input type="text" value="${banner.bg_color || ''}" onchange="window.updateMobileBanner(${index}, 'bg_color', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="e.g. bg-emerald-100">
                     </div>
                 </div>
             </div>
-        ).join('');
+        `).join('');
     }
     
     // Render Services
