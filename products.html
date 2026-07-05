@@ -121,20 +121,41 @@
     </div>
   </header>
 
-  <!-- Mobile Category Strip -->
-  <div class="md:hidden fixed top-[53px] w-full z-30 bg-white border-b border-gray-100 shadow-sm overflow-x-auto custom-scrollbar flex gap-2 px-4 py-2">
-    <button onclick="window.RanjitCart.clearFilter()" class="shrink-0 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-full transition-colors">All</button>
-    <button onclick="window.RanjitCart.filterProducts('Indoor Plants')" class="shrink-0 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-100 transition-colors">Indoor</button>
-    <button onclick="window.RanjitCart.filterProducts('Outdoor Plants')" class="shrink-0 px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-full border border-green-100 transition-colors">Outdoor</button>
-    <button onclick="window.RanjitCart.filterProducts('Seeds')" class="shrink-0 px-3 py-1 bg-orange-50 text-orange-700 text-xs font-bold rounded-full border border-orange-100 transition-colors">Seeds</button>
-    <button onclick="window.RanjitCart.filterProducts('Pots')" class="shrink-0 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full border border-blue-100 transition-colors">Pots</button>
-  </div>
+  <!-- Mobile Category Strip removed for vertical sidebar layout -->
 
   <!-- Products Main Layout -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:py-10 pb-24 md:pb-10 min-h-screen flex flex-col md:flex-row gap-8">
+  <section class="max-w-7xl mx-auto px-0 md:px-8 pt-[60px] md:pt-10 pb-24 md:pb-10 min-h-screen flex flex-row gap-0 md:gap-8 relative items-start">
     
+    <!-- Mobile Vertical Sidebar -->
+    <aside class="w-[85px] shrink-0 block md:hidden bg-gray-50/80 backdrop-blur-md border-r border-gray-100 overflow-y-auto h-[calc(100vh-130px)] sticky top-[60px] pb-20 custom-scrollbar z-30" id="mobile-vertical-sidebar">
+      <button onclick="window.RanjitCart.clearFilter(); setActiveMobileCategory(this)" class="mobile-cat-btn w-full py-4 px-1 flex flex-col items-center justify-center gap-1.5 border-l-4 border-primary bg-white text-primary transition-all relative shadow-[2px_0_10px_rgba(0,0,0,0.02)] z-10">
+        <div class="bg-primary/10 p-2.5 rounded-2xl mb-0.5"><i data-lucide="layout-grid" class="w-6 h-6"></i></div>
+        <span class="text-[10px] font-bold text-center leading-tight">All</span>
+      </button>
+      <button onclick="window.RanjitCart.filterProducts('Indoor Plants'); setActiveMobileCategory(this)" class="mobile-cat-btn w-full py-4 px-1 flex flex-col items-center justify-center gap-1.5 border-l-4 border-transparent text-gray-500 hover:bg-gray-100 transition-all">
+        <div class="bg-white p-2.5 rounded-2xl mb-0.5 shadow-sm border border-gray-100"><i data-lucide="home" class="w-6 h-6 text-emerald-600"></i></div>
+        <span class="text-[10px] font-medium text-center leading-tight">Indoor</span>
+      </button>
+      <button onclick="window.RanjitCart.filterProducts('Outdoor Plants'); setActiveMobileCategory(this)" class="mobile-cat-btn w-full py-4 px-1 flex flex-col items-center justify-center gap-1.5 border-l-4 border-transparent text-gray-500 hover:bg-gray-100 transition-all">
+        <div class="bg-white p-2.5 rounded-2xl mb-0.5 shadow-sm border border-gray-100"><i data-lucide="sun" class="w-6 h-6 text-green-500"></i></div>
+        <span class="text-[10px] font-medium text-center leading-tight">Outdoor</span>
+      </button>
+      <button onclick="window.RanjitCart.filterProducts('Seeds'); setActiveMobileCategory(this)" class="mobile-cat-btn w-full py-4 px-1 flex flex-col items-center justify-center gap-1.5 border-l-4 border-transparent text-gray-500 hover:bg-gray-100 transition-all">
+        <div class="bg-white p-2.5 rounded-2xl mb-0.5 shadow-sm border border-gray-100"><i data-lucide="sprout" class="w-6 h-6 text-orange-500"></i></div>
+        <span class="text-[10px] font-medium text-center leading-tight">Seeds</span>
+      </button>
+      <button onclick="window.RanjitCart.filterProducts('Pots'); setActiveMobileCategory(this)" class="mobile-cat-btn w-full py-4 px-1 flex flex-col items-center justify-center gap-1.5 border-l-4 border-transparent text-gray-500 hover:bg-gray-100 transition-all">
+        <div class="bg-white p-2.5 rounded-2xl mb-0.5 shadow-sm border border-gray-100"><i data-lucide="package" class="w-6 h-6 text-blue-500"></i></div>
+        <span class="text-[10px] font-medium text-center leading-tight">Pots</span>
+      </button>
+      <button onclick="window.RanjitCart.filterProducts('Tools'); setActiveMobileCategory(this)" class="mobile-cat-btn w-full py-4 px-1 flex flex-col items-center justify-center gap-1.5 border-l-4 border-transparent text-gray-500 hover:bg-gray-100 transition-all">
+        <div class="bg-white p-2.5 rounded-2xl mb-0.5 shadow-sm border border-gray-100"><i data-lucide="wrench" class="w-6 h-6 text-gray-600"></i></div>
+        <span class="text-[10px] font-medium text-center leading-tight">Tools</span>
+      </button>
+    </aside>
+
     <!-- Left Sidebar (Desktop) -->
-    <aside class="w-full md:w-64 flex-shrink-0 hidden md:block">
+    <aside class="w-64 flex-shrink-0 hidden md:block">
       <div class="sticky top-40 bg-white p-5 rounded-3xl shadow-sm border border-gray-100">
         <h3 class="text-lg font-outfit font-bold text-gray-900 mb-4 flex items-center gap-2">
           <i data-lucide="layers" class="w-5 h-5 text-primary"></i> Browse Categories
@@ -146,7 +167,7 @@
     </aside>
 
     <!-- Right Content Area -->
-    <main class="flex-1 min-w-0">
+    <main class="flex-1 min-w-0 p-3 md:p-0 bg-white md:bg-transparent min-h-[calc(100vh-130px)]">
       
       <!-- Filter Status UI -->
       <div id="filter-status-container" class="hidden flex-wrap items-center justify-between mb-8 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
@@ -508,5 +529,41 @@
     </div>
   </div>
 
+  <script>
+    // Logic to handle active states for mobile sidebar categories
+    window.setActiveMobileCategory = function(clickedBtn) {
+      const sidebar = document.getElementById('mobile-vertical-sidebar');
+      if (!sidebar) return;
+      
+      const buttons = sidebar.querySelectorAll('.mobile-cat-btn');
+      buttons.forEach(btn => {
+        // Reset to inactive state
+        btn.classList.remove('border-primary', 'bg-white', 'text-primary', 'shadow-[2px_0_10px_rgba(0,0,0,0.02)]', 'z-10');
+        btn.classList.add('border-transparent', 'text-gray-500');
+        
+        // Reset icon container
+        const iconContainer = btn.querySelector('div');
+        iconContainer.classList.remove('bg-primary/10');
+        iconContainer.classList.add('bg-white', 'shadow-sm', 'border', 'border-gray-100');
+        
+        // Reset text
+        const textSpan = btn.querySelector('span');
+        textSpan.classList.remove('font-bold');
+        textSpan.classList.add('font-medium');
+      });
+
+      // Set active state on clicked button
+      clickedBtn.classList.remove('border-transparent', 'text-gray-500');
+      clickedBtn.classList.add('border-primary', 'bg-white', 'text-primary', 'shadow-[2px_0_10px_rgba(0,0,0,0.02)]', 'z-10');
+      
+      const iconContainer = clickedBtn.querySelector('div');
+      iconContainer.classList.remove('bg-white', 'shadow-sm', 'border', 'border-gray-100');
+      iconContainer.classList.add('bg-primary/10');
+      
+      const textSpan = clickedBtn.querySelector('span');
+      textSpan.classList.remove('font-medium');
+      textSpan.classList.add('font-bold');
+    };
+  </script>
 </body>
 </html>
