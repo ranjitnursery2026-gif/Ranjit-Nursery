@@ -104,19 +104,19 @@
   </nav>
 
   <!-- Mobile App Header -->
-  <header class="md:hidden bg-white fixed top-0 w-full z-40 border-b border-gray-100 px-4 py-3 shadow-sm flex items-center justify-between">
+  <header class="md:hidden bg-white fixed top-0 w-full z-40 border-b border-gray-100 px-4 py-2 shadow-sm flex items-center justify-between">
     <div class="flex items-center gap-0">
       <a href="index.html" class="flex items-center gap-2">
-        <img src="/logo.png" alt="Ranjit Nursery Logo" class="h-12 w-auto scale-[1.3] object-contain origin-center -mr-2 -ml-1">
-        <h1 class="text-xl font-outfit font-bold text-primary leading-none">Products</h1>
+        <img src="/logo.png" alt="Ranjit Nursery Logo" class="h-9 w-auto scale-[1.3] object-contain origin-center -mr-2 -ml-1">
+        <h1 class="text-lg font-outfit font-bold text-primary leading-none">Products</h1>
       </a>
     </div>
     <div class="flex items-center gap-3">
       <button class="text-gray-600 p-1" onclick="window.openModal('search-modal')">
-        <i data-lucide="search" class="w-6 h-6"></i>
+        <i data-lucide="search" class="w-5 h-5"></i>
       </button>
       <button class="text-gray-600 p-1" onclick="window.RanjitCart.openAuthModal()">
-        <i data-lucide="user-circle" class="w-6 h-6"></i>
+        <i data-lucide="user-circle" class="w-5 h-5"></i>
       </button>
     </div>
   </header>
@@ -124,10 +124,10 @@
   <!-- Mobile Category Strip removed for vertical sidebar layout -->
 
   <!-- Products Main Layout -->
-  <section class="max-w-7xl mx-auto px-0 md:px-8 pt-[60px] md:pt-10 pb-24 md:pb-10 min-h-screen flex flex-row gap-0 md:gap-8 relative items-start">
+  <section class="max-w-7xl mx-auto px-0 md:px-8 pt-[52px] md:pt-10 pb-24 md:pb-10 min-h-screen flex flex-row gap-0 md:gap-8 relative items-start">
     
     <!-- Mobile Vertical Sidebar -->
-    <aside class="w-[85px] shrink-0 block md:hidden bg-gray-50/80 backdrop-blur-md border-r border-gray-100 overflow-y-auto h-[calc(100vh-130px)] sticky top-[60px] pb-20 custom-scrollbar z-30" id="mobile-vertical-sidebar">
+    <aside class="w-[85px] shrink-0 block md:hidden bg-gray-50/80 backdrop-blur-md border-r border-gray-100 overflow-y-auto h-[calc(100vh-120px)] sticky top-[52px] pb-20 custom-scrollbar z-30" id="mobile-vertical-sidebar">
       <button onclick="window.RanjitCart.clearFilter(); setActiveMobileCategory(this)" class="mobile-cat-btn w-full py-4 px-1 flex flex-col items-center justify-center gap-1.5 border-l-4 border-primary bg-white text-primary transition-all relative shadow-[2px_0_10px_rgba(0,0,0,0.02)] z-10">
         <div class="bg-primary/10 p-2.5 rounded-2xl mb-0.5"><i data-lucide="layout-grid" class="w-6 h-6"></i></div>
         <span class="text-[10px] font-bold text-center leading-tight">All</span>
