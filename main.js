@@ -686,9 +686,12 @@ window.fetchAndRenderLandingPage = async () => {
         // Render Mobile Promo Banners
         const mobileBannersContainer = document.getElementById('mobile-promo-banners');
         if (mobileBannersContainer && config.mobile_banners && config.mobile_banners.length > 0) {
-            mobileBannersContainer.innerHTML = config.mobile_banners.map(banner => `
+            mobileBannersContainer.innerHTML = config.mobile_banners.map((banner, index) => {
+                const fallbackImage = index % 2 === 0 ? '/images/mobile_banner_sale.png' : '/images/mobile_banner_new.png';
+                const imgUrl = banner.image || fallbackImage;
+                return `
                 <div class="snap-center shrink-0 w-full relative aspect-[5/3] overflow-hidden ${banner.bg_color || 'bg-gradient-to-r from-emerald-800 to-primary'}">
-                    ${banner.image ? `<img src="${banner.image}" class="absolute inset-0 w-full h-full object-cover z-0">` : ''}
+                    <img src="${imgUrl}" class="absolute inset-0 w-full h-full object-cover z-0">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-0"></div>
                     <div class="relative z-10 flex flex-col justify-end h-full p-4 pb-5">
                       <span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider backdrop-blur-md w-max text-white border border-white/30 mb-1">Promo</span>
@@ -697,7 +700,8 @@ window.fetchAndRenderLandingPage = async () => {
                       <a href="products.html" class="inline-block bg-primary text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md w-max">Shop Now</a>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
         }
         
         // Render About Us
