@@ -270,8 +270,8 @@ export function renderProducts() {
     const productsHTML = displayProducts.map((p, i) => {
       const delayClass = ['delay-100', 'delay-200', 'delay-300'][i % 3];
       const badgeHTML = p.badge
-        ? `<div class="absolute top-4 right-4 ${p.badge === 'Specialty' ? 'bg-accent' : p.badge === 'Bestseller' ? 'bg-amber-500' : 'bg-primary'} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
-             <i data-lucide="${p.badge === 'Specialty' ? 'star' : p.badge === 'Bestseller' ? 'flame' : 'trending-up'}" class="w-3 h-3"></i> ${p.badge}
+        ? `<div class="absolute top-2 right-2 md:top-4 md:right-4 ${p.badge === 'Specialty' ? 'bg-accent' : p.badge === 'Bestseller' ? 'bg-amber-500' : 'bg-primary'} text-white px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-bold shadow-lg flex items-center gap-1">
+             <i data-lucide="${p.badge === 'Specialty' ? 'star' : p.badge === 'Bestseller' ? 'flame' : 'trending-up'}" class="w-2.5 h-2.5 md:w-3 md:h-3"></i> ${p.badge}
            </div>`
         : '';
       
@@ -301,26 +301,26 @@ export function renderProducts() {
       let actionButtonsHTML = '';
       
       if (availStatus === 'Coming Soon') {
-          actionButtonsHTML = `<div class="w-full bg-orange-500 text-white font-bold py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-center shadow-md flex items-center justify-center gap-1 md:gap-2 text-[11px] md:text-sm"><i data-lucide="clock" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Coming Soon</span><span class="sm:hidden">Soon</span></div>`;
+          actionButtonsHTML = `<div class="w-full bg-orange-500 text-white font-bold py-1 md:py-2.5 rounded-lg md:rounded-xl text-center shadow-md flex items-center justify-center gap-1 md:gap-2 text-[10px] md:text-sm"><i data-lucide="clock" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Coming Soon</span><span class="sm:hidden">Soon</span></div>`;
       } else if (availStatus === 'Not Available') {
-          actionButtonsHTML = `<div class="w-full bg-gray-100 text-gray-500 font-bold py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-center border border-gray-200 flex items-center justify-center gap-1 md:gap-2 text-[11px] md:text-sm shadow-sm"><i data-lucide="slash" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Not Available</span><span class="sm:hidden">N/A</span></div>`;
+          actionButtonsHTML = `<div class="w-full bg-gray-100 text-gray-500 font-bold py-1 md:py-2.5 rounded-lg md:rounded-xl text-center border border-gray-200 flex items-center justify-center gap-1 md:gap-2 text-[10px] md:text-sm shadow-sm"><i data-lucide="slash" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Not Available</span><span class="sm:hidden">N/A</span></div>`;
       } else if (availStatus === 'Out of Stock' || p.is_available === false || (p.stock !== undefined && p.stock !== null ? p.stock : 10) <= 0) {
-          actionButtonsHTML = `<div class="w-full bg-red-50 text-red-600 font-bold py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-center border border-red-100 flex items-center justify-center gap-1 md:gap-2 text-[11px] md:text-sm"><i data-lucide="x-circle" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Out of Stock</span><span class="sm:hidden">Sold Out</span></div>`;
+          actionButtonsHTML = `<div class="w-full bg-red-50 text-red-600 font-bold py-1 md:py-2.5 rounded-lg md:rounded-xl text-center border border-red-100 flex items-center justify-center gap-1 md:gap-2 text-[10px] md:text-sm"><i data-lucide="x-circle" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Out of Stock</span><span class="sm:hidden">Sold Out</span></div>`;
       } else {
           // IN STOCK
           const primaryButtons = `${isCarpetGrass 
-              ? `<div class="flex-1 bg-emerald-50 text-emerald-700 font-semibold py-1.5 md:py-2.5 rounded-lg md:rounded-xl border border-emerald-200 flex items-center justify-center gap-1 md:gap-1.5 text-[11px] md:text-sm shadow-sm">
+              ? `<div class="flex-1 bg-emerald-50 text-emerald-700 font-semibold py-1 md:py-2.5 rounded-lg md:rounded-xl border border-emerald-200 flex items-center justify-center gap-1 md:gap-1.5 text-[10px] md:text-sm shadow-sm">
                   <i data-lucide="check-circle" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Available</span>
                 </div>`
-              : `<button onclick="window.RanjitCart.addToCart(${p.id})" class="flex-1 bg-primary hover:bg-emerald-800 text-white font-semibold py-1.5 md:py-2.5 rounded-lg md:rounded-xl transition-all text-[11px] md:text-sm flex items-center justify-center gap-1 md:gap-1.5 shadow-md hover:shadow-lg">
+              : `<button onclick="window.RanjitCart.addToCart(${p.id})" class="flex-1 bg-primary hover:bg-emerald-800 text-white font-semibold py-1 md:py-2.5 rounded-lg md:rounded-xl transition-all text-[10px] md:text-sm flex items-center justify-center gap-1 md:gap-1.5 shadow-md hover:shadow-lg">
                   <i data-lucide="shopping-cart" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Add to Cart</span><span class="sm:hidden">Add</span>
                 </button>`
             }
             ${isCarpetGrass
-              ? `<a href="tel:+917978809687" class="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold py-1.5 md:py-2.5 rounded-lg md:rounded-xl border border-amber-200 flex items-center justify-center gap-1 md:gap-1.5 text-[11px] md:text-sm shadow-sm transition-colors">
+              ? `<a href="tel:+917978809687" class="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold py-1 md:py-2.5 rounded-lg md:rounded-xl border border-amber-200 flex items-center justify-center gap-1 md:gap-1.5 text-[10px] md:text-sm shadow-sm transition-colors">
                   <i data-lucide="phone-call" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Contact</span><span class="sm:hidden">Call</span>
                 </a>`
-              : `<div class="flex-1 bg-amber-50 text-amber-700 font-semibold py-1.5 md:py-2.5 rounded-lg md:rounded-xl border border-amber-200 flex items-center justify-center gap-1 md:gap-1.5 text-[11px] md:text-sm shadow-sm">
+              : `<div class="flex-1 bg-amber-50 text-amber-700 font-semibold py-1 md:py-2.5 rounded-lg md:rounded-xl border border-amber-200 flex items-center justify-center gap-1 md:gap-1.5 text-[10px] md:text-sm shadow-sm">
                   <i data-lucide="home" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">In Stock: </span><span class="sm:hidden">Left: </span>${p.stock !== undefined && p.stock !== null ? p.stock : 10}
                 </div>`
             }`;
@@ -338,27 +338,27 @@ export function renderProducts() {
       }
 
       return `
-        <div class="bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group animate-on-scroll opacity-0 translate-y-8 ${delayClass} flex flex-col">
-          <div class="relative h-36 md:h-56 overflow-hidden shrink-0">
+        <div class="bg-white rounded-xl md:rounded-3xl overflow-hidden shadow-sm md:shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group animate-on-scroll opacity-0 translate-y-8 ${delayClass} flex flex-col border border-gray-100 md:border-0">
+          <div class="relative h-28 md:h-56 overflow-hidden shrink-0">
             <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
             ${badgeHTML}
             <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
           </div>
-          <div class="p-3 md:p-5 flex flex-col flex-grow">
+          <div class="p-2.5 md:p-5 flex flex-col flex-grow">
             <div>
-              <div class="flex items-start justify-between mb-1 gap-2">
-                <span class="text-[9px] md:text-xs font-bold uppercase tracking-wider text-primary/70 mt-1 truncate">${displayCategory}</span>
+              <div class="flex items-start justify-between mb-0.5 md:mb-1 gap-1 md:gap-2">
+                <span class="text-[8px] md:text-xs font-bold uppercase tracking-wider text-primary/70 mt-1 truncate">${displayCategory}</span>
                 ${priceHTML}
               </div>
-              <h3 class="text-sm md:text-base font-outfit font-bold text-gray-900 mb-1 leading-snug line-clamp-2">${p.name}</h3>
-              <div class="flex items-center gap-1 mb-1.5">
-                <i data-lucide="star" class="w-3 h-3 text-amber-500 ${p.avgRating > 0 ? 'fill-amber-500' : ''}"></i>
-                <span class="text-[10px] md:text-xs font-bold text-gray-700">${p.avgRating > 0 ? p.avgRating.toFixed(1) : 'New'}</span>
-                ${p.reviewCount > 0 ? `<span class="text-[9px] md:text-[10px] text-gray-400 ml-0.5">(${p.reviewCount})</span>` : ''}
+              <h3 class="text-[11px] md:text-base font-outfit font-bold text-gray-900 mb-0.5 md:mb-1 leading-tight md:leading-snug line-clamp-2">${p.name}</h3>
+              <div class="flex items-center gap-1 mb-1 md:mb-1.5">
+                <i data-lucide="star" class="w-2.5 h-2.5 md:w-3 md:h-3 text-amber-500 ${p.avgRating > 0 ? 'fill-amber-500' : ''}"></i>
+                <span class="text-[9px] md:text-xs font-bold text-gray-700">${p.avgRating > 0 ? p.avgRating.toFixed(1) : 'New'}</span>
+                ${p.reviewCount > 0 ? `<span class="text-[8px] md:text-[10px] text-gray-400 ml-0.5">(${p.reviewCount})</span>` : ''}
               </div>
-              <p class="text-gray-500 text-[10px] md:text-xs mb-2 line-clamp-1">${p.description || ''}</p>
+              <p class="text-gray-500 text-[9px] md:text-xs mb-1.5 md:mb-2 line-clamp-1">${p.description || ''}</p>
             </div>
-            <div class="mt-auto pt-3 border-t border-gray-50 w-full">
+            <div class="mt-auto pt-2 md:pt-3 border-t border-gray-50 w-full">
               ${actionButtonsHTML}
             </div>
           </div>
