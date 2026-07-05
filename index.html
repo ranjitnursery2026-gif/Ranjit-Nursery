@@ -1278,95 +1278,186 @@
     </div>
 
     <!-- Promo Banner (Horizontal Scroll) -->
-    <div id="mobile-promo-banners" class="px-4 py-4 overflow-x-auto custom-scrollbar flex gap-4 snap-x">
-      <!-- Banner 1 -->
-      <div class="snap-center shrink-0 w-[85vw] max-w-[320px] rounded-2xl bg-gradient-to-r from-emerald-800 to-primary p-5 text-white relative overflow-hidden shadow-md">
-        <div class="relative z-10">
-          <span class="bg-white/20 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">Sale</span>
-          <h3 class="text-xl font-bold mt-2">Up to 30% Off</h3>
-          <p class="text-emerald-100 text-sm mt-1 mb-3">On all indoor plants</p>
-          <a href="products.html?category=Indoor%20Plants" class="inline-block bg-white text-primary px-4 py-1.5 rounded-full text-sm font-bold shadow-sm">Shop Now</a>
+    <div id="mobile-promo-banners" class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar custom-scrollbar w-full">
+      <!-- Fallback static banners (if no CMS data) -->
+      <div class="snap-center shrink-0 w-full relative aspect-[5/3] overflow-hidden bg-gradient-to-r from-emerald-800 to-primary">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-0"></div>
+        <div class="relative z-10 flex flex-col justify-end h-full p-4 pb-5">
+          <span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider backdrop-blur-md w-max text-white border border-white/30 mb-1">Sale</span>
+          <h3 class="text-xl font-bold text-white leading-tight">Up to 30% Off</h3>
+          <p class="text-emerald-50 text-xs mt-0.5 mb-2">On all indoor plants</p>
+          <a href="products.html?category=Indoor%20Plants" class="inline-block bg-white text-primary px-4 py-1.5 rounded-full text-xs font-bold shadow-md w-max">Shop Now</a>
         </div>
-        <i data-lucide="leaf" class="absolute -right-4 -bottom-4 w-32 h-32 text-white opacity-10"></i>
+        <i data-lucide="leaf" class="absolute -right-4 -top-4 w-40 h-40 text-white opacity-10"></i>
       </div>
-      <!-- Banner 2 -->
-      <div class="snap-center shrink-0 w-[85vw] max-w-[320px] rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 p-5 text-white relative overflow-hidden shadow-md">
-        <div class="relative z-10">
-          <span class="bg-white/20 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">New</span>
-          <h3 class="text-xl font-bold mt-2">Organic Seeds</h3>
-          <p class="text-orange-100 text-sm mt-1 mb-3">Start your kitchen garden</p>
-          <a href="products.html?category=Seeds" class="inline-block bg-white text-orange-600 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm">Explore</a>
+      <div class="snap-center shrink-0 w-full relative aspect-[5/3] overflow-hidden bg-gradient-to-r from-orange-500 to-amber-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-0"></div>
+        <div class="relative z-10 flex flex-col justify-end h-full p-4 pb-5">
+          <span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider backdrop-blur-md w-max text-white border border-white/30 mb-1">New</span>
+          <h3 class="text-xl font-bold text-white leading-tight">Organic Seeds</h3>
+          <p class="text-orange-50 text-xs mt-0.5 mb-2">Start your kitchen garden</p>
+          <a href="products.html?category=Seeds" class="inline-block bg-white text-orange-600 px-4 py-1.5 rounded-full text-xs font-bold shadow-md w-max">Explore</a>
         </div>
-        <i data-lucide="sprout" class="absolute -right-2 -bottom-2 w-28 h-28 text-white opacity-15"></i>
+        <i data-lucide="sprout" class="absolute -right-4 -top-4 w-32 h-32 text-white opacity-15"></i>
       </div>
     </div>
 
-    <!-- Quick Categories (Grid) -->
-    <div class="px-4 py-2">
-      <div class="flex justify-between items-center mb-3">
-        <h3 class="font-bold text-gray-900 text-lg">Categories</h3>
-        <a href="products.html" class="text-primary text-sm font-semibold">See All</a>
+    <!-- Trust Strip -->
+    <div class="flex items-center justify-between px-3 py-2.5 bg-emerald-50 border-b border-emerald-100">
+      <div class="flex items-center gap-1.5">
+        <div class="bg-emerald-200/50 p-1 rounded-full"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-700"></i></div>
+        <span class="text-[9px] font-bold text-emerald-900 uppercase tracking-tight leading-none">100%<br>Safe</span>
       </div>
-      <div class="grid grid-cols-4 gap-y-4 gap-x-2">
-        <a href="products.html?category=Indoor%20Plants" class="flex flex-col items-center gap-1">
-          <div class="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 shadow-sm">
-            <i data-lucide="home" class="w-6 h-6"></i>
+      <div class="flex items-center gap-1.5">
+        <div class="bg-emerald-200/50 p-1 rounded-full"><i data-lucide="leaf" class="w-3.5 h-3.5 text-emerald-700"></i></div>
+        <span class="text-[9px] font-bold text-emerald-900 uppercase tracking-tight leading-none">Fresh<br>Plants</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <div class="bg-emerald-200/50 p-1 rounded-full"><i data-lucide="credit-card" class="w-3.5 h-3.5 text-emerald-700"></i></div>
+        <span class="text-[9px] font-bold text-emerald-900 uppercase tracking-tight leading-none">Secure<br>Pay</span>
+      </div>
+    </div>
+
+    <!-- Coupons Strip -->
+    <div class="px-0 py-3 bg-gray-50/50 border-b border-gray-100">
+      <div class="flex overflow-x-auto gap-3 snap-x snap-mandatory px-4 custom-scrollbar hide-scrollbar">
+        <div class="snap-start shrink-0 flex items-center bg-white border border-dashed border-emerald-300 rounded-lg p-2 min-w-[200px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] relative overflow-hidden">
+          <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-r border-emerald-200"></div>
+          <div class="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-l border-emerald-200"></div>
+          <div class="pl-3 pr-3 flex-1 border-r border-dashed border-emerald-100">
+            <span class="block text-[11px] text-emerald-600 font-extrabold uppercase">10% OFF</span>
+            <span class="block text-[9px] text-gray-500 font-medium">All Orders</span>
           </div>
-          <span class="text-[11px] font-medium text-gray-700 text-center leading-tight mt-1">Indoor<br>Plants</span>
+          <div class="pl-2 pr-1">
+            <span class="text-[10px] font-mono font-bold bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded border border-emerald-100">WELCOME10</span>
+          </div>
+        </div>
+        <div class="snap-start shrink-0 flex items-center bg-white border border-dashed border-blue-300 rounded-lg p-2 min-w-[200px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] relative overflow-hidden">
+          <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-r border-blue-200"></div>
+          <div class="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-l border-blue-200"></div>
+          <div class="pl-3 pr-3 flex-1 border-r border-dashed border-blue-100">
+            <span class="block text-[11px] text-blue-600 font-extrabold uppercase">Free Ship</span>
+            <span class="block text-[9px] text-gray-500 font-medium">Above ₹1500</span>
+          </div>
+          <div class="pl-2 pr-1">
+            <span class="text-[10px] font-mono font-bold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-100">FREESHIP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image-Based Categories (Horizontal Scroll) -->
+    <div class="px-0 py-4 bg-white">
+      <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 px-4 custom-scrollbar hide-scrollbar pb-1">
+        <a href="products.html?category=Indoor%20Plants" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+          <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+            <img src="https://images.unsplash.com/photo-1416879598555-0814f3333333?auto=format&fit=crop&w=150&h=150&q=80" class="w-full h-full rounded-full object-cover" alt="Indoor">
+          </div>
+          <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Indoor</span>
         </a>
-        <a href="products.html?category=Outdoor%20Plants" class="flex flex-col items-center gap-1">
-          <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center text-green-600 shadow-sm">
-            <i data-lucide="tree-pine" class="w-6 h-6"></i>
+        <a href="products.html?category=Outdoor%20Plants" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+          <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+            <img src="https://images.unsplash.com/photo-1584589167171-541ce45f1eea?auto=format&fit=crop&w=150&h=150&q=80" class="w-full h-full rounded-full object-cover" alt="Outdoor">
           </div>
-          <span class="text-[11px] font-medium text-gray-700 text-center leading-tight mt-1">Outdoor<br>Plants</span>
+          <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Outdoor</span>
         </a>
-        <a href="products.html?category=Seeds" class="flex flex-col items-center gap-1">
-          <div class="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 shadow-sm">
-            <i data-lucide="sprout" class="w-6 h-6"></i>
+        <a href="products.html?category=Seeds" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+          <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+            <img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=150&h=150&q=80" class="w-full h-full rounded-full object-cover" alt="Seeds">
           </div>
-          <span class="text-[11px] font-medium text-gray-700 text-center leading-tight mt-1">Organic<br>Seeds</span>
+          <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Seeds</span>
         </a>
-        <a href="products.html?category=Pots" class="flex flex-col items-center gap-1">
-          <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 shadow-sm">
-            <i data-lucide="archive" class="w-6 h-6"></i>
+        <a href="products.html?category=Pots" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+          <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+            <img src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=150&h=150&q=80" class="w-full h-full rounded-full object-cover" alt="Pots">
           </div>
-          <span class="text-[11px] font-medium text-gray-700 text-center leading-tight mt-1">Designer<br>Pots</span>
+          <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Pots</span>
         </a>
-        <a href="products.html?category=Tools" class="flex flex-col items-center gap-1">
-          <div class="w-14 h-14 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 shadow-sm">
-            <i data-lucide="hammer" class="w-6 h-6"></i>
+        <a href="products.html?category=Flowers" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+          <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+            <img src="https://images.unsplash.com/photo-1490750967868-88cb4ec069c9?auto=format&fit=crop&w=150&h=150&q=80" class="w-full h-full rounded-full object-cover" alt="Flowers">
           </div>
-          <span class="text-[11px] font-medium text-gray-700 text-center leading-tight mt-1">Tools &<br>Equip</span>
+          <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Flowers</span>
         </a>
-        <a href="products.html?category=Fertilizers" class="flex flex-col items-center gap-1">
-          <div class="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 shadow-sm">
-            <i data-lucide="flask-conical" class="w-6 h-6"></i>
+        <a href="products.html?category=Tools" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+          <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+            <img src="https://images.unsplash.com/photo-1416879598555-0814f3333333?auto=format&fit=crop&w=150&h=150&q=80" class="w-full h-full rounded-full object-cover" alt="Tools">
           </div>
-          <span class="text-[11px] font-medium text-gray-700 text-center leading-tight mt-1">Fertilizer<br>& Meds</span>
+          <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Tools</span>
         </a>
-        <a href="#" onclick="window.RanjitCart.openTrackModal()" class="flex flex-col items-center gap-1">
-          <div class="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 shadow-sm">
-            <i data-lucide="truck" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <!-- Deal of the Day (Flash Sale) -->
+    <div class="mt-2 bg-gradient-to-br from-blue-950 to-indigo-950 py-4 pb-5 overflow-hidden relative">
+      <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500 rounded-full blur-[80px] opacity-30"></div>
+      <div class="px-4 flex justify-between items-center mb-4 relative z-10">
+        <div class="flex flex-col">
+          <h3 class="font-bold text-white text-lg flex items-center gap-1.5 leading-none mb-1"><i data-lucide="zap" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i> Deal of the Day</h3>
+          <span class="text-[10px] text-blue-200 font-medium">Ends in <span class="font-mono font-bold bg-black/40 px-1.5 py-0.5 rounded ml-1 text-white shadow-inner">04:32:10</span></span>
+        </div>
+        <a href="products.html" class="bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full transition-colors shadow-sm">View All</a>
+      </div>
+      <div class="flex overflow-x-auto snap-x snap-mandatory px-4 gap-3 custom-scrollbar hide-scrollbar relative z-10 pb-2">
+        <a href="products.html?category=Indoor" class="snap-start shrink-0 w-32 bg-white rounded-xl overflow-hidden shadow-xl flex flex-col relative">
+          <span class="absolute top-0 left-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-br-lg z-10 shadow-sm">45% OFF</span>
+          <img src="https://images.unsplash.com/photo-1599598425947-330026293905?auto=format&fit=crop&w=250&h=250&q=80" class="w-full h-28 object-cover">
+          <div class="p-2.5 flex flex-col">
+            <h4 class="text-[11px] font-bold text-gray-800 line-clamp-1 mb-1 leading-tight">Snake Plant</h4>
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm font-outfit font-extrabold text-primary">₹149</span>
+              <span class="text-[9px] font-medium text-gray-400 line-through">₹299</span>
+            </div>
           </div>
-          <span class="text-[11px] font-medium text-gray-700 text-center leading-tight mt-1">Track<br>Order</span>
         </a>
-        <a href="https://wa.me/919692905128" class="flex flex-col items-center gap-1">
-          <div class="w-14 h-14 bg-[#25D366]/20 rounded-full flex items-center justify-center text-[#25D366] shadow-sm">
-            <i data-lucide="phone" class="w-6 h-6"></i>
+        <a href="products.html?category=Pots" class="snap-start shrink-0 w-32 bg-white rounded-xl overflow-hidden shadow-xl flex flex-col relative">
+          <span class="absolute top-0 left-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-br-lg z-10 shadow-sm">30% OFF</span>
+          <img src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=250&h=250&q=80" class="w-full h-28 object-cover">
+          <div class="p-2.5 flex flex-col">
+            <h4 class="text-[11px] font-bold text-gray-800 line-clamp-1 mb-1 leading-tight">Ceramic Pot</h4>
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm font-outfit font-extrabold text-primary">₹299</span>
+              <span class="text-[9px] font-medium text-gray-400 line-through">₹499</span>
+            </div>
           </div>
-          <span class="text-[11px] font-medium text-gray-700 text-center leading-tight mt-1">WhatsApp<br>Us</span>
+        </a>
+        <a href="products.html?category=Seeds" class="snap-start shrink-0 w-32 bg-white rounded-xl overflow-hidden shadow-xl flex flex-col relative">
+          <span class="absolute top-0 left-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-br-lg z-10 shadow-sm">50% OFF</span>
+          <img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=250&h=250&q=80" class="w-full h-28 object-cover">
+          <div class="p-2.5 flex flex-col">
+            <h4 class="text-[11px] font-bold text-gray-800 line-clamp-1 mb-1 leading-tight">Tomato Seeds</h4>
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm font-outfit font-extrabold text-primary">₹49</span>
+              <span class="text-[9px] font-medium text-gray-400 line-through">₹99</span>
+            </div>
+          </div>
         </a>
       </div>
     </div>
 
     <!-- Featured Products Mobile -->
-    <div class="px-4 py-6">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="font-bold text-gray-900 text-lg">Best Sellers</h3>
-        <a href="products.html" class="text-primary text-sm font-semibold">View All</a>
+    <div class="pt-5 pb-6 bg-gray-50 mt-2">
+      <div class="px-4 flex justify-between items-center mb-4">
+        <h3 class="font-outfit font-bold text-gray-900 text-lg">Best Sellers</h3>
+        <a href="products.html" class="text-primary text-xs font-bold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">View All</a>
       </div>
-      <!-- Note: We use .products-grid-container so cart.js can inject into this as well -->
-      <div id="mobile-products-grid" class="products-grid-container grid grid-cols-2 gap-3">
+      <!-- Notice the style tag forcing the layout to horizontal swipeable carousel -->
+      <style>
+        #mobile-products-grid {
+          display: flex !important;
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          gap: 12px;
+          padding: 0 16px 16px 16px;
+          scroll-snap-type: x mandatory;
+        }
+        #mobile-products-grid > div {
+          width: 140px;
+          flex: 0 0 auto;
+          scroll-snap-align: start;
+        }
+      </style>
+      <div id="mobile-products-grid" class="products-grid-container custom-scrollbar hide-scrollbar">
         <!-- Products injected by cart.js -->
       </div>
     </div>

@@ -687,14 +687,15 @@ window.fetchAndRenderLandingPage = async () => {
         const mobileBannersContainer = document.getElementById('mobile-promo-banners');
         if (mobileBannersContainer && config.mobile_banners && config.mobile_banners.length > 0) {
             mobileBannersContainer.innerHTML = config.mobile_banners.map(banner => `
-                <div class="snap-center shrink-0 w-[85vw] max-w-[320px] rounded-2xl ${banner.bg_color || 'bg-gradient-to-r from-emerald-800 to-primary'} p-5 text-white relative overflow-hidden shadow-md">
-                    <div class="relative z-10">
-                        <span class="bg-white/20 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">Promo</span>
-                        <h3 class="text-xl font-bold mt-2">${banner.title}</h3>
-                        <p class="text-emerald-100 text-sm mt-1 mb-3">${banner.text}</p>
-                        <a href="products.html" class="inline-block bg-white text-gray-900 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm">Shop Now</a>
+                <div class="snap-center shrink-0 w-full relative aspect-[5/3] overflow-hidden ${banner.bg_color || 'bg-gradient-to-r from-emerald-800 to-primary'}">
+                    ${banner.image ? `<img src="${banner.image}" class="absolute inset-0 w-full h-full object-cover z-0">` : ''}
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-0"></div>
+                    <div class="relative z-10 flex flex-col justify-end h-full p-4 pb-5">
+                      <span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider backdrop-blur-md w-max text-white border border-white/30 mb-1">Promo</span>
+                      <h3 class="text-xl font-bold text-white leading-tight">${banner.title}</h3>
+                      <p class="text-emerald-50 text-xs mt-0.5 mb-2 line-clamp-2">${banner.text}</p>
+                      <a href="products.html" class="inline-block bg-primary text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md w-max">Shop Now</a>
                     </div>
-                    ${banner.image ? `<img src="${banner.image}" class="absolute -right-4 -bottom-4 w-32 h-32 opacity-15 object-contain" />` : ''}
                 </div>
             `).join('');
         }
