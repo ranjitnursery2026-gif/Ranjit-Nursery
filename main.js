@@ -645,7 +645,10 @@ window.fetchAndRenderLandingPage = async () => {
         if (error && error.code !== 'PGRST116') throw error;
         
         let config = data?.landing_config;
-        if (!config || Object.keys(config).length === 0) return; // No config, leave hardcoded HTML as fallback
+        if (!config || Object.keys(config).length === 0) {
+            initHeroCarousel(); // Initialize the fallback HTML slider
+            return;
+        }
         
         // Render Desktop Hero Slides
         const heroContainer = document.getElementById('hero-carousel');
@@ -705,6 +708,80 @@ window.fetchAndRenderLandingPage = async () => {
             if (titleEl && config.about_us.title) titleEl.textContent = config.about_us.title;
             if (imgEl && config.about_us.image) imgEl.src = config.about_us.image;
             if (textEl && config.about_us.text) textEl.textContent = config.about_us.text;
+        }
+        // Render Services
+        const servicesList = document.getElementById('dynamic-services-list');
+        if (servicesList && config.services && config.services.length > 0) {
+            servicesList.innerHTML = config.services.map(svc => `
+                <li class="flex items-start gap-3">
+                  <div class="mt-1 bg-emerald-100 p-1.5 rounded-full text-primary shrink-0">
+                    <i data-lucide="${svc.icon || 'check'}" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <strong class="text-gray-900">${svc.title}</strong>
+                    <p class="text-gray-600 text-sm mt-1">${svc.desc}</p>
+                  </div>
+                </li>
+            `).join('');
+        }
+
+        // Render Packages
+        const packagesGrid = document.getElementById('dynamic-packages-grid');
+        if (packagesGrid && config.packages && config.packages.length > 0) {
+            packagesGrid.innerHTML = config.packages.map(pkg => `
+                <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 relative overflow-hidden group">
+                  <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-emerald-100/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <h3 class="text-2xl font-outfit font-bold text-gray-900 mb-2 relative z-10">${pkg.title}</h3>
+                  <div class="text-primary font-black text-xl mb-6 relative z-10">${pkg.price}</div>
+                  <ul class="space-y-4 mb-8 relative z-10">
+                    ${(pkg.features || '').split(',').map(f => `
+                        <li class="flex items-center gap-3 text-gray-600">
+                          <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                          <span>${f.trim()}</span>
+                        </li>
+                    `).join('')}
+                  </ul>
+                  <button class="w-full bg-gray-50 hover:bg-primary text-gray-900 hover:text-white font-bold py-3 rounded-xl transition-colors relative z-10" onclick="window.RanjitCart && window.RanjitCart.openAuthModal ? window.RanjitCart.openAuthModal() : alert('Coming soon!')">
+                    Select Package
+                  </button>
+                </div>
+            `).join('');
+        }
+
+        // Render Testimonials
+        const testimonialsGrid = document.getElementById('dynamic-testimonials-grid');
+        if (testimonialsGrid && config.testimonials && config.testimonials.length > 0) {
+            testimonialsGrid.innerHTML = config.testimonials.map((test, idx) => `
+                <div class="bg-white/10 backdrop-blur-md rounded-3xl p-5 md:p-8 border border-white/20 shadow-xl animate-on-scroll opacity-0 translate-y-8 delay-${(idx % 3) * 100}">
+                  <div class="flex text-accent-gold mb-4">
+                    ${Array.from({length: 5}).map((_, i) => `<i data-lucide="star" class="w-5 h-5 ${i < parseInt(test.rating || 5) ? 'fill-current' : 'text-gray-400'}"></i>`).join('')}
+                  </div>
+                  <p class="text-gray-100 mb-6 italic">"${test.text}"</p>
+                  <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-emerald-800 rounded-full flex items-center justify-center text-white font-bold text-xl border-2 border-accent shrink-0">
+                      ${test.name ? test.name.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                    <div>
+                      <h4 class="text-white font-bold">${test.name}</h4>
+                      <p class="text-emerald-200 text-sm">Customer</p>
+                    </div>
+                  </div>
+                </div>
+            `).join('');
+            
+            // Re-trigger scroll animations for injected content
+            setTimeout(() => {
+                if (window.IntersectionObserver) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.remove('opacity-0', 'translate-y-8');
+                            }
+                        });
+                    }, { threshold: 0.1 });
+                    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+                }
+            }, 100);
         }
         
         if (typeof lucide !== 'undefined') lucide.createIcons();

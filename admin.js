@@ -1146,6 +1146,9 @@ window.saveCategoryData = async () => {
 let heroSlides = [];
 let mobileBanners = [];
 let aboutData = {};
+let servicesData = [];
+let packagesData = [];
+let testimonialsData = [];
 
 window.fetchLandingConfig = async () => {
     if (!supabase) return;
@@ -1158,6 +1161,9 @@ window.fetchLandingConfig = async () => {
         heroSlides = config.hero_slides || [];
         mobileBanners = config.mobile_banners || [];
         aboutData = config.about_us || { title: '', text: '', image: '' };
+        servicesData = config.services || [];
+        packagesData = config.packages || [];
+        testimonialsData = config.testimonials || [];
         
         document.getElementById('cms-about-title').value = aboutData.title || '';
         document.getElementById('cms-about-image').value = aboutData.image || '';
@@ -1172,6 +1178,9 @@ window.fetchLandingConfig = async () => {
 window.renderLandingConfig = () => {
     const heroContainer = document.getElementById('hero-slides-container');
     const mobileContainer = document.getElementById('mobile-banners-container');
+    const servicesContainer = document.getElementById('services-container');
+    const packagesContainer = document.getElementById('packages-container');
+    const testimonialsContainer = document.getElementById('testimonials-container');
     
     // Render Hero Slides
     if (heroSlides.length === 0) {
@@ -1235,6 +1244,93 @@ window.renderLandingConfig = () => {
         ).join('');
     }
     
+    // Render Services
+    if (servicesContainer) {
+        if (servicesData.length === 0) {
+            servicesContainer.innerHTML = '<p class="text-gray-500 italic text-sm">No services added yet.</p>';
+        } else {
+            servicesContainer.innerHTML = servicesData.map((svc, index) => `
+                <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group">
+                    <button onclick="window.removeService(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Icon (Lucide Name)</label>
+                            <input type="text" value="${svc.icon || ''}" onchange="window.updateService(${index}, 'icon', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none" placeholder="e.g. leaf">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title</label>
+                            <input type="text" value="${svc.title || ''}" onchange="window.updateService(${index}, 'title', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none" placeholder="e.g. Expert Care">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Description</label>
+                            <input type="text" value="${svc.desc || ''}" onchange="window.updateService(${index}, 'desc', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none" placeholder="Short description">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    // Render Packages
+    if (packagesContainer) {
+        if (packagesData.length === 0) {
+            packagesContainer.innerHTML = '<p class="text-gray-500 italic text-sm">No packages added yet.</p>';
+        } else {
+            packagesContainer.innerHTML = packagesData.map((pkg, index) => `
+                <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group">
+                    <button onclick="window.removePackage(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Package Name</label>
+                            <input type="text" value="${pkg.title || ''}" onchange="window.updatePackage(${index}, 'title', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Price/Subtitle</label>
+                            <input type="text" value="${pkg.price || ''}" onchange="window.updatePackage(${index}, 'price', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Features (comma separated)</label>
+                            <input type="text" value="${pkg.features || ''}" onchange="window.updatePackage(${index}, 'features', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    // Render Testimonials
+    if (testimonialsContainer) {
+        if (testimonialsData.length === 0) {
+            testimonialsContainer.innerHTML = '<p class="text-gray-500 italic text-sm">No testimonials added yet.</p>';
+        } else {
+            testimonialsContainer.innerHTML = testimonialsData.map((test, index) => `
+                <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group">
+                    <button onclick="window.removeTestimonial(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Name</label>
+                            <input type="text" value="${test.name || ''}" onchange="window.updateTestimonial(${index}, 'name', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Rating (1-5)</label>
+                            <input type="number" min="1" max="5" value="${test.rating || '5'}" onchange="window.updateTestimonial(${index}, 'rating', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Feedback</label>
+                            <textarea rows="2" onchange="window.updateTestimonial(${index}, 'text', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none">${test.text || ''}</textarea>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+    
     if (typeof lucide !== 'undefined') lucide.createIcons();
 };
 
@@ -1270,6 +1366,51 @@ window.updateMobileBanner = (index, field, value) => {
     mobileBanners[index][field] = value;
 };
 
+// CRUD Services
+window.addService = () => {
+    servicesData.push({ icon: 'leaf', title: 'New Service', desc: '' });
+    window.renderLandingConfig();
+};
+window.removeService = (index) => {
+    if(confirm("Remove this service?")) {
+        servicesData.splice(index, 1);
+        window.renderLandingConfig();
+    }
+};
+window.updateService = (index, field, value) => {
+    servicesData[index][field] = value;
+};
+
+// CRUD Packages
+window.addPackage = () => {
+    packagesData.push({ title: 'New Package', price: '₹999', features: 'Feature 1, Feature 2' });
+    window.renderLandingConfig();
+};
+window.removePackage = (index) => {
+    if(confirm("Remove this package?")) {
+        packagesData.splice(index, 1);
+        window.renderLandingConfig();
+    }
+};
+window.updatePackage = (index, field, value) => {
+    packagesData[index][field] = value;
+};
+
+// CRUD Testimonials
+window.addTestimonial = () => {
+    testimonialsData.push({ name: 'Customer', rating: '5', text: 'Great service!' });
+    window.renderLandingConfig();
+};
+window.removeTestimonial = (index) => {
+    if(confirm("Remove this testimonial?")) {
+        testimonialsData.splice(index, 1);
+        window.renderLandingConfig();
+    }
+};
+window.updateTestimonial = (index, field, value) => {
+    testimonialsData[index][field] = value;
+};
+
 window.saveLandingConfig = async () => {
     if (!supabase) return;
     const btn = document.getElementById('save-landing-btn');
@@ -1285,7 +1426,10 @@ window.saveLandingConfig = async () => {
     const configData = {
         hero_slides: heroSlides,
         mobile_banners: mobileBanners,
-        about_us: aboutData
+        about_us: aboutData,
+        services: servicesData,
+        packages: packagesData,
+        testimonials: testimonialsData
     };
     
     try {
