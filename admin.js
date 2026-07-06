@@ -484,7 +484,7 @@ window.bulkDeleteProducts = async () => {
 // View Switcher
 window.switchAdminView = (viewName) => {
     // Hide all views
-    ['products', 'categories', 'orders', 'pincodes', 'settings', 'reviews', 'landing'].forEach(v => {
+    ['products', 'categories', 'orders', 'pincodes', 'settings', 'reviews', 'landing', 'coupons'].forEach(v => {
         const viewEl = document.getElementById(`view-${v}`);
         if(viewEl) viewEl.classList.add('hidden');
     });
@@ -493,7 +493,7 @@ window.switchAdminView = (viewName) => {
     const activeClasses = ['font-semibold', 'text-primary', 'bg-primary/10', 'dark:bg-primary/20', 'dark:text-green-400', 'shadow-sm'];
 
     // Reset all nav buttons
-    ['products', 'categories', 'orders', 'pincodes', 'settings', 'reviews', 'landing'].forEach(v => {
+    ['products', 'categories', 'orders', 'pincodes', 'settings', 'reviews', 'landing', 'coupons'].forEach(v => {
         const navEl = document.getElementById(`nav-${v}`);
         if (navEl) {
             navEl.classList.remove(...activeClasses);
@@ -1150,6 +1150,13 @@ let servicesData = [];
 let packagesData = [];
 let testimonialsData = [];
 
+// New Mobile UI States
+let imageCategories = [];
+let trustStrip = { enabled: true };
+let dealOfDay = { enabled: false, end_time: '', products: [] };
+let couponsList = [];
+let bestSellersConfig = { category: '' };
+
 window.fetchLandingConfig = async () => {
     if (!supabase) return;
     try {
@@ -1164,6 +1171,20 @@ window.fetchLandingConfig = async () => {
         servicesData = config.services || [];
         packagesData = config.packages || [];
         testimonialsData = config.testimonials || [];
+        
+        imageCategories = config.image_categories || [];
+        trustStrip = config.trust_strip || { enabled: true };
+        dealOfDay = config.deal_of_day || { enabled: false, end_time: '', products: [] };
+        couponsList = config.coupons || [];
+        bestSellersConfig = config.best_sellers || { category: '' };
+        
+        const trustStripToggle = document.getElementById('cms-trust-strip-toggle');
+        const dealTimeInput = document.getElementById('cms-deal-time');
+        const bestSellersCategoryInput = document.getElementById('cms-best-sellers-category');
+        
+        if (trustStripToggle) trustStripToggle.checked = trustStrip.enabled;
+        if (dealTimeInput) dealTimeInput.value = dealOfDay.end_time;
+        if (bestSellersCategoryInput) bestSellersCategoryInput.value = bestSellersConfig.category || '';
         
         document.getElementById('cms-about-title').value = aboutData.title || '';
         document.getElementById('cms-about-image').value = aboutData.image || '';
@@ -1331,6 +1352,11 @@ window.renderLandingConfig = () => {
         }
     }
     
+    // Render Mobile Sections
+    renderAdminImageCategories();
+    renderAdminDealOfDay();
+    renderAdminCoupons();
+    
     if (typeof lucide !== 'undefined') lucide.createIcons();
 };
 
@@ -1411,6 +1437,127 @@ window.updateTestimonial = (index, field, value) => {
     testimonialsData[index][field] = value;
 };
 
+
+// --- NEW MOBILE UI CRUD ---
+function renderAdminImageCategories() {
+    const container = document.getElementById('image-categories-container');
+    if (!container) return;
+    if (imageCategories.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 italic text-sm">No categories added yet.</p>';
+    } else {
+        container.innerHTML = imageCategories.map((cat, index) => `
+            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group flex gap-4 items-center">
+                <button onclick="window.removeImageCategory(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Remove">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+                <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 border border-gray-300">
+                    <img src="${cat.image || 'https://placehold.co/100x100?text=IMG'}" class="w-full h-full object-cover">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Name</label>
+                        <input type="text" value="${cat.name || ''}" onchange="window.updateImageCategory(${index}, 'name', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="Category Name">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Image URL</label>
+                        <input type="text" value="${cat.image || ''}" onchange="window.updateImageCategory(${index}, 'image', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="/images/icon.png">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Link</label>
+                        <input type="text" value="${cat.link || ''}" onchange="window.updateImageCategory(${index}, 'link', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2 text-sm focus:border-primary outline-none text-gray-900 dark:text-white" placeholder="products.html?category=Indoor">
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+window.addImageCategory = () => { imageCategories.push({ name: 'New Category', image: '', link: '' }); window.renderLandingConfig(); };
+window.removeImageCategory = (index) => { if(confirm("Remove category?")) { imageCategories.splice(index, 1); window.renderLandingConfig(); } };
+window.updateImageCategory = (index, field, value) => { imageCategories[index][field] = value; window.renderLandingConfig(); };
+
+function renderAdminDealOfDay() {
+    const container = document.getElementById('deal-products-container');
+    if (!container) return;
+    if (dealOfDay.products.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 italic text-sm">No deal products added.</p>';
+    } else {
+        container.innerHTML = dealOfDay.products.map((prod, index) => `
+            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group">
+                <button onclick="window.removeDealProduct(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Remove">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Name</label>
+                        <input type="text" value="${prod.name || ''}" onchange="window.updateDealProduct(${index}, 'name', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 rounded p-2 text-sm outline-none" placeholder="Product Name">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Orig. Price</label>
+                        <input type="number" value="${prod.original_price || ''}" onchange="window.updateDealProduct(${index}, 'original_price', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 rounded p-2 text-sm outline-none" placeholder="299">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Curr. Price</label>
+                        <input type="number" value="${prod.current_price || ''}" onchange="window.updateDealProduct(${index}, 'current_price', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 rounded p-2 text-sm outline-none" placeholder="149">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Discount Tag</label>
+                        <input type="text" value="${prod.discount || ''}" onchange="window.updateDealProduct(${index}, 'discount', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 rounded p-2 text-sm outline-none" placeholder="50% OFF">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Image URL</label>
+                        <input type="text" value="${prod.image || ''}" onchange="window.updateDealProduct(${index}, 'image', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 rounded p-2 text-sm outline-none" placeholder="/images/deal.png">
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+window.addDealProduct = () => { dealOfDay.products.push({ name: 'New Deal', original_price: 299, current_price: 149, discount: '50% OFF', image: '', link: 'products.html' }); window.renderLandingConfig(); };
+window.removeDealProduct = (index) => { if(confirm("Remove deal?")) { dealOfDay.products.splice(index, 1); window.renderLandingConfig(); } };
+window.updateDealProduct = (index, field, value) => { dealOfDay.products[index][field] = value; window.renderLandingConfig(); };
+
+function renderAdminCoupons() {
+    const container = document.getElementById('coupons-container');
+    if (!container) return;
+    if (couponsList.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 italic text-sm">No coupons added.</p>';
+    } else {
+        container.innerHTML = couponsList.map((coup, index) => `
+            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group">
+                <button onclick="window.removeCoupon(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Remove">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title</label>
+                        <input type="text" value="${coup.title || ''}" onchange="window.updateCoupon(${index}, 'title', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 rounded p-2 text-sm outline-none" placeholder="10% OFF">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Description</label>
+                        <input type="text" value="${coup.desc || ''}" onchange="window.updateCoupon(${index}, 'desc', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 rounded p-2 text-sm outline-none" placeholder="All Orders">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Code</label>
+                        <input type="text" value="${coup.code || ''}" onchange="window.updateCoupon(${index}, 'code', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 rounded p-2 text-sm outline-none font-mono" placeholder="WELCOME10">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Color Theme</label>
+                        <select onchange="window.updateCoupon(${index}, 'theme', this.value)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 rounded p-2 text-sm outline-none">
+                            <option value="emerald" ${coup.theme === 'emerald' ? 'selected' : ''}>Green (Emerald)</option>
+                            <option value="blue" ${coup.theme === 'blue' ? 'selected' : ''}>Blue</option>
+                            <option value="amber" ${coup.theme === 'amber' ? 'selected' : ''}>Amber (Orange)</option>
+                            <option value="rose" ${coup.theme === 'rose' ? 'selected' : ''}>Rose (Pink)</option>
+                            <option value="purple" ${coup.theme === 'purple' ? 'selected' : ''}>Purple</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+window.addCoupon = () => { couponsList.push({ title: '20% OFF', desc: 'Summer Sale', code: 'SUMMER20', theme: 'emerald' }); window.renderLandingConfig(); };
+window.removeCoupon = (index) => { if(confirm("Remove coupon?")) { couponsList.splice(index, 1); window.renderLandingConfig(); } };
+window.updateCoupon = (index, field, value) => { couponsList[index][field] = value; window.renderLandingConfig(); };
 window.saveLandingConfig = async () => {
     if (!supabase) return;
     const btn = document.getElementById('save-landing-btn');
@@ -1429,7 +1576,16 @@ window.saveLandingConfig = async () => {
         about_us: aboutData,
         services: servicesData,
         packages: packagesData,
-        testimonials: testimonialsData
+        testimonials: testimonialsData,
+        image_categories: imageCategories,
+        trust_strip: { enabled: document.getElementById('cms-trust-strip-toggle').checked },
+        deal_of_day: { 
+            enabled: true, 
+            end_time: document.getElementById('cms-deal-time').value, 
+            products: dealOfDay.products 
+        },
+        coupons: couponsList,
+        best_sellers: { category: document.getElementById('cms-best-sellers-category').value.trim() }
     };
     
     try {
@@ -1445,4 +1601,33 @@ window.saveLandingConfig = async () => {
         if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 };
+
+window.saveCoupons = async () => {
+    if (!supabase) return;
+    const btn = document.getElementById('save-coupons-btn');
+    btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Saving...';
+    btn.disabled = true;
+    
+    try {
+        const { data, error: fetchErr } = await supabase.from('store_settings').select('landing_config').eq('id', 1).single();
+        if (fetchErr) throw fetchErr;
+        
+        let configData = data.landing_config || {};
+        configData.coupons = couponsList;
+        
+        const { error: updateErr } = await supabase.from('store_settings').update({ landing_config: configData }).eq('id', 1);
+        if (updateErr) throw updateErr;
+        
+        showToast("Coupons saved successfully!");
+    } catch (err) {
+        console.error("Error saving coupons:", err);
+        alert("Failed to save coupons.");
+    } finally {
+        btn.innerHTML = '<i data-lucide="save" class="w-5 h-5"></i> Save Coupons';
+        btn.disabled = false;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+};
+
+
 

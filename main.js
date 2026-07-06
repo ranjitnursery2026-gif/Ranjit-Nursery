@@ -132,7 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
             b.className = `mega-root-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm flex items-center justify-between transition-colors ${b.dataset.category === activeCategoryKey ? 'bg-white text-primary shadow-sm border border-gray-100' : 'text-gray-600 hover:bg-gray-100'}`;
           });
           renderMegaMenu(activeCategoryKey);
-          if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
         }
       });
     });
@@ -188,7 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
       accItem.appendChild(accBody);
       mobileAccordion.appendChild(accItem);
     });
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
   // Fetch categories asynchronously and init everything
@@ -555,7 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
       `;
-      if (typeof lucide !== 'undefined') lucide.createIcons();
+        if (typeof lucide !== 'undefined') lucide.createIcons();
       doctorResult.classList.remove('opacity-0', 'translate-y-4');
     }, 300);
   }
@@ -623,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `).join('') + '</div>';
       
-      if (typeof lucide !== 'undefined') lucide.createIcons();
+        if (typeof lucide !== 'undefined') lucide.createIcons();
     });
   }
 
@@ -634,7 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ─── DYNAMIC LANDING PAGE GENERATION ────────────────────────────
 window.fetchAndRenderLandingPage = async () => {
-    if (!window.supabase) return;
+    if (!supabase) return;
     
     // Check if we are on index.html (the homepage)
     const isHomepage = document.getElementById('hero-carousel') || document.getElementById('mobile-promo-banners');
@@ -789,7 +791,107 @@ window.fetchAndRenderLandingPage = async () => {
             }, 100);
         }
         
+        
+        // Render Trust Strip
+        const trustContainer = document.getElementById('dynamic-trust-strip');
+        if (trustContainer && config.trust_strip) {
+            if (!config.trust_strip.enabled) {
+                trustContainer.style.display = 'none';
+            } else {
+                trustContainer.style.display = 'flex';
+                // Keeping original HTML if enabled, no need to overwrite unless custom badges added later.
+            }
+        }
+
+        // Render Image Categories
+        const imgCatsContainer = document.getElementById('dynamic-image-categories');
+        if (imgCatsContainer && config.image_categories && config.image_categories.length > 0) {
+            imgCatsContainer.innerHTML = `<div class="flex overflow-x-auto snap-x snap-mandatory gap-4 px-4 custom-scrollbar hide-scrollbar pb-1">` + 
+                config.image_categories.map(cat => `
+                <a href="${cat.link || 'products.html'}" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+                    <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+                        <img src="${cat.image}" class="w-full h-full rounded-full object-cover" alt="${cat.name}">
+                    </div>
+                    <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">${cat.name}</span>
+                </a>
+            `).join('') + `</div>`;
+        }
+
+        // Render Coupons
+        const couponsContainer = document.getElementById('dynamic-coupons');
+        if (couponsContainer && config.coupons && config.coupons.length > 0) {
+            couponsContainer.innerHTML = `<div class="flex overflow-x-auto gap-3 snap-x snap-mandatory px-4 custom-scrollbar hide-scrollbar">` +
+                config.coupons.map(coup => {
+                    const t = coup.theme || 'emerald';
+                    return `
+                    <div class="snap-start shrink-0 flex items-center bg-white border border-dashed border-${t}-300 rounded-lg p-2 min-w-[200px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] relative overflow-hidden">
+                        <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-r border-${t}-200"></div>
+                        <div class="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-l border-${t}-200"></div>
+                        <div class="pl-3 pr-3 flex-1 border-r border-dashed border-${t}-100">
+                            <span class="block text-[11px] text-${t}-600 font-extrabold uppercase">${coup.title}</span>
+                            <span class="block text-[9px] text-gray-500 font-medium">${coup.desc}</span>
+                        </div>
+                        <div class="pl-2 pr-1">
+                            <span class="text-[10px] font-mono font-bold bg-${t}-50 text-${t}-700 px-1.5 py-0.5 rounded border border-${t}-100">${coup.code}</span>
+                        </div>
+                    </div>
+                    `;
+                }).join('') + `</div>`;
+        } else if (couponsContainer && (!config.coupons || config.coupons.length === 0)) {
+            couponsContainer.style.display = 'none';
+        }
+
+        // Render Deal of the Day
+        const dealContainer = document.getElementById('dynamic-deal-of-day');
+        if (dealContainer && config.deal_of_day) {
+            if (!config.deal_of_day.enabled || !config.deal_of_day.products || config.deal_of_day.products.length === 0) {
+                dealContainer.style.display = 'none';
+            } else {
+                dealContainer.style.display = 'block';
+                
+                // Format the timer based on end_time
+                let timerHtml = '<span class="font-mono font-bold bg-black/40 px-1.5 py-0.5 rounded ml-1 text-white shadow-inner">00:00:00</span>';
+                // For a real implementation, you'd add a setInterval timer here parsing config.deal_of_day.end_time.
+                
+                dealContainer.innerHTML = `
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500 rounded-full blur-[80px] opacity-30"></div>
+                <div class="px-4 flex justify-between items-center mb-4 relative z-10">
+                    <div class="flex flex-col">
+                        <h3 class="font-bold text-white text-lg flex items-center gap-1.5 leading-none mb-1"><i data-lucide="zap" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i> Deal of the Day</h3>
+                        <span class="text-[10px] text-blue-200 font-medium">Ends in ${timerHtml}</span>
+                    </div>
+                    <a href="products.html" class="bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full transition-colors shadow-sm">View All</a>
+                </div>
+                <div class="flex overflow-x-auto snap-x snap-mandatory px-4 gap-3 custom-scrollbar hide-scrollbar relative z-10 pb-2">
+                    ` + config.deal_of_day.products.map(p => `
+                    <a href="${p.link || 'products.html'}" class="snap-start shrink-0 w-32 bg-white rounded-xl overflow-hidden shadow-xl flex flex-col relative">
+                        <span class="absolute top-0 left-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-br-lg z-10 shadow-sm">${p.discount}</span>
+                        <img src="${p.image}" class="w-full h-28 object-cover">
+                        <div class="p-2.5 flex flex-col">
+                            <h4 class="text-[11px] font-bold text-gray-800 line-clamp-1 mb-1 leading-tight">${p.name}</h4>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-sm font-outfit font-extrabold text-primary">?${p.current_price}</span>
+                                <span class="text-[9px] font-medium text-gray-400 line-through">?${p.original_price}</span>
+                            </div>
+                        </div>
+                    </a>
+                    `).join('') + `
+                </div>
+                `;
+            }
+        }
+
+        // Best Sellers Config
+        const bestSellersGrid = document.getElementById('mobile-products-grid');
+        if (bestSellersGrid && config.best_sellers && config.best_sellers.category) {
+            bestSellersGrid.dataset.category = config.best_sellers.category;
+            // Trigger cart.js render again if products are already loaded
+            if (window.renderProducts) window.renderProducts();
+        }
+
+        
         if (typeof lucide !== 'undefined') lucide.createIcons();
+        setTimeout(initAutoScrolls, 500);
         
     } catch (err) {
         console.error("Error fetching landing page config:", err);
@@ -863,3 +965,52 @@ function initHeroCarousel() {
 document.addEventListener('DOMContentLoaded', () => {
     window.fetchAndRenderLandingPage();
 });
+
+
+
+
+function initAutoScrolls() {
+    const scrollContainers = [
+        document.getElementById('mobile-promo-banners'),
+        document.querySelector('#dynamic-image-categories > div'),
+        document.querySelector('#dynamic-coupons > div'),
+        document.querySelector('#dynamic-deal-of-day > div.flex.overflow-x-auto'),
+        document.getElementById('mobile-products-grid')
+    ];
+    
+    scrollContainers.forEach(container => {
+        if (!container) return;
+        
+        // Auto scroll setup
+        let isHovered = false;
+        
+        container.addEventListener('mouseenter', () => isHovered = true);
+        container.addEventListener('mouseleave', () => isHovered = false);
+        container.addEventListener('touchstart', () => isHovered = true, {passive: true});
+        container.addEventListener('touchend', () => { setTimeout(() => isHovered = false, 2000) }, {passive: true});
+        
+        setInterval(() => {
+            if (isHovered) return; // Pause on hover/touch
+            
+            // Allow 2px tolerance for floating point scroll widths
+            const maxScroll = container.scrollWidth - container.clientWidth;
+            if (maxScroll <= 2) return; // No need to scroll
+            
+            const firstChild = container.firstElementChild;
+            if (!firstChild) return;
+            
+            const gap = parseFloat(window.getComputedStyle(container).gap) || 0;
+            const margin = parseFloat(window.getComputedStyle(firstChild).marginRight) || 0;
+            const step = firstChild.clientWidth + gap + margin;
+            
+            // Check if we are at the end (with 10px tolerance)
+            if (container.scrollLeft >= maxScroll - 10) {
+                container.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: step, behavior: 'smooth' });
+            }
+        }, 2000); // 2 seconds auto swipe
+    });
+}
+
+
