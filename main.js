@@ -6,6 +6,12 @@ import { categoryData as fallbackCategoryData } from './categoryData.js'
 let categoryData = fallbackCategoryData;
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (!document.getElementById('dynamic-view-container')) {
+        window.dispatchEvent(new Event('view-loaded'));
+    }
+});
+
+window.addEventListener('view-loaded', () => {
   // Initialize Lucide icons
   if (typeof lucide !== 'undefined') {
     lucide.createIcons();
