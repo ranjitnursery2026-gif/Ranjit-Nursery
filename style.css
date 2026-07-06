@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "./public/views";
 
 @theme {
   --color-primary: #047857; /* Deep Emerald Green */

@@ -576,6 +576,25 @@ function renderOrders() {
     const orderList = document.getElementById('admin-order-list');
     if (!orderList) return;
     
+    // Update Stats
+    const totalOrders = realOrders.length;
+    const pendingOrders = realOrders.filter(o => o.status === 'Pending').length;
+    const totalRevenue = realOrders.reduce((sum, order) => {
+        // Only count revenue for orders that are not Cancelled
+        if (order.status !== 'Cancelled') {
+            return sum + (Number(order.total_amount) || 0);
+        }
+        return sum;
+    }, 0);
+
+    const statTotal = document.getElementById('stat-orders-total');
+    const statPending = document.getElementById('stat-orders-pending');
+    const statRevenue = document.getElementById('stat-orders-revenue');
+
+    if (statTotal) statTotal.textContent = totalOrders;
+    if (statPending) statPending.textContent = pendingOrders;
+    if (statRevenue) statRevenue.textContent = `₹${totalRevenue.toLocaleString('en-IN')}`;
+    
     if (realOrders.length === 0) {
         orderList.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No orders found.</td></tr>`;
         return;
@@ -653,6 +672,49 @@ window.updateOrderStatus = async (id, newStatus) => {
         alert("Failed to update status.");
         fetchOrders(); // Revert UI
     }
+};
+
+window.exportOrdersToCSV = () => {
+    if (!realOrders || realOrders.length === 0) {
+        alert("No orders to export.");
+        return;
+    }
+    
+    // Headers
+    const headers = ['Order ID', 'Customer Name', 'Phone', 'Address', 'Status', 'Total (INR)', 'Payment Method', 'UTR', 'Items', 'Date'];
+    const csvRows = [headers.join(',')];
+    
+    // Rows
+    for (const order of realOrders) {
+        const date = new Date(order.created_at).toLocaleString('en-IN');
+        const items = order.items ? order.items.map(i => `${i.name} (x${i.quantity})`).join(' | ') : '';
+        const escapeCSV = (str) => `"${String(str || '').replace(/"/g, '""')}"`;
+        
+        const row = [
+            escapeCSV(order.id),
+            escapeCSV(order.customer_name),
+            escapeCSV(order.customer_phone),
+            escapeCSV(order.delivery_address),
+            escapeCSV(order.status),
+            escapeCSV(order.total_amount),
+            escapeCSV(order.payment_method),
+            escapeCSV(order.payment_utr),
+            escapeCSV(items),
+            escapeCSV(date)
+        ];
+        csvRows.push(row.join(','));
+    }
+    
+    // Create Blob and download
+    const csvData = csvRows.join('\n');
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('href', url);
+    a.setAttribute('download', `ranjit_nursery_orders_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 };
 
 // Start

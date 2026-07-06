@@ -211,6 +211,79 @@ export function showAllProducts() {
   renderProducts();
 }
 
+export function generateProductHTML(p) {
+    const displayCategory = p.categories && p.categories.length > 0 
+        ? (typeof p.categories === 'string' ? p.categories.replace(/[\[\]"]/g,'').split(',')[0] : p.categories[0]) 
+        : (p.category || 'Plant');
+    
+    const isOutOfStock = p.stock !== undefined && p.stock !== null && p.stock <= 0;
+    const badgeHTML = isOutOfStock 
+        ? `<div class="absolute top-2 right-2 bg-red-500/90 text-white text-[9px] md:text-xs font-bold px-2 py-0.5 rounded-full shadow-lg backdrop-blur-sm z-10 animate-pulse">Out of Stock</div>`
+        : (p.badge ? `<div class="absolute top-2 right-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] md:text-xs font-bold px-2 py-0.5 rounded-full shadow-lg backdrop-blur-sm z-10">${p.badge}</div>` : '');
+
+    let priceHTML = '';
+    if (p.discount_price && p.discount_price < p.price) {
+        const percentOff = Math.round(((p.price - p.discount_price) / p.price) * 100);
+        priceHTML = `
+            <div class="flex items-center gap-1 md:gap-1.5 flex-wrap">
+                <span class="text-xs md:text-lg font-outfit font-extrabold text-emerald-600 drop-shadow-sm">₹${p.discount_price}</span>
+                <span class="text-[9px] md:text-xs text-gray-400 line-through font-medium">₹${p.price}</span>
+                <span class="text-[8px] md:text-[10px] font-bold text-red-500 bg-red-50 px-1 py-0.5 rounded-sm">${percentOff}% OFF</span>
+            </div>`;
+    } else {
+        priceHTML = `<span class="text-xs md:text-lg font-outfit font-extrabold text-emerald-600 drop-shadow-sm">₹${p.price}</span>`;
+    }
+
+    let actionButtonsHTML = '';
+    if (isOutOfStock) {
+        actionButtonsHTML = `
+            <button disabled class="w-full bg-gray-200 text-gray-500 py-2 rounded-lg font-semibold text-[10px] md:text-sm cursor-not-allowed flex items-center justify-center gap-2">
+            <i data-lucide="x-circle" class="w-3 h-3 md:w-4 md:h-4"></i> Out of Stock
+            </button>
+        `;
+    } else {
+        actionButtonsHTML = `
+            <div class="flex items-center gap-1 md:gap-2">
+            <button onclick="window.RanjitCart.addToCart(${p.id}); event.stopPropagation();" class="flex-grow bg-emerald-50 hover:bg-primary text-emerald-700 hover:text-white py-2 px-2 rounded-lg font-semibold text-[10px] md:text-sm transition-all duration-300 flex items-center justify-center gap-1 md:gap-2 border border-emerald-100 hover:border-transparent group/btn">
+                <i data-lucide="shopping-bag" class="w-3 h-3 md:w-4 md:h-4 group-hover/btn:scale-110 transition-transform"></i>
+                <span>Add</span>
+            </button>
+            <button onclick="window.location.href='checkout.html'; window.RanjitCart.addToCart(${p.id}); event.stopPropagation();" class="flex-grow bg-primary hover:bg-emerald-700 text-white py-2 px-2 rounded-lg font-semibold text-[10px] md:text-sm transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-1 md:gap-2 border border-transparent">
+                <span>Buy</span>
+                <i data-lucide="zap" class="w-3 h-3 md:w-4 md:h-4"></i>
+            </button>
+            </div>
+        `;
+    }
+
+    return `
+    <div class="product-card group relative bg-white rounded-xl md:rounded-2xl border border-gray-100 hover:border-emerald-200 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-[280px] md:h-[400px] overflow-hidden cursor-pointer animate-on-scroll opacity-0 translate-y-8" onclick="window.location.href='products.html?id=${p.id}'">
+        <div class="relative h-[120px] md:h-[200px] w-full bg-gray-50 overflow-hidden">
+        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+        ${badgeHTML}
+        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        </div>
+        <div class="p-2.5 md:p-5 flex flex-col flex-grow">
+        <div>
+            <div class="flex items-start justify-between mb-0.5 md:mb-1 gap-1 md:gap-2">
+            <span class="text-[8px] md:text-xs font-bold uppercase tracking-wider text-primary/70 mt-1 truncate">${displayCategory}</span>
+            ${priceHTML}
+            </div>
+            <h3 class="text-[11px] md:text-base font-outfit font-bold text-gray-900 mb-0.5 md:mb-1 leading-tight md:leading-snug line-clamp-2">${p.name}</h3>
+            <div class="flex items-center gap-1 mb-1 md:mb-1.5">
+            <i data-lucide="star" class="w-2.5 h-2.5 md:w-3 md:h-3 text-amber-500 ${p.avgRating > 0 ? 'fill-amber-500' : ''}"></i>
+            <span class="text-[9px] md:text-xs font-bold text-gray-700">${p.avgRating > 0 ? p.avgRating.toFixed(1) : 'New'}</span>
+            ${p.reviewCount > 0 ? `<span class="text-[8px] md:text-[10px] text-gray-400 ml-0.5">(${p.reviewCount})</span>` : ''}
+            </div>
+            <p class="text-gray-500 text-[9px] md:text-xs mb-1.5 md:mb-2 line-clamp-1">${p.description || ''}</p>
+        </div>
+        <div class="mt-auto pt-2 md:pt-3 border-t border-gray-50 w-full">
+            ${actionButtonsHTML}
+        </div>
+        </div>
+    </div>`;
+}
+
 export function renderProducts() {
   const grids = document.querySelectorAll('.products-grid-container');
   const emptyState = document.getElementById('products-empty-state');

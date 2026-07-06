@@ -5,6 +5,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ranjit Nursery | 5 Star Nursery Wholesale</title>
+  <meta name="keywords" content="Ranjit Nursery, Plant Nursery Rourkela, Buy Plants Online, Wholesale Nursery Odisha, Landscaping Services, Indoor Plants, Outdoor Plants">
+  <meta name="author" content="Ranjit Nursery">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ranjitnursery.com/">
+  <meta property="og:title" content="Ranjit Nursery | 5 Star Nursery Wholesale">
+  <meta property="og:description" content="Jai Jagannath | Your Green Partner for Premium Plants & Landscaping in Rourkela, Odisha. Wholesale & Retail Supplier.">
+  <meta property="og:image" content="https://ranjitnursery.com/logo.png">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://ranjitnursery.com/">
+  <meta property="twitter:title" content="Ranjit Nursery | 5 Star Nursery Wholesale">
+  <meta property="twitter:description" content="Your Green Partner for Premium Plants in Rourkela, Odisha.">
+  <meta property="twitter:image" content="https://ranjitnursery.com/logo.png">
+  
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2D5A27">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, err => {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+  </script>
   <meta name="description"
     content="Jai Jagannath | Your Green Partner for Premium Plants & Landscaping in Rourkela, Odisha. Wholesale & Retail Supplier." />
 
@@ -21,7 +53,7 @@
   <!-- Vite Main Stylesheet entry point is main.js, which imports style.css -->
 </head>
 
-<body class="antialiased bg-gray-50 text-gray-800 overflow-x-hidden">
+<body class="antialiased bg-gray-50 text-gray-800 overflow-hidden">
   <!-- ================= PRELOADER ================= -->
   <style>
     @keyframes preloader-progress { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
@@ -35,7 +67,7 @@
       <img src="/images/hero_plants_new.png" class="absolute inset-0 w-full h-full object-cover animate-slow-pan" alt="Premium Plants">
       <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-emerald-950/90 to-transparent"></div>
       <div class="absolute bottom-6 left-6 md:bottom-12 md:left-12 text-white z-10">
-        <h2 class="text-2xl md:text-4xl font-outfit font-extrabold mb-1 md:mb-2 drop-shadow-lg">Ranjit Nursery</h2>
+        <h2 class="text-2xl md:text-4xl font-outfit font-extrabold mb-1 md:mb-2 text-white drop-shadow-lg">Ranjit Nursery</h2>
         <p class="text-emerald-200 text-sm md:text-lg font-medium drop-shadow-md">Cultivating Nature's Best Since 2026</p>
       </div>
     </div>
@@ -74,6 +106,7 @@
         document.getElementById('dynamic-view-container').innerHTML = html;
         
         // Dispatch event so main.js knows the DOM is ready
+        window.__viewLoadedFlag = true;
         window.dispatchEvent(new Event('view-loaded'));
       } catch (err) {
         console.error("Failed to load view", err);
@@ -81,15 +114,6 @@
     }
     
     loadView();
-    // Handle resize swapping (optional, but good for dev)
-    let lastIsMobile = window.innerWidth < 768;
-    window.addEventListener('resize', () => {
-        const isMobile = window.innerWidth < 768;
-        if (isMobile !== lastIsMobile) {
-            lastIsMobile = isMobile;
-            loadView(); // Reload the other view
-        }
-    });
   </script>
 <script>
     window.openModal = function(id) {
@@ -123,6 +147,7 @@
     };
   </script>
 
+    <script type="module" src="/main.js"></script>
 </body>
 
 </html>

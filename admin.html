@@ -221,6 +221,42 @@
                     <h1 class="text-3xl font-outfit font-bold text-gray-900">Order Management</h1>
                     <p class="text-gray-500 mt-1">Track customer orders, update statuses, and view purchase history.</p>
                 </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="window.exportOrdersToCSV()" class="bg-primary hover:bg-green-800 text-white px-5 py-2.5 rounded-lg font-semibold shadow-sm flex items-center gap-2 transition-colors">
+                        <i data-lucide="download" class="w-5 h-5"></i> Export CSV
+                    </button>
+                </div>
+            </div>
+
+            <!-- Order Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="bg-white/90 rounded-2xl p-6 border border-gray-100 shadow-sm flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                        <i data-lucide="shopping-bag" class="w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Total Orders</p>
+                        <h3 id="stat-orders-total" class="text-3xl font-bold text-gray-900 tracking-tight">0</h3>
+                    </div>
+                </div>
+                <div class="bg-white/90 rounded-2xl p-6 border border-gray-100 shadow-sm flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                        <i data-lucide="clock" class="w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Pending Orders</p>
+                        <h3 id="stat-orders-pending" class="text-3xl font-bold text-gray-900 tracking-tight">0</h3>
+                    </div>
+                </div>
+                <div class="bg-white/90 rounded-2xl p-6 border border-gray-100 shadow-sm flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                        <i data-lucide="indian-rupee" class="w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Total Revenue</p>
+                        <h3 id="stat-orders-revenue" class="text-3xl font-bold text-gray-900 tracking-tight">₹0</h3>
+                    </div>
+                </div>
             </div>
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">

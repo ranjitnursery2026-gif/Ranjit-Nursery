@@ -5,13 +5,7 @@ import { categoryData as fallbackCategoryData } from './categoryData.js'
 
 let categoryData = fallbackCategoryData;
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (!document.getElementById('dynamic-view-container')) {
-        window.dispatchEvent(new Event('view-loaded'));
-    }
-});
-
-window.addEventListener('view-loaded', () => {
+const initializeApp = () => {
   // Initialize Lucide icons
   if (typeof lucide !== 'undefined') {
     lucide.createIcons();
@@ -671,13 +665,19 @@ window.addEventListener('view-loaded', () => {
           preloader.classList.add('opacity-0', 'pointer-events-none');
           setTimeout(() => preloader.remove(), 700);
       }
+      document.body.classList.remove('overflow-hidden');
+      document.body.classList.add('overflow-x-hidden');
   }).catch(err => {
       console.error("App Initialization Error:", err);
       if (msgInterval) clearInterval(msgInterval);
       const preloader = document.getElementById('app-preloader');
       if (preloader) preloader.remove();
+      document.body.classList.remove('overflow-hidden');
+      document.body.classList.add('overflow-x-hidden');
   });
-});
+};
+
+
 
 // ─── DYNAMIC LANDING PAGE GENERATION ────────────────────────────
 window.fetchAndRenderLandingPage = async () => {
@@ -1056,3 +1056,14 @@ function initAutoScrolls() {
 }
 
 
+// ─── START APPLICATION ─────────────────────────────────────────
+if (window.__viewLoadedFlag || !document.getElementById('dynamic-view-container')) {
+    initializeApp();
+} else {
+    window.addEventListener('view-loaded', initializeApp, { once: true });
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!document.getElementById('dynamic-view-container')) {
+            initializeApp();
+        }
+    });
+}
