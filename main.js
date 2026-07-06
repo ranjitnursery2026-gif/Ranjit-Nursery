@@ -631,7 +631,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ─── Initialize E-Commerce Cart System ─────────────────────
   window.RanjitCart = Cart;
-  Cart.init();
+  
+  // Parallel App Initialization with minimum 5-second Preloader wait
+  const preloaderMessages = [
+    "Curating the greenest plants...",
+    "Preparing the greenhouse...",
+    "Watering the roots...",
+    "Getting things ready...",
+    "Almost there..."
+  ];
+  const msgEl = document.getElementById('preloader-message');
+  let msgIdx = 0;
+  let msgInterval = null;
+  if (msgEl) {
+      msgInterval = setInterval(() => {
+          msgEl.classList.add('opacity-0');
+          setTimeout(() => {
+              msgIdx = (msgIdx + 1) % preloaderMessages.length;
+              msgEl.textContent = preloaderMessages[msgIdx];
+              msgEl.classList.remove('opacity-0');
+          }, 300);
+      }, 1000);
+  }
+
+  Promise.all([
+      Cart.init(),
+      window.fetchAndRenderLandingPage(),
+      new Promise(resolve => setTimeout(resolve, 5000))
+  ]).then(() => {
+      if (msgInterval) clearInterval(msgInterval);
+      const preloader = document.getElementById('app-preloader');
+      if (preloader) {
+          preloader.classList.add('opacity-0', 'pointer-events-none');
+          setTimeout(() => preloader.remove(), 700);
+      }
+  }).catch(err => {
+      console.error("App Initialization Error:", err);
+      if (msgInterval) clearInterval(msgInterval);
+      const preloader = document.getElementById('app-preloader');
+      if (preloader) preloader.remove();
+  });
 });
 
 // ─── DYNAMIC LANDING PAGE GENERATION ────────────────────────────
@@ -961,10 +1000,7 @@ function initHeroCarousel() {
     }
 }
 
-// Fetch rendering immediately after DOM loads (or manually called here)
-document.addEventListener('DOMContentLoaded', () => {
-    window.fetchAndRenderLandingPage();
-});
+// Initialization is handled in the main DOMContentLoaded block at the top
 
 
 

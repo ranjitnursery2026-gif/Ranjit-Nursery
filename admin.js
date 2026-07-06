@@ -1174,16 +1174,18 @@ window.fetchLandingConfig = async () => {
         
         imageCategories = config.image_categories || [];
         trustStrip = config.trust_strip || { enabled: true };
-        dealOfDay = config.deal_of_day || { enabled: false, end_time: '', products: [] };
+        dealOfDay = config.deal_of_day || { enabled: false, end_time: '', title: 'Deal of the Day', products: [] };
         couponsList = config.coupons || [];
         bestSellersConfig = config.best_sellers || { category: '' };
         
         const trustStripToggle = document.getElementById('cms-trust-strip-toggle');
         const dealTimeInput = document.getElementById('cms-deal-time');
+        const dealTitleInput = document.getElementById('cms-deal-title');
         const bestSellersCategoryInput = document.getElementById('cms-best-sellers-category');
         
         if (trustStripToggle) trustStripToggle.checked = trustStrip.enabled;
-        if (dealTimeInput) dealTimeInput.value = dealOfDay.end_time;
+        if (dealTimeInput) dealTimeInput.value = dealOfDay.end_time || '';
+        if (dealTitleInput) dealTitleInput.value = dealOfDay.title || '';
         if (bestSellersCategoryInput) bestSellersCategoryInput.value = bestSellersConfig.category || '';
         
         document.getElementById('cms-about-title').value = aboutData.title || '';
@@ -1582,6 +1584,7 @@ window.saveLandingConfig = async () => {
         deal_of_day: { 
             enabled: true, 
             end_time: document.getElementById('cms-deal-time').value, 
+            title: document.getElementById('cms-deal-title').value,
             products: dealOfDay.products 
         },
         coupons: couponsList,
