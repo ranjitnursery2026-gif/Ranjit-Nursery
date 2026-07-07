@@ -1712,15 +1712,17 @@ function renderAdminRoomHotspots() {
     if (!cont) return;
     cont.innerHTML = roomHotspots.map((h, i) => `
         <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex gap-2 relative items-center">
-            <button onclick="roomHotspots.splice(${i},1);window.renderLandingConfig()" class="absolute top-1 right-1 text-red-500 hover:text-red-700"><i data-lucide="x" class="w-4 h-4"></i></button>
-            <input type="text" value="${h.name || ''}" onchange="roomHotspots[${i}].name=this.value" class="w-full text-xs p-1 border rounded" placeholder="Plant Name">
-            <input type="text" value="${h.price || ''}" onchange="roomHotspots[${i}].price=this.value" class="w-full text-xs p-1 border rounded" placeholder="₹ Price">
-            <input type="number" value="${h.x || 50}" onchange="roomHotspots[${i}].x=this.value" class="w-16 text-xs p-1 border rounded" placeholder="X%">
-            <input type="number" value="${h.y || 50}" onchange="roomHotspots[${i}].y=this.value" class="w-16 text-xs p-1 border rounded" placeholder="Y%">
+            <button onclick="window.removeRoomHotspot(${i})" class="absolute top-1 right-1 text-red-500 hover:text-red-700"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <input type="text" value="${h.name || ''}" onchange="window.updateRoomHotspot(${i}, 'name', this.value)" class="w-full text-xs p-1 border rounded" placeholder="Plant Name">
+            <input type="text" value="${h.price || ''}" onchange="window.updateRoomHotspot(${i}, 'price', this.value)" class="w-full text-xs p-1 border rounded" placeholder="₹ Price">
+            <input type="number" value="${h.x || 50}" onchange="window.updateRoomHotspot(${i}, 'x', this.value)" class="w-16 text-xs p-1 border rounded" placeholder="X%">
+            <input type="number" value="${h.y || 50}" onchange="window.updateRoomHotspot(${i}, 'y', this.value)" class="w-16 text-xs p-1 border rounded" placeholder="Y%">
         </div>
     `).join('');
 }
 window.addShopRoomHotspot = () => { roomHotspots.push({ name: 'New Plant', price: '₹99', x: 50, y: 50 }); window.renderLandingConfig(); };
+window.removeRoomHotspot = (index) => { roomHotspots.splice(index, 1); window.renderLandingConfig(); };
+window.updateRoomHotspot = (index, field, value) => { roomHotspots[index][field] = value; };
 
 function renderAdminTimeline() {
     const cont = document.getElementById('cms-timeline-container');
@@ -1729,50 +1731,59 @@ function renderAdminTimeline() {
     cont.innerHTML = processTimeline.map((t, i) => `
         <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3">
             <div class="text-xs font-bold mb-1">Step ${i+1}</div>
-            <input type="text" value="${t.title || ''}" onchange="processTimeline[${i}].title=this.value" class="w-full text-sm p-2 mb-2 border rounded" placeholder="Title">
-            <input type="text" value="${t.desc || ''}" onchange="processTimeline[${i}].desc=this.value" class="w-full text-sm p-2 border rounded" placeholder="Description">
+            <input type="text" value="${t.title || ''}" onchange="window.updateTimeline(${i}, 'title', this.value)" class="w-full text-sm p-2 mb-2 border rounded" placeholder="Title">
+            <input type="text" value="${t.desc || ''}" onchange="window.updateTimeline(${i}, 'desc', this.value)" class="w-full text-sm p-2 border rounded" placeholder="Description">
         </div>
     `).join('');
 }
+window.updateTimeline = (index, field, value) => { processTimeline[index][field] = value; };
 
 function renderAdminTrendingGrid() {
     const cont = document.getElementById('cms-trending-container');
     if (!cont) return;
     cont.innerHTML = trendingGrid.map((t, i) => `
         <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex gap-2 relative">
-            <button onclick="trendingGrid.splice(${i},1);window.renderLandingConfig()" class="absolute top-1 right-1 text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
-            <input type="text" value="${t.title || ''}" onchange="trendingGrid[${i}].title=this.value" class="w-full text-sm p-2 border rounded" placeholder="Title">
-            <input type="text" value="${t.image || ''}" onchange="trendingGrid[${i}].image=this.value" class="w-full text-sm p-2 border rounded" placeholder="Image URL">
+            <button onclick="window.removeTrendingGrid(${i})" class="absolute top-1 right-1 text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <input type="text" value="${t.title || ''}" onchange="window.updateTrendingGrid(${i}, 'title', this.value)" class="w-full text-sm p-2 border rounded" placeholder="Title">
+            <input type="text" value="${t.image || ''}" onchange="window.updateTrendingGrid(${i}, 'image', this.value)" class="w-full text-sm p-2 border rounded" placeholder="Image URL">
         </div>
     `).join('');
-    cont.innerHTML += `<button onclick="trendingGrid.push({title:'', image:''});window.renderLandingConfig()" class="text-sm text-primary">+ Add Trending Item</button>`;
+    cont.innerHTML += `<button onclick="window.addTrendingGrid()" class="text-sm text-primary">+ Add Trending Item</button>`;
 }
+window.addTrendingGrid = () => { trendingGrid.push({title:'', image:''}); window.renderLandingConfig(); };
+window.removeTrendingGrid = (index) => { trendingGrid.splice(index, 1); window.renderLandingConfig(); };
+window.updateTrendingGrid = (index, field, value) => { trendingGrid[index][field] = value; };
 
 function renderAdminFeaturesGrid() {
     const cont = document.getElementById('cms-features-container');
     if (!cont) return;
     cont.innerHTML = featuresGrid.map((f, i) => `
         <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex gap-2 relative">
-            <button onclick="featuresGrid.splice(${i},1);window.renderLandingConfig()" class="absolute top-1 right-1 text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
-            <input type="text" value="${f.icon || ''}" onchange="featuresGrid[${i}].icon=this.value" class="w-1/3 text-sm p-2 border rounded" placeholder="Lucide Icon">
-            <input type="text" value="${f.title || ''}" onchange="featuresGrid[${i}].title=this.value" class="w-2/3 text-sm p-2 border rounded" placeholder="Feature Title">
+            <button onclick="window.removeFeaturesGrid(${i})" class="absolute top-1 right-1 text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <input type="text" value="${f.icon || ''}" onchange="window.updateFeaturesGrid(${i}, 'icon', this.value)" class="w-1/3 text-sm p-2 border rounded" placeholder="Lucide Icon">
+            <input type="text" value="${f.title || ''}" onchange="window.updateFeaturesGrid(${i}, 'title', this.value)" class="w-2/3 text-sm p-2 border rounded" placeholder="Feature Title">
         </div>
     `).join('');
-    cont.innerHTML += `<button onclick="featuresGrid.push({icon:'leaf', title:''});window.renderLandingConfig()" class="text-sm text-primary">+ Add Feature</button>`;
+    cont.innerHTML += `<button onclick="window.addFeaturesGrid()" class="text-sm text-primary">+ Add Feature</button>`;
 }
+window.addFeaturesGrid = () => { featuresGrid.push({icon:'leaf', title:''}); window.renderLandingConfig(); };
+window.removeFeaturesGrid = (index) => { featuresGrid.splice(index, 1); window.renderLandingConfig(); };
+window.updateFeaturesGrid = (index, field, value) => { featuresGrid[index][field] = value; };
 
 function renderAdminFaq() {
     const cont = document.getElementById('cms-faq-container');
     if (!cont) return;
     cont.innerHTML = faqList.map((f, i) => `
         <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 relative">
-            <button onclick="faqList.splice(${i},1);window.renderLandingConfig()" class="absolute top-2 right-2 text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
-            <input type="text" value="${f.q || ''}" onchange="faqList[${i}].q=this.value" class="w-full text-sm p-2 mb-2 border rounded" placeholder="Question">
-            <textarea onchange="faqList[${i}].a=this.value" class="w-full text-sm p-2 border rounded" placeholder="Answer">${f.a || ''}</textarea>
+            <button onclick="window.removeFaqItem(${i})" class="absolute top-2 right-2 text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <input type="text" value="${f.q || ''}" onchange="window.updateFaqItem(${i}, 'q', this.value)" class="w-full text-sm p-2 mb-2 border rounded" placeholder="Question">
+            <textarea onchange="window.updateFaqItem(${i}, 'a', this.value)" class="w-full text-sm p-2 border rounded" placeholder="Answer">${f.a || ''}</textarea>
         </div>
     `).join('');
 }
 window.addFaqItem = () => { faqList.push({ q: 'New Question', a: 'Answer' }); window.renderLandingConfig(); };
+window.removeFaqItem = (index) => { faqList.splice(index, 1); window.renderLandingConfig(); };
+window.updateFaqItem = (index, field, value) => { faqList[index][field] = value; };
 window.saveLandingConfig = async () => {
     if (!supabase) return;
     const btn = document.getElementById('save-landing-btn');
