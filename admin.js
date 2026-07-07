@@ -1205,6 +1205,26 @@ window.saveCategoryData = async () => {
 };
 
 // --- LANDING PAGE CMS -----------------------------------------
+window.moveLandingItem = (arrayRefStr, index, direction, renderFnStr) => {
+    // Helper function to handle array reordering
+    let arr;
+    if (arrayRefStr === 'heroSlides') arr = heroSlides;
+    else if (arrayRefStr === 'mobileBanners') arr = mobileBanners;
+    else if (arrayRefStr === 'packagesData') arr = packagesData;
+    else if (arrayRefStr === 'imageCategories') arr = imageCategories;
+    else if (arrayRefStr === 'dealOfDay.products') arr = dealOfDay.products;
+    
+    if (!arr) return;
+    
+    if (direction === 'up' && index > 0) {
+        [arr[index], arr[index - 1]] = [arr[index - 1], arr[index]];
+    } else if (direction === 'down' && index < arr.length - 1) {
+        [arr[index], arr[index + 1]] = [arr[index + 1], arr[index]];
+    } else return;
+    
+    if (window[renderFnStr]) window[renderFnStr]();
+};
+
 let heroSlides = [];
 let mobileBanners = [];
 let aboutData = {};
@@ -1218,6 +1238,15 @@ let trustStrip = { enabled: true };
 let dealOfDay = { enabled: false, end_time: '', products: [] };
 let couponsList = [];
 let bestSellersConfig = { category: '' };
+
+// New Mobile Exclusive Sections Configs
+let roomBgImage = '';
+let roomHotspots = [];
+let processTimeline = [];
+let trendingGrid = [];
+let parallaxBanner = { image: '', quote: '' };
+let featuresGrid = [];
+let faqList = [];
 
 window.fetchLandingConfig = async () => {
     if (!supabase) return;
@@ -1240,6 +1269,14 @@ window.fetchLandingConfig = async () => {
         couponsList = config.coupons || [];
         bestSellersConfig = config.best_sellers || { category: '' };
         
+        roomBgImage = config.room_bg_image || '';
+        roomHotspots = config.room_hotspots || [];
+        processTimeline = config.process_timeline || [];
+        trendingGrid = config.trending_grid || [];
+        parallaxBanner = config.parallax_banner || { image: '', quote: '' };
+        featuresGrid = config.features_grid || [];
+        faqList = config.faq_list || [];
+        
         const trustStripToggle = document.getElementById('cms-trust-strip-toggle');
         const dealTimeInput = document.getElementById('cms-deal-time');
         const dealTitleInput = document.getElementById('cms-deal-title');
@@ -1254,6 +1291,13 @@ window.fetchLandingConfig = async () => {
         document.getElementById('cms-about-image').value = aboutData.image || '';
         document.getElementById('cms-about-text').value = aboutData.text || '';
         
+        const rBg = document.getElementById('cms-room-bg');
+        if (rBg) rBg.value = roomBgImage;
+        const pBg = document.getElementById('cms-parallax-bg');
+        if (pBg) pBg.value = parallaxBanner.image;
+        const pQt = document.getElementById('cms-parallax-quote');
+        if (pQt) pQt.value = parallaxBanner.quote;
+
         window.renderLandingConfig();
     } catch (err) {
         console.error("Error fetching landing config:", err);
@@ -1273,9 +1317,17 @@ window.renderLandingConfig = () => {
     } else {
         heroContainer.innerHTML = heroSlides.map((slide, index) => `
             <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group">
-                <button onclick="window.removeHeroSlide(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Remove Slide">
-                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
+                <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                    <button onclick="window.moveLandingItem('heroSlides', ${index}, 'up', 'renderLandingConfig')" class="text-gray-500 hover:text-gray-800 bg-white dark:bg-gray-900 rounded-full p-1 shadow-sm disabled:opacity-30" title="Move Up" ${index === 0 ? 'disabled' : ''}>
+                        <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="window.moveLandingItem('heroSlides', ${index}, 'down', 'renderLandingConfig')" class="text-gray-500 hover:text-gray-800 bg-white dark:bg-gray-900 rounded-full p-1 shadow-sm disabled:opacity-30" title="Move Down" ${index === heroSlides.length - 1 ? 'disabled' : ''}>
+                        <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="window.removeHeroSlide(${index})" class="text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 shadow-sm" title="Remove Slide">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Badge Text</label>
@@ -1304,9 +1356,17 @@ window.renderLandingConfig = () => {
     } else {
         mobileContainer.innerHTML = mobileBanners.map((banner, index) => `
             <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group">
-                <button onclick="window.removeMobileBanner(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Remove Banner">
-                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
+                <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                    <button onclick="window.moveLandingItem('mobileBanners', ${index}, 'up', 'renderLandingConfig')" class="text-gray-500 hover:text-gray-800 bg-white dark:bg-gray-900 rounded-full p-1 shadow-sm disabled:opacity-30" title="Move Up" ${index === 0 ? 'disabled' : ''}>
+                        <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="window.moveLandingItem('mobileBanners', ${index}, 'down', 'renderLandingConfig')" class="text-gray-500 hover:text-gray-800 bg-white dark:bg-gray-900 rounded-full p-1 shadow-sm disabled:opacity-30" title="Move Down" ${index === mobileBanners.length - 1 ? 'disabled' : ''}>
+                        <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="window.removeMobileBanner(${index})" class="text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 shadow-sm" title="Remove Banner">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title</label>
@@ -1365,9 +1425,17 @@ window.renderLandingConfig = () => {
         } else {
             packagesContainer.innerHTML = packagesData.map((pkg, index) => `
                 <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group">
-                    <button onclick="window.removePackage(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
+                    <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <button onclick="window.moveLandingItem('packagesData', ${index}, 'up', 'renderLandingConfig')" class="text-gray-500 hover:text-gray-800 bg-white dark:bg-gray-900 rounded-full p-1 shadow-sm disabled:opacity-30" title="Move Up" ${index === 0 ? 'disabled' : ''}>
+                            <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="window.moveLandingItem('packagesData', ${index}, 'down', 'renderLandingConfig')" class="text-gray-500 hover:text-gray-800 bg-white dark:bg-gray-900 rounded-full p-1 shadow-sm disabled:opacity-30" title="Move Down" ${index === packagesData.length - 1 ? 'disabled' : ''}>
+                            <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="window.removePackage(${index})" class="text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 shadow-sm" title="Remove Package">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Package Name</label>
@@ -1421,6 +1489,12 @@ window.renderLandingConfig = () => {
     renderAdminDealOfDay();
     renderAdminCoupons();
     
+    renderAdminRoomHotspots();
+    renderAdminTimeline();
+    renderAdminTrendingGrid();
+    renderAdminFeaturesGrid();
+    renderAdminFaq();
+
     if (typeof lucide !== 'undefined') lucide.createIcons();
 };
 
@@ -1511,9 +1585,17 @@ function renderAdminImageCategories() {
     } else {
         container.innerHTML = imageCategories.map((cat, index) => `
             <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800 relative group flex gap-4 items-center">
-                <button onclick="window.removeImageCategory(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Remove">
-                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
+                <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                    <button onclick="window.moveLandingItem('imageCategories', ${index}, 'up', 'renderLandingConfig')" class="text-gray-500 hover:text-gray-800 bg-white dark:bg-gray-900 rounded-full p-1 shadow-sm disabled:opacity-30" title="Move Up" ${index === 0 ? 'disabled' : ''}>
+                        <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="window.moveLandingItem('imageCategories', ${index}, 'down', 'renderLandingConfig')" class="text-gray-500 hover:text-gray-800 bg-white dark:bg-gray-900 rounded-full p-1 shadow-sm disabled:opacity-30" title="Move Down" ${index === imageCategories.length - 1 ? 'disabled' : ''}>
+                        <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="window.removeImageCategory(${index})" class="text-red-500 hover:text-red-700 bg-white dark:bg-gray-900 rounded-full p-1 shadow-sm" title="Remove">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
                 <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 border border-gray-300">
                     <img src="${cat.image || 'https://placehold.co/100x100?text=IMG'}" class="w-full h-full object-cover">
                 </div>
@@ -1622,6 +1704,75 @@ function renderAdminCoupons() {
 window.addCoupon = () => { couponsList.push({ title: '20% OFF', desc: 'Summer Sale', code: 'SUMMER20', theme: 'emerald' }); window.renderLandingConfig(); };
 window.removeCoupon = (index) => { if(confirm("Remove coupon?")) { couponsList.splice(index, 1); window.renderLandingConfig(); } };
 window.updateCoupon = (index, field, value) => { couponsList[index][field] = value; window.renderLandingConfig(); };
+
+// ---- Mobile Exclusive Rendering logic ----
+
+function renderAdminRoomHotspots() {
+    const cont = document.getElementById('cms-room-hotspots-container');
+    if (!cont) return;
+    cont.innerHTML = roomHotspots.map((h, i) => `
+        <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex gap-2 relative items-center">
+            <button onclick="roomHotspots.splice(${i},1);window.renderLandingConfig()" class="absolute top-1 right-1 text-red-500 hover:text-red-700"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <input type="text" value="${h.name || ''}" onchange="roomHotspots[${i}].name=this.value" class="w-full text-xs p-1 border rounded" placeholder="Plant Name">
+            <input type="text" value="${h.price || ''}" onchange="roomHotspots[${i}].price=this.value" class="w-full text-xs p-1 border rounded" placeholder="₹ Price">
+            <input type="number" value="${h.x || 50}" onchange="roomHotspots[${i}].x=this.value" class="w-16 text-xs p-1 border rounded" placeholder="X%">
+            <input type="number" value="${h.y || 50}" onchange="roomHotspots[${i}].y=this.value" class="w-16 text-xs p-1 border rounded" placeholder="Y%">
+        </div>
+    `).join('');
+}
+window.addShopRoomHotspot = () => { roomHotspots.push({ name: 'New Plant', price: '₹99', x: 50, y: 50 }); window.renderLandingConfig(); };
+
+function renderAdminTimeline() {
+    const cont = document.getElementById('cms-timeline-container');
+    if (!cont) return;
+    if (processTimeline.length === 0) processTimeline = [{title:'Seed', desc:''}, {title:'Sprout', desc:''}, {title:'Growth', desc:''}, {title:'Delivery', desc:''}];
+    cont.innerHTML = processTimeline.map((t, i) => `
+        <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3">
+            <div class="text-xs font-bold mb-1">Step ${i+1}</div>
+            <input type="text" value="${t.title || ''}" onchange="processTimeline[${i}].title=this.value" class="w-full text-sm p-2 mb-2 border rounded" placeholder="Title">
+            <input type="text" value="${t.desc || ''}" onchange="processTimeline[${i}].desc=this.value" class="w-full text-sm p-2 border rounded" placeholder="Description">
+        </div>
+    `).join('');
+}
+
+function renderAdminTrendingGrid() {
+    const cont = document.getElementById('cms-trending-container');
+    if (!cont) return;
+    cont.innerHTML = trendingGrid.map((t, i) => `
+        <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex gap-2 relative">
+            <button onclick="trendingGrid.splice(${i},1);window.renderLandingConfig()" class="absolute top-1 right-1 text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <input type="text" value="${t.title || ''}" onchange="trendingGrid[${i}].title=this.value" class="w-full text-sm p-2 border rounded" placeholder="Title">
+            <input type="text" value="${t.image || ''}" onchange="trendingGrid[${i}].image=this.value" class="w-full text-sm p-2 border rounded" placeholder="Image URL">
+        </div>
+    `).join('');
+    cont.innerHTML += `<button onclick="trendingGrid.push({title:'', image:''});window.renderLandingConfig()" class="text-sm text-primary">+ Add Trending Item</button>`;
+}
+
+function renderAdminFeaturesGrid() {
+    const cont = document.getElementById('cms-features-container');
+    if (!cont) return;
+    cont.innerHTML = featuresGrid.map((f, i) => `
+        <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex gap-2 relative">
+            <button onclick="featuresGrid.splice(${i},1);window.renderLandingConfig()" class="absolute top-1 right-1 text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <input type="text" value="${f.icon || ''}" onchange="featuresGrid[${i}].icon=this.value" class="w-1/3 text-sm p-2 border rounded" placeholder="Lucide Icon">
+            <input type="text" value="${f.title || ''}" onchange="featuresGrid[${i}].title=this.value" class="w-2/3 text-sm p-2 border rounded" placeholder="Feature Title">
+        </div>
+    `).join('');
+    cont.innerHTML += `<button onclick="featuresGrid.push({icon:'leaf', title:''});window.renderLandingConfig()" class="text-sm text-primary">+ Add Feature</button>`;
+}
+
+function renderAdminFaq() {
+    const cont = document.getElementById('cms-faq-container');
+    if (!cont) return;
+    cont.innerHTML = faqList.map((f, i) => `
+        <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 relative">
+            <button onclick="faqList.splice(${i},1);window.renderLandingConfig()" class="absolute top-2 right-2 text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <input type="text" value="${f.q || ''}" onchange="faqList[${i}].q=this.value" class="w-full text-sm p-2 mb-2 border rounded" placeholder="Question">
+            <textarea onchange="faqList[${i}].a=this.value" class="w-full text-sm p-2 border rounded" placeholder="Answer">${f.a || ''}</textarea>
+        </div>
+    `).join('');
+}
+window.addFaqItem = () => { faqList.push({ q: 'New Question', a: 'Answer' }); window.renderLandingConfig(); };
 window.saveLandingConfig = async () => {
     if (!supabase) return;
     const btn = document.getElementById('save-landing-btn');
@@ -1650,7 +1801,19 @@ window.saveLandingConfig = async () => {
             products: dealOfDay.products 
         },
         coupons: couponsList,
-        best_sellers: { category: document.getElementById('cms-best-sellers-category').value.trim() }
+        best_sellers: { category: document.getElementById('cms-best-sellers-category').value.trim() },
+        
+        // Mobile Exclusive Configs
+        room_bg_image: document.getElementById('cms-room-bg') ? document.getElementById('cms-room-bg').value : '',
+        room_hotspots: roomHotspots,
+        process_timeline: processTimeline,
+        trending_grid: trendingGrid,
+        parallax_banner: {
+            image: document.getElementById('cms-parallax-bg') ? document.getElementById('cms-parallax-bg').value : '',
+            quote: document.getElementById('cms-parallax-quote') ? document.getElementById('cms-parallax-quote').value : ''
+        },
+        features_grid: featuresGrid,
+        faq_list: faqList
     };
     
     try {

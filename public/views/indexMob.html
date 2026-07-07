@@ -296,6 +296,20 @@
   </section>
 
   <!-- Plant Finder Quiz USP -->
+  <!-- ================= NEW MOBILE CMS SECTIONS ================= -->
+  
+  <!-- 1. SHOP BY ROOM -->
+  <section id="mob-shop-room" class="py-16 bg-white relative overflow-hidden hidden">
+    <div class="px-5">
+      <h2 class="text-3xl font-outfit font-extrabold text-gray-900 mb-6">Shop by <span class="text-emerald-600">Room</span></h2>
+      <div class="relative rounded-3xl overflow-hidden shadow-xl border border-gray-100">
+        <img id="mob-shop-room-bg" src="" alt="Shop by Room" class="w-full h-[500px] object-cover filter brightness-95">
+        <!-- Hotspots Container -->
+        <div id="mob-shop-room-hotspots" class="absolute inset-0 w-full h-full"></div>
+      </div>
+    </div>
+  </section>
+  
   <section id="plant-finder" class="py-20 bg-emerald-950 relative overflow-hidden">
     <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none"
       style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M54.627 0l.83.83-54.627 54.627-.83-.83L54.627 0zM0 54.627l.83-.83 54.627-54.627.83.83L1.66 55.457 0 54.627z\' fill=\'%23ffffff\' fill-opacity=\'1\' fill-rule=\'evenodd\'/%3E%3C/svg%3E');">
@@ -608,6 +622,16 @@
   </section>
 
   <!-- Product Categories Section -->
+  <!-- 2. PROCESS TIMELINE -->
+  <section id="mob-timeline" class="py-20 bg-emerald-50 relative hidden">
+    <div class="px-5">
+      <h2 class="text-3xl font-outfit font-extrabold text-gray-900 mb-12 text-center">Our <span class="text-emerald-600">Process</span></h2>
+      <div class="relative border-l-2 border-emerald-200 ml-4 space-y-10" id="mob-timeline-container">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </section>
+
   <section id="products" class="py-24 bg-gray-50 relative min-h-screen">
     <div class="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12">
       <div class="text-center max-w-3xl mx-auto mb-10 animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
@@ -646,6 +670,16 @@
   </section>
 
   <!-- Subscription Packages Section -->
+  <!-- 3. TRENDING GRID (MASONRY) -->
+  <section id="mob-trending" class="py-16 bg-white relative hidden">
+    <div class="px-5">
+      <h2 class="text-3xl font-outfit font-extrabold text-gray-900 mb-8">Trending <span class="text-emerald-600">Collections</span></h2>
+      <div class="grid grid-cols-2 gap-4" id="mob-trending-container">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </section>
+
   <section id="packages" class="py-20 bg-emerald-50 relative">
     <div class="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12">
       <div class="text-center max-w-3xl mx-auto mb-12 animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
@@ -662,6 +696,15 @@
   </section>
 
   <!-- Testimonials Section -->
+  <!-- 4. PARALLAX BANNER -->
+  <section id="mob-parallax" class="py-32 relative bg-gray-900 hidden">
+    <div id="mob-parallax-bg" class="absolute inset-0 w-full h-full bg-cover bg-center bg-fixed opacity-50"></div>
+    <div class="relative z-10 px-5 text-center">
+      <i data-lucide="quote" class="w-12 h-12 text-emerald-400 mx-auto mb-6 opacity-80"></i>
+      <h2 id="mob-parallax-quote" class="text-3xl md:text-4xl font-outfit font-bold text-white leading-tight"></h2>
+    </div>
+  </section>
+
   <section id="testimonials" class="py-12 md:py-24 bg-emerald-900 relative overflow-hidden">
     <div class="absolute inset-0 z-0 opacity-10">
       <i data-lucide="leaf" class="w-full h-full text-white transform -rotate-12 scale-150"></i>
@@ -750,6 +793,16 @@
   </section>
 
   <!-- Plant Doctor Section -->
+  <!-- 5. FEATURES GRID -->
+  <section id="mob-features" class="py-16 bg-white relative hidden">
+    <div class="px-5">
+      <h2 class="text-3xl font-outfit font-extrabold text-gray-900 mb-8 text-center">Why <span class="text-emerald-600">Choose Us?</span></h2>
+      <div class="grid grid-cols-2 gap-4" id="mob-features-container">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </section>
+
   <section id="plant-doctor" class="py-24 bg-emerald-50 relative overflow-hidden border-y border-emerald-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div
@@ -1071,6 +1124,16 @@
   </section>
 
   <!-- Book Consultation Form Section -->
+  <!-- 6. FAQ SECTION -->
+  <section id="mob-faq" class="py-20 bg-white relative hidden">
+    <div class="px-5 max-w-2xl mx-auto">
+      <h2 class="text-3xl font-outfit font-extrabold text-gray-900 mb-8 text-center">Got <span class="text-emerald-600">Questions?</span></h2>
+      <div class="space-y-4" id="mob-faq-container">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </section>
+
   <section id="consultation" class="py-24 bg-emerald-50 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div
@@ -1250,13 +1313,7 @@
       </div>
     </header>
 
-    <!-- Search Bar (Static for quick access) -->
-    <div class="px-4 py-3 bg-white">
-      <div class="bg-gray-100 rounded-full flex items-center px-4 py-2.5" onclick="window.openModal('search-modal')">
-        <i data-lucide="search" class="w-5 h-5 text-gray-400 mr-2"></i>
-        <span class="text-gray-500 text-sm">Search for plants, seeds, pots...</span>
-      </div>
-    </div>
+
 
     <!-- Promo Banner (Horizontal Scroll) -->
     <div id="mobile-promo-banners" class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar custom-scrollbar w-full">

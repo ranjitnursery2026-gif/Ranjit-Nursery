@@ -403,6 +403,70 @@
                 </div>
             </div>
 
+            <!-- ================= MOBILE EXCLUSIVE SECTIONS CMS ================= -->
+            
+            <div class="mt-12 mb-6 border-b-2 border-emerald-500 pb-2">
+                <h2 class="text-2xl font-outfit font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
+                    <i data-lucide="smartphone" class="w-6 h-6 text-emerald-600"></i> Mobile Exclusive Sections
+                </h2>
+                <p class="text-gray-500 text-sm mt-1">Configure the premium visual sections that appear only on mobile devices.</p>
+            </div>
+
+            <!-- Shop By Room CMS -->
+            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
+                <div class="flex justify-between items-center mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Shop by Room (Lookbook)</h3>
+                    <button onclick="window.addShopRoomHotspot()" class="text-sm text-primary hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="plus" class="w-4 h-4"></i> Add Hotspot</button>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Main Background Image URL</label>
+                    <input type="text" id="cms-room-bg" class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl w-full p-2.5" placeholder="/images/living_room.jpg">
+                </div>
+                <div id="cms-room-hotspots-container" class="space-y-3"></div>
+            </div>
+
+            <!-- Timeline CMS -->
+            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">Process Timeline (4 Steps)</h3>
+                <div id="cms-timeline-container" class="space-y-4"></div>
+            </div>
+
+            <!-- Trending Grid CMS -->
+            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">Trending Collections (Masonry)</h3>
+                <div id="cms-trending-container" class="space-y-4"></div>
+            </div>
+
+            <!-- Parallax Banner CMS -->
+            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">Parallax Banner</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Background Image URL</label>
+                        <input type="text" id="cms-parallax-bg" class="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl w-full p-2.5" placeholder="/images/farm.jpg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Quote Text</label>
+                        <input type="text" id="cms-parallax-quote" class="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl w-full p-2.5" placeholder="Rooted in Nature, Growing with Love.">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Grid CMS -->
+            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">Features Grid (Why Choose Us)</h3>
+                <div id="cms-features-container" class="space-y-4"></div>
+            </div>
+
+            <!-- FAQ CMS -->
+            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
+                <div class="flex justify-between items-center mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">FAQ Section</h3>
+                    <button onclick="window.addFaqItem()" class="text-sm text-primary hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="plus" class="w-4 h-4"></i> Add FAQ</button>
+                </div>
+                <div id="cms-faq-container" class="space-y-3"></div>
+            </div>
+
             <!-- About Us Section -->
             <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mt-6">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">

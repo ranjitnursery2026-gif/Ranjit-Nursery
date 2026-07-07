@@ -243,16 +243,10 @@ export function generateProductHTML(p) {
         `;
     } else {
         actionButtonsHTML = `
-            <div class="flex items-center gap-1 md:gap-2">
-            <button onclick="window.RanjitCart.addToCart(${p.id}); event.stopPropagation();" class="flex-grow bg-emerald-50 hover:bg-primary text-emerald-700 hover:text-white py-2 px-2 rounded-lg font-semibold text-[10px] md:text-sm transition-all duration-300 flex items-center justify-center gap-1 md:gap-2 border border-emerald-100 hover:border-transparent group/btn">
+            <button onclick="window.RanjitCart.addToCart(${p.id}); event.stopPropagation();" class="w-full bg-primary hover:bg-emerald-700 text-white py-2 px-2 rounded-lg font-semibold text-[10px] md:text-sm transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-1 md:gap-2 border border-transparent group/btn">
                 <i data-lucide="shopping-bag" class="w-3 h-3 md:w-4 md:h-4 group-hover/btn:scale-110 transition-transform"></i>
-                <span>Add</span>
+                <span>Add to Cart</span>
             </button>
-            <button onclick="window.location.href='checkout.html'; window.RanjitCart.addToCart(${p.id}); event.stopPropagation();" class="flex-grow bg-primary hover:bg-emerald-700 text-white py-2 px-2 rounded-lg font-semibold text-[10px] md:text-sm transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-1 md:gap-2 border border-transparent">
-                <span>Buy</span>
-                <i data-lucide="zap" class="w-3 h-3 md:w-4 md:h-4"></i>
-            </button>
-            </div>
         `;
     }
 

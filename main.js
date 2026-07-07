@@ -865,11 +865,10 @@ window.fetchAndRenderLandingPage = async () => {
         // Render Coupons
         const couponsContainer = document.getElementById('dynamic-coupons');
         if (couponsContainer && config.coupons && config.coupons.length > 0) {
-            couponsContainer.innerHTML = `<div class="flex overflow-x-auto gap-3 snap-x snap-mandatory px-4 custom-scrollbar hide-scrollbar">` +
-                config.coupons.map(coup => {
+            const couponItemsHTML = config.coupons.map(coup => {
                     const t = coup.theme || 'emerald';
                     return `
-                    <div class="snap-start shrink-0 flex items-center bg-white border border-dashed border-${t}-300 rounded-lg p-2 min-w-[200px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] relative overflow-hidden">
+                    <div class="shrink-0 flex items-center bg-white border border-dashed border-${t}-300 rounded-lg p-2 min-w-[200px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] relative overflow-hidden mx-1.5">
                         <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-r border-${t}-200"></div>
                         <div class="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-l border-${t}-200"></div>
                         <div class="pl-3 pr-3 flex-1 border-r border-dashed border-${t}-100">
@@ -881,7 +880,11 @@ window.fetchAndRenderLandingPage = async () => {
                         </div>
                     </div>
                     `;
-                }).join('') + `</div>`;
+                }).join('');
+            
+            // Repeat items multiple times so it fills the width perfectly to loop seamlessly
+            const repeatedItems = couponItemsHTML + couponItemsHTML + couponItemsHTML + couponItemsHTML;
+            couponsContainer.innerHTML = `<div class="overflow-hidden w-full relative"><div class="animate-marquee hover:pause">` + repeatedItems + `</div></div>`;
         } else if (couponsContainer && (!config.coupons || config.coupons.length === 0)) {
             couponsContainer.style.display = 'none';
         }
@@ -915,8 +918,8 @@ window.fetchAndRenderLandingPage = async () => {
                         <div class="p-2.5 flex flex-col">
                             <h4 class="text-[11px] font-bold text-gray-800 line-clamp-1 mb-1 leading-tight">${p.name}</h4>
                             <div class="flex items-center gap-1.5">
-                                <span class="text-sm font-outfit font-extrabold text-primary">?${p.current_price}</span>
-                                <span class="text-[9px] font-medium text-gray-400 line-through">?${p.original_price}</span>
+                                <span class="text-sm font-outfit font-extrabold text-primary">₹${p.current_price}</span>
+                                <span class="text-[9px] font-medium text-gray-400 line-through">₹${p.original_price}</span>
                             </div>
                         </div>
                     </a>
@@ -925,6 +928,122 @@ window.fetchAndRenderLandingPage = async () => {
                 `;
             }
         }
+        // ================= MOBILE EXCLUSIVE SECTIONS =================
+        
+        // 1. Shop By Room
+        const roomSec = document.getElementById('mob-shop-room');
+        const roomBg = document.getElementById('mob-shop-room-bg');
+        const roomHotspots = document.getElementById('mob-shop-room-hotspots');
+        if (roomSec && config.room_bg_image && config.room_hotspots && config.room_hotspots.length > 0) {
+            roomSec.classList.remove('hidden');
+            if (roomBg) roomBg.src = config.room_bg_image;
+            if (roomHotspots) {
+                roomHotspots.innerHTML = config.room_hotspots.map(h => `
+                    <div class="absolute group" style="top: ${h.y}%; left: ${h.x}%; transform: translate(-50%, -50%);">
+                        <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.8)] relative z-10 animate-pulse-slow">
+                            <div class="w-3 h-3 bg-primary rounded-full"></div>
+                        </div>
+                        <div class="absolute top-8 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-md rounded-xl p-2 w-max shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 border border-white">
+                            <span class="block text-xs font-bold text-gray-900">${h.name}</span>
+                            <span class="block text-primary font-bold text-sm">${h.price}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        } else if (roomSec) {
+            roomSec.classList.add('hidden');
+        }
+
+        // 2. Timeline
+        const timelineSec = document.getElementById('mob-timeline');
+        const timelineCont = document.getElementById('mob-timeline-container');
+        if (timelineSec && config.process_timeline && config.process_timeline.length > 0) {
+            timelineSec.classList.remove('hidden');
+            if (timelineCont) {
+                timelineCont.innerHTML = config.process_timeline.map((t, i) => `
+                    <div class="relative pl-6 animate-on-scroll opacity-0 translate-y-4 delay-${i * 100}">
+                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-emerald-500 border-4 border-emerald-100 shadow-sm"></div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-1 leading-tight">${t.title}</h4>
+                        <p class="text-sm text-gray-500">${t.desc}</p>
+                    </div>
+                `).join('');
+            }
+        } else if (timelineSec) {
+            timelineSec.classList.add('hidden');
+        }
+
+        // 3. Trending Grid
+        const trendingSec = document.getElementById('mob-trending');
+        const trendingCont = document.getElementById('mob-trending-container');
+        if (trendingSec && config.trending_grid && config.trending_grid.length > 0) {
+            trendingSec.classList.remove('hidden');
+            if (trendingCont) {
+                trendingCont.innerHTML = config.trending_grid.map((t, i) => `
+                    <div class="relative rounded-2xl overflow-hidden shadow-sm aspect-[4/5] ${i % 3 === 0 ? 'col-span-2 aspect-[2/1]' : ''} group cursor-pointer animate-on-scroll opacity-0 scale-95 delay-${(i%2)*100}">
+                        <img src="${t.image}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <h4 class="text-white font-bold text-lg leading-tight shadow-sm">${t.title}</h4>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        } else if (trendingSec) {
+            trendingSec.classList.add('hidden');
+        }
+
+        // 4. Parallax Banner
+        const parallaxSec = document.getElementById('mob-parallax');
+        const parallaxBg = document.getElementById('mob-parallax-bg');
+        const parallaxQuote = document.getElementById('mob-parallax-quote');
+        if (parallaxSec && config.parallax_banner && config.parallax_banner.image) {
+            parallaxSec.classList.remove('hidden');
+            if (parallaxBg) parallaxBg.style.backgroundImage = `url('${config.parallax_banner.image}')`;
+            if (parallaxQuote) parallaxQuote.textContent = config.parallax_banner.quote || '';
+        } else if (parallaxSec) {
+            parallaxSec.classList.add('hidden');
+        }
+
+        // 5. Features Grid
+        const featuresSec = document.getElementById('mob-features');
+        const featuresCont = document.getElementById('mob-features-container');
+        if (featuresSec && config.features_grid && config.features_grid.length > 0) {
+            featuresSec.classList.remove('hidden');
+            if (featuresCont) {
+                featuresCont.innerHTML = config.features_grid.map(f => `
+                    <div class="bg-emerald-50 rounded-2xl p-4 flex flex-col items-center text-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-emerald-100/50 animate-on-scroll opacity-0 translate-y-4">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary mb-3 shadow-sm">
+                            <i data-lucide="${f.icon || 'check'}" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-sm font-bold text-gray-800 leading-tight">${f.title}</span>
+                    </div>
+                `).join('');
+            }
+        } else if (featuresSec) {
+            featuresSec.classList.add('hidden');
+        }
+
+        // 6. FAQ
+        const faqSec = document.getElementById('mob-faq');
+        const faqCont = document.getElementById('mob-faq-container');
+        if (faqSec && config.faq_list && config.faq_list.length > 0) {
+            faqSec.classList.remove('hidden');
+            if (faqCont) {
+                faqCont.innerHTML = config.faq_list.map((f, i) => `
+                    <div class="border border-gray-100 rounded-2xl p-5 bg-gray-50/50 animate-on-scroll opacity-0 translate-y-4 delay-${(i%3)*100}">
+                        <h4 class="font-bold text-gray-900 mb-2 flex items-start gap-2">
+                            <i data-lucide="help-circle" class="w-5 h-5 text-primary shrink-0 mt-0.5"></i>
+                            ${f.q}
+                        </h4>
+                        <p class="text-gray-500 text-sm ml-7">${f.a}</p>
+                    </div>
+                `).join('');
+            }
+        } else if (faqSec) {
+            faqSec.classList.add('hidden');
+        }
+
+        // =============================================================
 
         // Best Sellers Config
         const bestSellersGrid = document.getElementById('mobile-products-grid');
@@ -1014,8 +1133,6 @@ function initHeroCarousel() {
 function initAutoScrolls() {
     const scrollContainers = [
         document.getElementById('mobile-promo-banners'),
-        document.querySelector('#dynamic-image-categories > div'),
-        document.querySelector('#dynamic-coupons > div'),
         document.querySelector('#dynamic-deal-of-day > div.flex.overflow-x-auto'),
         document.getElementById('mobile-products-grid')
     ];
