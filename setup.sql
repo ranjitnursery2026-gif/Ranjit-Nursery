@@ -11,11 +11,13 @@ CREATE TABLE IF NOT EXISTS public.products (
   badge text,
   is_available boolean NOT NULL DEFAULT true,
   availability_status text DEFAULT 'In Stock',
+  variants jsonb DEFAULT '[]'::jsonb,
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
 -- ADD COLUMN FOR EXISTING DATABASES
 ALTER TABLE public.products ADD COLUMN IF NOT EXISTS availability_status text DEFAULT 'In Stock';
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS variants jsonb DEFAULT '[]'::jsonb;
 
 -- 2. Insert existing products
 INSERT INTO public.products (id, name, categories, price, image, description, badge, is_available) VALUES

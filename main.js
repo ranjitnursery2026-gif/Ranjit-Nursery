@@ -11,6 +11,67 @@ const initializeApp = () => {
     lucide.createIcons();
   }
 
+  // Desktop Hero Carousel Logic
+  const slides = document.querySelectorAll('.carousel-slide');
+  const dots = document.querySelectorAll('.carousel-dot');
+  if (slides.length > 0 && dots.length > 0) {
+    let currentSlide = 0;
+    let slideInterval;
+
+    const showSlide = (index) => {
+      slides.forEach((slide, i) => {
+        if (i === index) {
+          slide.classList.remove('opacity-0', 'pointer-events-none', 'z-0');
+          slide.classList.add('opacity-100', 'z-10');
+          const content = slide.querySelector('.slide-content');
+          if (content) {
+            content.classList.remove('translate-y-8', 'opacity-0');
+            content.classList.add('translate-y-0', 'opacity-100');
+          }
+        } else {
+          slide.classList.remove('opacity-100', 'z-10');
+          slide.classList.add('opacity-0', 'pointer-events-none', 'z-0');
+          const content = slide.querySelector('.slide-content');
+          if (content) {
+            content.classList.remove('translate-y-0', 'opacity-100');
+            content.classList.add('translate-y-8', 'opacity-0');
+          }
+        }
+      });
+
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          dot.classList.remove('w-3', 'opacity-40');
+          dot.classList.add('w-10', 'opacity-100');
+        } else {
+          dot.classList.remove('w-10', 'opacity-100');
+          dot.classList.add('w-3', 'opacity-40');
+        }
+      });
+      currentSlide = index;
+    };
+
+    const nextSlide = () => {
+      showSlide((currentSlide + 1) % slides.length);
+    };
+
+    const startSlideShow = () => {
+      clearInterval(slideInterval);
+      slideInterval = setInterval(nextSlide, 5000);
+    };
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        showSlide(index);
+        startSlideShow();
+      });
+    });
+
+    // Initial setup
+    showSlide(0);
+    startSlideShow();
+  }
+
   // Mobile Menu Toggle
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
@@ -897,24 +958,27 @@ window.fetchAndRenderLandingPage = async () => {
             } else {
                 dealContainer.style.display = 'block';
                 
-                // Format the timer based on end_time
-                let timerHtml = '<span class="font-mono font-bold bg-black/40 px-1.5 py-0.5 rounded ml-1 text-white shadow-inner">00:00:00</span>';
-                // For a real implementation, you'd add a setInterval timer here parsing config.deal_of_day.end_time.
+                const dealTitle = config.deal_of_day.title || 'Deal of the Day';
                 
                 dealContainer.innerHTML = `
                 <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500 rounded-full blur-[80px] opacity-30"></div>
                 <div class="px-4 flex justify-between items-center mb-4 relative z-10">
                     <div class="flex flex-col">
-                        <h3 class="font-bold text-white text-lg flex items-center gap-1.5 leading-none mb-1"><i data-lucide="zap" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i> Deal of the Day</h3>
-                        <span class="text-[10px] text-blue-200 font-medium">Ends in ${timerHtml}</span>
+                        <h3 class="font-bold text-white text-lg flex items-center gap-1.5 leading-none mb-1"><i data-lucide="zap" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i> ${dealTitle}</h3>
+                        <span class="text-[10px] text-blue-200 font-medium">Ends in <span id="deal-timer-display" class="font-mono font-bold bg-black/40 px-1.5 py-0.5 rounded ml-1 text-white shadow-inner">00:00:00</span></span>
                     </div>
                     <a href="products.html" class="bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full transition-colors shadow-sm">View All</a>
                 </div>
                 <div class="flex overflow-x-auto snap-x snap-mandatory px-4 gap-3 custom-scrollbar hide-scrollbar relative z-10 pb-2">
-                    ` + config.deal_of_day.products.map(p => `
-                    <a href="${p.link || 'products.html'}" class="snap-start shrink-0 w-32 bg-white rounded-xl overflow-hidden shadow-xl flex flex-col relative">
+                    ` + config.deal_of_day.products.map((p, index) => `
+                    <div onclick="window.openDealModal(${index})" class="snap-start shrink-0 w-32 bg-white rounded-xl overflow-hidden shadow-xl flex flex-col relative group cursor-pointer">
                         <span class="absolute top-0 left-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-br-lg z-10 shadow-sm">${p.discount}</span>
-                        <img src="${p.image}" class="w-full h-28 object-cover">
+                        <div class="relative w-full h-28 overflow-hidden">
+                            <img src="${p.image}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="bg-white/90 text-gray-900 text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-sm shadow-sm"><i data-lucide="eye" class="w-3 h-3 inline"></i> Quick View</span>
+                            </div>
+                        </div>
                         <div class="p-2.5 flex flex-col">
                             <h4 class="text-[11px] font-bold text-gray-800 line-clamp-1 mb-1 leading-tight">${p.name}</h4>
                             <div class="flex items-center gap-1.5">
@@ -922,129 +986,137 @@ window.fetchAndRenderLandingPage = async () => {
                                 <span class="text-[9px] font-medium text-gray-400 line-through">₹${p.original_price}</span>
                             </div>
                         </div>
-                    </a>
+                    </div>
                     `).join('') + `
                 </div>
                 `;
-            }
-        }
-        // ================= MOBILE EXCLUSIVE SECTIONS =================
-        
-        // 1. Shop By Room
-        const roomSec = document.getElementById('mob-shop-room');
-        const roomBg = document.getElementById('mob-shop-room-bg');
-        const roomHotspots = document.getElementById('mob-shop-room-hotspots');
-        if (roomSec && config.room_bg_image && config.room_hotspots && config.room_hotspots.length > 0) {
-            roomSec.classList.remove('hidden');
-            if (roomBg) roomBg.src = config.room_bg_image;
-            if (roomHotspots) {
-                roomHotspots.innerHTML = config.room_hotspots.map(h => `
-                    <div class="absolute group" style="top: ${h.y}%; left: ${h.x}%; transform: translate(-50%, -50%);">
-                        <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.8)] relative z-10 animate-pulse-slow">
-                            <div class="w-3 h-3 bg-primary rounded-full"></div>
+
+                // Real-time Timer Logic
+                if (window.dealTimerInterval) clearInterval(window.dealTimerInterval);
+                const timerDisplay = document.getElementById('deal-timer-display');
+                if (config.deal_of_day.end_time && timerDisplay) {
+                    const updateTimer = () => {
+                        const endTime = new Date(config.deal_of_day.end_time).getTime();
+                        if (isNaN(endTime)) return; // Invalid date
+                        const now = new Date().getTime();
+                        const distance = endTime - now;
+                        
+                        if (distance <= 0) {
+                            clearInterval(window.dealTimerInterval);
+                            timerDisplay.textContent = "00:00:00";
+                            return;
+                        }
+                        
+                        const hours = Math.floor(distance / (1000 * 60 * 60)); // Support > 24h
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        
+                        const h = String(hours).padStart(2, '0');
+                        const m = String(minutes).padStart(2, '0');
+                        const s = String(seconds).padStart(2, '0');
+                        
+                        timerDisplay.textContent = `${h}:${m}:${s}`;
+                    };
+                    
+                    updateTimer(); // Initial call
+                    window.dealTimerInterval = setInterval(updateTimer, 1000);
+                }
+
+                // Inject Deal of the Day Quick View Modal
+                if (!document.getElementById('deal-quickview-modal')) {
+                    const modalHtml = `
+                    <div id="deal-quickview-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4">
+                        <div id="deal-quickview-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 cursor-pointer" onclick="window.closeDealModal()"></div>
+                        <div id="deal-quickview-content" class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl relative z-10 transform scale-95 opacity-0 transition-all duration-300">
+                            <button onclick="window.closeDealModal()" class="absolute top-3 right-3 bg-white/50 hover:bg-white backdrop-blur-md rounded-full p-1.5 text-gray-600 transition-colors z-20">
+                                <i data-lucide="x" class="w-5 h-5"></i>
+                            </button>
+                            <div class="relative h-64 w-full bg-gray-50">
+                                <span id="deal-modal-discount" class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-20"></span>
+                                <img id="deal-modal-image" src="" class="w-full h-full object-cover">
+                            </div>
+                            <div class="p-6">
+                                <h2 id="deal-modal-name" class="text-2xl font-outfit font-extrabold text-gray-900 mb-2 leading-tight"></h2>
+                                <div class="flex items-end gap-3 mb-4">
+                                    <span id="deal-modal-price" class="text-3xl font-black text-emerald-600"></span>
+                                    <span id="deal-modal-original" class="text-base text-gray-400 line-through font-medium mb-1"></span>
+                                </div>
+                                <div class="bg-blue-50 border border-blue-100 rounded-xl p-3 mb-5 flex items-start gap-3">
+                                    <i data-lucide="zap" class="w-5 h-5 text-yellow-500 shrink-0 mt-0.5"></i>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-gray-900 uppercase tracking-wider mb-0.5">Flash Sale Offer</h4>
+                                        <p class="text-[11px] text-gray-600 leading-snug">This is a limited-time exclusive deal. Grab it before the timer runs out!</p>
+                                    </div>
+                                </div>
+                                <button id="deal-modal-add-btn" class="w-full bg-primary hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-[0_5px_15px_rgba(45,90,39,0.3)] transition-all flex items-center justify-center gap-2 group">
+                                    <i data-lucide="shopping-bag" class="w-5 h-5 group-hover:scale-110 transition-transform"></i> Add Deal to Cart
+                                </button>
+                            </div>
                         </div>
-                        <div class="absolute top-8 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-md rounded-xl p-2 w-max shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 border border-white">
-                            <span class="block text-xs font-bold text-gray-900">${h.name}</span>
-                            <span class="block text-primary font-bold text-sm">${h.price}</span>
-                        </div>
                     </div>
-                `).join('');
+                    `;
+                    document.body.insertAdjacentHTML('beforeend', modalHtml);
+                }
+
+                window.currentDealProducts = config.deal_of_day.products;
+                
+                window.openDealModal = (index) => {
+                    const deal = window.currentDealProducts[index];
+                    document.getElementById('deal-modal-image').src = deal.image;
+                    document.getElementById('deal-modal-name').textContent = deal.name;
+                    document.getElementById('deal-modal-price').textContent = '₹' + deal.current_price;
+                    document.getElementById('deal-modal-original').textContent = '₹' + deal.original_price;
+                    document.getElementById('deal-modal-discount').textContent = deal.discount;
+                    
+                    const dealId = 'deal_' + index;
+                    
+                    // Sync with cart products
+                    if (window.RanjitCart && window.RanjitCart.PRODUCTS) {
+                        if (!window.RanjitCart.PRODUCTS.find(p => p.id === dealId)) {
+                            window.RanjitCart.PRODUCTS.push({
+                                id: dealId,
+                                name: deal.name + ' (Flash Sale)',
+                                price: parseFloat(deal.current_price),
+                                image: deal.image,
+                                category: 'Flash Sale',
+                                stock: 999
+                            });
+                        }
+                    }
+                    
+                    document.getElementById('deal-modal-add-btn').onclick = () => {
+                        if (window.RanjitCart) window.RanjitCart.addToCart(dealId);
+                        window.closeDealModal();
+                    };
+                    
+                    const modal = document.getElementById('deal-quickview-modal');
+                    const overlay = document.getElementById('deal-quickview-overlay');
+                    const content = document.getElementById('deal-quickview-content');
+                    
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        overlay.classList.remove('opacity-0');
+                        content.classList.remove('scale-95', 'opacity-0');
+                    }, 10);
+                    document.body.style.overflow = 'hidden';
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                };
+
+                window.closeDealModal = () => {
+                    const modal = document.getElementById('deal-quickview-modal');
+                    const overlay = document.getElementById('deal-quickview-overlay');
+                    const content = document.getElementById('deal-quickview-content');
+                    
+                    if (overlay) overlay.classList.add('opacity-0');
+                    if (content) content.classList.add('scale-95', 'opacity-0');
+                    
+                    setTimeout(() => {
+                        if (modal) modal.classList.add('hidden');
+                        document.body.style.overflow = '';
+                    }, 300);
+                };
             }
-        } else if (roomSec) {
-            roomSec.classList.add('hidden');
         }
-
-        // 2. Timeline
-        const timelineSec = document.getElementById('mob-timeline');
-        const timelineCont = document.getElementById('mob-timeline-container');
-        if (timelineSec && config.process_timeline && config.process_timeline.length > 0) {
-            timelineSec.classList.remove('hidden');
-            if (timelineCont) {
-                timelineCont.innerHTML = config.process_timeline.map((t, i) => `
-                    <div class="relative pl-6 animate-on-scroll opacity-0 translate-y-4 delay-${i * 100}">
-                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-emerald-500 border-4 border-emerald-100 shadow-sm"></div>
-                        <h4 class="text-lg font-bold text-gray-900 mb-1 leading-tight">${t.title}</h4>
-                        <p class="text-sm text-gray-500">${t.desc}</p>
-                    </div>
-                `).join('');
-            }
-        } else if (timelineSec) {
-            timelineSec.classList.add('hidden');
-        }
-
-        // 3. Trending Grid
-        const trendingSec = document.getElementById('mob-trending');
-        const trendingCont = document.getElementById('mob-trending-container');
-        if (trendingSec && config.trending_grid && config.trending_grid.length > 0) {
-            trendingSec.classList.remove('hidden');
-            if (trendingCont) {
-                trendingCont.innerHTML = config.trending_grid.map((t, i) => `
-                    <div class="relative rounded-2xl overflow-hidden shadow-sm aspect-[4/5] ${i % 3 === 0 ? 'col-span-2 aspect-[2/1]' : ''} group cursor-pointer animate-on-scroll opacity-0 scale-95 delay-${(i%2)*100}">
-                        <img src="${t.image}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-4">
-                            <h4 class="text-white font-bold text-lg leading-tight shadow-sm">${t.title}</h4>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        } else if (trendingSec) {
-            trendingSec.classList.add('hidden');
-        }
-
-        // 4. Parallax Banner
-        const parallaxSec = document.getElementById('mob-parallax');
-        const parallaxBg = document.getElementById('mob-parallax-bg');
-        const parallaxQuote = document.getElementById('mob-parallax-quote');
-        if (parallaxSec && config.parallax_banner && config.parallax_banner.image) {
-            parallaxSec.classList.remove('hidden');
-            if (parallaxBg) parallaxBg.style.backgroundImage = `url('${config.parallax_banner.image}')`;
-            if (parallaxQuote) parallaxQuote.textContent = config.parallax_banner.quote || '';
-        } else if (parallaxSec) {
-            parallaxSec.classList.add('hidden');
-        }
-
-        // 5. Features Grid
-        const featuresSec = document.getElementById('mob-features');
-        const featuresCont = document.getElementById('mob-features-container');
-        if (featuresSec && config.features_grid && config.features_grid.length > 0) {
-            featuresSec.classList.remove('hidden');
-            if (featuresCont) {
-                featuresCont.innerHTML = config.features_grid.map(f => `
-                    <div class="bg-emerald-50 rounded-2xl p-4 flex flex-col items-center text-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-emerald-100/50 animate-on-scroll opacity-0 translate-y-4">
-                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary mb-3 shadow-sm">
-                            <i data-lucide="${f.icon || 'check'}" class="w-6 h-6"></i>
-                        </div>
-                        <span class="text-sm font-bold text-gray-800 leading-tight">${f.title}</span>
-                    </div>
-                `).join('');
-            }
-        } else if (featuresSec) {
-            featuresSec.classList.add('hidden');
-        }
-
-        // 6. FAQ
-        const faqSec = document.getElementById('mob-faq');
-        const faqCont = document.getElementById('mob-faq-container');
-        if (faqSec && config.faq_list && config.faq_list.length > 0) {
-            faqSec.classList.remove('hidden');
-            if (faqCont) {
-                faqCont.innerHTML = config.faq_list.map((f, i) => `
-                    <div class="border border-gray-100 rounded-2xl p-5 bg-gray-50/50 animate-on-scroll opacity-0 translate-y-4 delay-${(i%3)*100}">
-                        <h4 class="font-bold text-gray-900 mb-2 flex items-start gap-2">
-                            <i data-lucide="help-circle" class="w-5 h-5 text-primary shrink-0 mt-0.5"></i>
-                            ${f.q}
-                        </h4>
-                        <p class="text-gray-500 text-sm ml-7">${f.a}</p>
-                    </div>
-                `).join('');
-            }
-        } else if (faqSec) {
-            faqSec.classList.add('hidden');
-        }
-
-        // =============================================================
-
         // Best Sellers Config
         const bestSellersGrid = document.getElementById('mobile-products-grid');
         if (bestSellersGrid && config.best_sellers && config.best_sellers.category) {

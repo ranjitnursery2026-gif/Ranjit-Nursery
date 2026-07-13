@@ -1,7 +1,5 @@
-
-
-  <!-- ================= DESKTOP VIEW ================= -->
-  <div id="desktop-view" class="hidden md:block">
+<!-- ================= DESKTOP VIEW ================= -->
+<div id="desktop-view" class="hidden md:block">
   <!-- Navbar -->
   <nav
     class="fixed w-full z-50 transition-all duration-300 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm"
@@ -9,7 +7,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
         <div class="flex items-center gap-0">
-          <img src="/logo.png" alt="Ranjit Nursery Logo" class="h-[60px] w-auto scale-[1.3] object-contain origin-center -mr-2 -ml-2">
+          <img src="/logo.png" alt="Ranjit Nursery Logo"
+            class="h-[60px] w-auto scale-[1.3] object-contain origin-center -mr-2 -ml-2">
           <div>
             <h1 class="text-2xl font-outfit font-bold text-primary leading-none">Ranjit Nursery</h1>
             <p class="text-[0.65rem] font-medium tracking-wider text-gray-500 uppercase mt-1">5 Star Nursery Wholesale
@@ -32,20 +31,25 @@
           <a href="#products" class="text-gray-600 hover:text-primary transition-colors">Products</a>
           <a href="#services" class="text-gray-600 hover:text-primary transition-colors">Services</a>
           <a href="#contact" class="text-gray-600 hover:text-primary transition-colors">Contact</a>
-          
+
           <div class="flex items-center gap-2 lg:gap-3 border-l border-gray-200 pl-3 ml-1 lg:pl-4 lg:ml-2">
             <!-- Search Icon -->
-            <button class="text-gray-600 hover:text-primary transition-colors p-2" title="Search Products" onclick="window.openModal('search-modal')">
+            <button class="text-gray-600 hover:text-primary transition-colors p-2" title="Search Products"
+              onclick="window.openModal('search-modal')">
               <i data-lucide="search" class="w-5 h-5"></i>
             </button>
 
             <!-- Track Order -->
-            <button class="text-gray-600 hover:text-primary transition-colors p-2 flex items-center gap-1 font-semibold text-sm" title="Track Order" onclick="window.RanjitCart.openTrackModal()">
+            <button
+              class="text-gray-600 hover:text-primary transition-colors p-2 flex items-center gap-1 font-semibold text-sm"
+              title="Track Order" onclick="window.RanjitCart.openTrackModal()">
               <i data-lucide="truck" class="w-5 h-5"></i> <span class="hidden xl:inline">Track Order</span>
             </button>
 
             <!-- Login / Profile -->
-            <button class="text-gray-600 hover:text-primary transition-colors p-2 flex items-center gap-1 font-semibold text-sm" title="Login / Profile" onclick="window.RanjitCart.openAuthModal()">
+            <button
+              class="text-gray-600 hover:text-primary transition-colors p-2 flex items-center gap-1 font-semibold text-sm"
+              title="Login / Profile" onclick="window.RanjitCart.openAuthModal()">
               <i data-lucide="user-circle" class="w-5 h-5"></i>
             </button>
 
@@ -58,7 +62,8 @@
 
             <!-- WhatsApp Icon -->
             <a href="https://wa.me/919692905128" target="_blank" rel="noopener noreferrer"
-              class="bg-[#25D366] hover:bg-[#1ebd5a] text-white p-2.5 rounded-full transition-all shadow-md hover:shadow-lg flex items-center justify-center transform hover:-translate-y-0.5" title="WhatsApp Us">
+              class="bg-[#25D366] hover:bg-[#1ebd5a] text-white p-2.5 rounded-full transition-all shadow-md hover:shadow-lg flex items-center justify-center transform hover:-translate-y-0.5"
+              title="WhatsApp Us">
               <i data-lucide="message-circle" class="w-5 h-5"></i>
             </a>
           </div>
@@ -66,7 +71,8 @@
 
         <!-- Mobile menu button -->
         <div class="md:hidden flex items-center gap-2">
-          <button class="text-gray-600 hover:text-primary transition-colors p-2" title="Search Products" onclick="window.openModal('search-modal')">
+          <button class="text-gray-600 hover:text-primary transition-colors p-2" title="Search Products"
+            onclick="window.openModal('search-modal')">
             <i data-lucide="search" class="w-5 h-5"></i>
           </button>
           <button class="cart-icon-btn relative text-gray-600 hover:text-primary transition-colors p-2">
@@ -122,8 +128,10 @@
           class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100">Products</a>
         <a href="#services"
           class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100">Services</a>
-        <a href="#" onclick="window.RanjitCart.openTrackModal(); document.getElementById('mobile-menu').classList.add('hidden'); event.preventDefault();"
-          class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100 flex items-center gap-2"><i data-lucide="truck" class="w-4 h-4 text-primary"></i> Track Order</a>
+        <a href="#"
+          onclick="window.RanjitCart.openTrackModal(); document.getElementById('mobile-menu').classList.add('hidden'); event.preventDefault();"
+          class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100 flex items-center gap-2"><i
+            data-lucide="truck" class="w-4 h-4 text-primary"></i> Track Order</a>
         <a href="#contact"
           class="mobile-link block px-3 py-3 text-base font-bold text-gray-900 border-b border-gray-100">Contact</a>
       </div>
@@ -141,8 +149,8 @@
       <div class="carousel-slide absolute inset-0 w-full h-full transition-opacity duration-1000 opacity-100 z-10"
         data-index="0">
         <div class="absolute inset-0 z-0">
-          <div class="w-full h-full bg-cover bg-center"
-            style="background-image: url('https://swamynursery.in/images/slider5.jpg');"></div>
+          <div class="w-full h-full bg-cover bg-center" style="background-image: url('public/images/panel1.png');">
+          </div>
           <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/90 to-emerald-900/60 mix-blend-multiply"></div>
         </div>
         <div
@@ -476,15 +484,19 @@
         </div>
 
         <!-- Result -->
-        <div id="quiz-result" class="quiz-step hidden opacity-0 transition-all duration-500 absolute w-full left-0 px-4 md:px-8 flex flex-col h-full justify-start pb-4 max-h-[400px] sm:max-h-[300px]">
+        <div id="quiz-result"
+          class="quiz-step hidden opacity-0 transition-all duration-500 absolute w-full left-0 px-4 md:px-8 flex flex-col h-full justify-start pb-4 max-h-[400px] sm:max-h-[300px]">
           <div class="overflow-y-auto pr-2 custom-scrollbar w-full">
-            <h3 class="text-2xl md:text-3xl font-bold text-white mb-1 text-center sticky top-0 bg-emerald-900/90 py-2 z-10 backdrop-blur-sm rounded-lg">Your Perfect Matches!</h3>
-            <p class="text-emerald-100 text-center text-sm mb-4">Based on your answers, we recommend these beautiful plants:</p>
-            
+            <h3
+              class="text-2xl md:text-3xl font-bold text-white mb-1 text-center sticky top-0 bg-emerald-900/90 py-2 z-10 backdrop-blur-sm rounded-lg">
+              Your Perfect Matches!</h3>
+            <p class="text-emerald-100 text-center text-sm mb-4">Based on your answers, we recommend these beautiful
+              plants:</p>
+
             <div id="quiz-results-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
               <!-- Dynamically populated by main.js -->
             </div>
-            
+
             <div class="flex flex-wrap justify-center gap-4">
               <a href="products.html" id="quiz-shop-link"
                 class="bg-white text-emerald-900 hover:bg-emerald-50 font-bold py-3 px-8 rounded-full transition-all shadow-[0_0_15px_rgba(255,255,255,0.4)] transform hover:-translate-y-1">Shop
@@ -550,8 +562,10 @@
               <i data-lucide="award" class="w-4 h-4 md:w-6 md:h-6"></i>
             </div>
             <div class="text-left">
-              <p class="text-[8px] md:text-xs font-bold text-gray-400 uppercase tracking-widest mb-0.5 md:mb-1">Founder & CEO</p>
-              <h4 id="dynamic-founder-title" class="text-sm md:text-xl font-outfit font-extrabold text-gray-900 leading-none">RANJIT SINGH</h4>
+              <p class="text-[8px] md:text-xs font-bold text-gray-400 uppercase tracking-widest mb-0.5 md:mb-1">Founder
+                & CEO</p>
+              <h4 id="dynamic-founder-title"
+                class="text-sm md:text-xl font-outfit font-extrabold text-gray-900 leading-none">RANJIT SINGH</h4>
             </div>
           </div>
         </div>
@@ -565,7 +579,8 @@
           <h2 class="text-4xl lg:text-5xl font-outfit font-extrabold text-gray-900 mb-6 leading-tight">
             Cultivating <span class="text-primary">Nature's Best</span> Since 2010
           </h2>
-          <p id="dynamic-about-text" class="text-gray-600 text-lg leading-relaxed mb-8 border-l-4 border-primary/20 pl-6 italic">
+          <p id="dynamic-about-text"
+            class="text-gray-600 text-lg leading-relaxed mb-8 border-l-4 border-primary/20 pl-6 italic">
             "What started as a small backyard passion has bloomed into one of the region's most trusted nurseries. We
             believe every space deserves a touch of green, and we're here to make that happen with uncompromising
             quality."
@@ -610,15 +625,19 @@
   <!-- Product Categories Section -->
   <section id="products" class="py-24 bg-gray-50 relative min-h-screen">
     <div class="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12">
-      <div class="text-center max-w-3xl mx-auto mb-10 animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-        <h2 id="featured-title" class="text-4xl md:text-5xl font-outfit font-bold text-gray-900 mb-4">Our Core Products</h2>
-        <p id="featured-subtitle" class="text-gray-600 text-lg">Explore our diverse collection of premium plants, gardening supplies, and exotic specialities perfect for any space.</p>
+      <div
+        class="text-center max-w-3xl mx-auto mb-10 animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+        <h2 id="featured-title" class="text-4xl md:text-5xl font-outfit font-bold text-gray-900 mb-4">Our Core Products
+        </h2>
+        <p id="featured-subtitle" class="text-gray-600 text-lg">Explore our diverse collection of premium plants,
+          gardening supplies, and exotic specialities perfect for any space.</p>
       </div>
 
 
 
       <!-- Dynamic Product Grid (rendered by cart.js) -->
-      <div id="products-grid" class="products-grid-container grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+      <div id="products-grid"
+        class="products-grid-container grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
         <!-- Products are injected here dynamically via JavaScript -->
       </div>
 
@@ -648,7 +667,8 @@
   <!-- Subscription Packages Section -->
   <section id="packages" class="py-20 bg-emerald-50 relative">
     <div class="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12">
-      <div class="text-center max-w-3xl mx-auto mb-12 animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+      <div
+        class="text-center max-w-3xl mx-auto mb-12 animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
         <div class="text-primary font-bold tracking-wider uppercase mb-2 flex items-center justify-center gap-2">
           <i data-lucide="package" class="w-5 h-5"></i> Packages
         </div>
@@ -1158,7 +1178,8 @@
         <!-- Brand -->
         <div class="lg:col-span-1">
           <div class="flex items-center gap-0 mb-6">
-            <img src="/logo.png" alt="Ranjit Nursery Logo" class="h-12 w-auto scale-[1.2] object-contain bg-white/20 p-1 rounded-lg backdrop-blur-sm -mr-2 -ml-1">
+            <img src="/logo.png" alt="Ranjit Nursery Logo"
+              class="h-12 w-auto scale-[1.2] object-contain bg-white/20 p-1 rounded-lg backdrop-blur-sm -mr-2 -ml-1">
             <h2 class="text-2xl font-outfit font-bold text-white leading-none">Ranjit Nursery</h2>
           </div>
           <p class="text-sm text-gray-400 mb-6">
@@ -1218,7 +1239,8 @@
         </div>
       </div>
 
-      <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+      <div
+        class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
         <p class="text-sm text-gray-500">&copy; 2026 Ranjit Nursery. All rights reserved.</p>
         <div class="flex items-center gap-4 text-sm text-gray-400">
           <a href="/views/terms.html" class="hover:text-white transition-colors">Terms</a>
@@ -1228,336 +1250,419 @@
       </div>
     </div>
   </footer>
+</div>
+<!-- ================= END DESKTOP VIEW ================= -->
+
+<!-- ================= MOBILE APP VIEW ================= -->
+<div id="mobile-app-view" class="block md:hidden bg-gray-50 pb-20 min-h-screen">
+
+  <!-- Mobile App Header -->
+  <header
+    class="bg-white sticky top-0 z-40 border-b border-gray-100 px-4 py-2 shadow-sm flex items-center justify-between">
+    <div class="flex items-center gap-0">
+      <img src="/logo.png" alt="Ranjit Nursery Logo"
+        class="h-9 w-auto scale-[1.3] object-contain origin-center -mr-2 -ml-1">
+      <h1 class="text-lg font-outfit font-bold text-primary leading-none">Ranjit Nursery</h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="text-gray-600 p-1" onclick="window.openModal('search-modal')">
+        <i data-lucide="search" class="w-5 h-5"></i>
+      </button>
+      <button class="text-gray-600 p-1" onclick="window.RanjitCart.openAuthModal()">
+        <i data-lucide="user-circle" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </header>
+
+
+
+  <!-- Promo Banner (Horizontal Scroll) -->
+  <div id="mobile-promo-banners"
+    class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar custom-scrollbar w-full">
+    <!-- Fallback static banners (if no CMS data) -->
+    <div
+      class="snap-center shrink-0 w-full relative aspect-[5/3] overflow-hidden bg-gradient-to-r from-emerald-800 to-primary">
+      <img src="/images/mobile_banner_sale.png" class="absolute inset-0 w-full h-full object-cover z-0">
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-0"></div>
+      <div class="relative z-10 flex flex-col justify-end h-full p-4 pb-5">
+        <span
+          class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider backdrop-blur-md w-max text-white border border-white/30 mb-1">Sale</span>
+        <h3 class="text-xl font-bold text-white leading-tight">Up to 30% Off</h3>
+        <p class="text-emerald-50 text-xs mt-0.5 mb-2">On all indoor plants</p>
+        <a href="products.html?category=Indoor%20Plants"
+          class="inline-block bg-white text-primary px-4 py-1.5 rounded-full text-xs font-bold shadow-md w-max">Shop
+          Now</a>
+      </div>
+      <i data-lucide="leaf" class="absolute -right-4 -top-4 w-40 h-40 text-white opacity-10"></i>
+    </div>
+    <div
+      class="snap-center shrink-0 w-full relative aspect-[5/3] overflow-hidden bg-gradient-to-r from-orange-500 to-amber-500">
+      <img src="/images/mobile_banner_new.png" class="absolute inset-0 w-full h-full object-cover z-0">
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-0"></div>
+      <div class="relative z-10 flex flex-col justify-end h-full p-4 pb-5">
+        <span
+          class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider backdrop-blur-md w-max text-white border border-white/30 mb-1">New</span>
+        <h3 class="text-xl font-bold text-white leading-tight">Organic Seeds</h3>
+        <p class="text-orange-50 text-xs mt-0.5 mb-2">Start your kitchen garden</p>
+        <a href="products.html?category=Seeds"
+          class="inline-block bg-white text-orange-600 px-4 py-1.5 rounded-full text-xs font-bold shadow-md w-max">Explore</a>
+      </div>
+      <i data-lucide="sprout" class="absolute -right-4 -top-4 w-32 h-32 text-white opacity-15"></i>
+    </div>
   </div>
-  <!-- ================= END DESKTOP VIEW ================= -->
 
-  <!-- ================= MOBILE APP VIEW ================= -->
-  <div id="mobile-app-view" class="block md:hidden bg-gray-50 pb-20 min-h-screen">
-    
-    <!-- Mobile App Header -->
-    <header class="bg-white sticky top-0 z-40 border-b border-gray-100 px-4 py-2 shadow-sm flex items-center justify-between">
-      <div class="flex items-center gap-0">
-        <img src="/logo.png" alt="Ranjit Nursery Logo" class="h-9 w-auto scale-[1.3] object-contain origin-center -mr-2 -ml-1">
-        <h1 class="text-lg font-outfit font-bold text-primary leading-none">Ranjit Nursery</h1>
-      </div>
-      <div class="flex items-center gap-3">
-        <button class="text-gray-600 p-1" onclick="window.openModal('search-modal')">
-          <i data-lucide="search" class="w-5 h-5"></i>
-        </button>
-        <button class="text-gray-600 p-1" onclick="window.RanjitCart.openAuthModal()">
-          <i data-lucide="user-circle" class="w-5 h-5"></i>
-        </button>
-      </div>
-    </header>
-
-
-
-    <!-- Promo Banner (Horizontal Scroll) -->
-    <div id="mobile-promo-banners" class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar custom-scrollbar w-full">
-      <!-- Fallback static banners (if no CMS data) -->
-      <div class="snap-center shrink-0 w-full relative aspect-[5/3] overflow-hidden bg-gradient-to-r from-emerald-800 to-primary">
-        <img src="/images/mobile_banner_sale.png" class="absolute inset-0 w-full h-full object-cover z-0">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-0"></div>
-        <div class="relative z-10 flex flex-col justify-end h-full p-4 pb-5">
-          <span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider backdrop-blur-md w-max text-white border border-white/30 mb-1">Sale</span>
-          <h3 class="text-xl font-bold text-white leading-tight">Up to 30% Off</h3>
-          <p class="text-emerald-50 text-xs mt-0.5 mb-2">On all indoor plants</p>
-          <a href="products.html?category=Indoor%20Plants" class="inline-block bg-white text-primary px-4 py-1.5 rounded-full text-xs font-bold shadow-md w-max">Shop Now</a>
-        </div>
-        <i data-lucide="leaf" class="absolute -right-4 -top-4 w-40 h-40 text-white opacity-10"></i>
-      </div>
-      <div class="snap-center shrink-0 w-full relative aspect-[5/3] overflow-hidden bg-gradient-to-r from-orange-500 to-amber-500">
-        <img src="/images/mobile_banner_new.png" class="absolute inset-0 w-full h-full object-cover z-0">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-0"></div>
-        <div class="relative z-10 flex flex-col justify-end h-full p-4 pb-5">
-          <span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider backdrop-blur-md w-max text-white border border-white/30 mb-1">New</span>
-          <h3 class="text-xl font-bold text-white leading-tight">Organic Seeds</h3>
-          <p class="text-orange-50 text-xs mt-0.5 mb-2">Start your kitchen garden</p>
-          <a href="products.html?category=Seeds" class="inline-block bg-white text-orange-600 px-4 py-1.5 rounded-full text-xs font-bold shadow-md w-max">Explore</a>
-        </div>
-        <i data-lucide="sprout" class="absolute -right-4 -top-4 w-32 h-32 text-white opacity-15"></i>
-      </div>
+  <!-- Trust Strip -->
+  <div id="dynamic-trust-strip"
+    class="flex items-center justify-between px-3 py-2.5 bg-emerald-50 border-b border-emerald-100">
+    <div class="flex items-center gap-1.5">
+      <div class="bg-emerald-200/50 p-1 rounded-full"><i data-lucide="shield-check"
+          class="w-3.5 h-3.5 text-emerald-700"></i></div>
+      <span class="text-[9px] font-bold text-emerald-900 uppercase tracking-tight leading-none">100%<br>Safe</span>
     </div>
-
-    <!-- Trust Strip -->
-    <div id="dynamic-trust-strip" class="flex items-center justify-between px-3 py-2.5 bg-emerald-50 border-b border-emerald-100">
-      <div class="flex items-center gap-1.5">
-        <div class="bg-emerald-200/50 p-1 rounded-full"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-700"></i></div>
-        <span class="text-[9px] font-bold text-emerald-900 uppercase tracking-tight leading-none">100%<br>Safe</span>
+    <div class="flex items-center gap-1.5">
+      <div class="bg-emerald-200/50 p-1 rounded-full"><i data-lucide="leaf" class="w-3.5 h-3.5 text-emerald-700"></i>
       </div>
-      <div class="flex items-center gap-1.5">
-        <div class="bg-emerald-200/50 p-1 rounded-full"><i data-lucide="leaf" class="w-3.5 h-3.5 text-emerald-700"></i></div>
-        <span class="text-[9px] font-bold text-emerald-900 uppercase tracking-tight leading-none">Fresh<br>Plants</span>
-      </div>
-      <div class="flex items-center gap-1.5">
-        <div class="bg-emerald-200/50 p-1 rounded-full"><i data-lucide="credit-card" class="w-3.5 h-3.5 text-emerald-700"></i></div>
-        <span class="text-[9px] font-bold text-emerald-900 uppercase tracking-tight leading-none">Secure<br>Pay</span>
-      </div>
+      <span class="text-[9px] font-bold text-emerald-900 uppercase tracking-tight leading-none">Fresh<br>Plants</span>
     </div>
-
-    <!-- Coupons Strip -->
-    <div id="dynamic-coupons" class="px-0 py-3 bg-gray-50/50 border-b border-gray-100">
-      <div class="flex overflow-x-auto gap-3 snap-x snap-mandatory px-4 custom-scrollbar hide-scrollbar">
-        <div class="snap-start shrink-0 flex items-center bg-white border border-dashed border-emerald-300 rounded-lg p-2 min-w-[200px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] relative overflow-hidden">
-          <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-r border-emerald-200"></div>
-          <div class="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-l border-emerald-200"></div>
-          <div class="pl-3 pr-3 flex-1 border-r border-dashed border-emerald-100">
-            <span class="block text-[11px] text-emerald-600 font-extrabold uppercase">10% OFF</span>
-            <span class="block text-[9px] text-gray-500 font-medium">All Orders</span>
-          </div>
-          <div class="pl-2 pr-1">
-            <span class="text-[10px] font-mono font-bold bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded border border-emerald-100">WELCOME10</span>
-          </div>
-        </div>
-        <div class="snap-start shrink-0 flex items-center bg-white border border-dashed border-blue-300 rounded-lg p-2 min-w-[200px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] relative overflow-hidden">
-          <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-r border-blue-200"></div>
-          <div class="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-l border-blue-200"></div>
-          <div class="pl-3 pr-3 flex-1 border-r border-dashed border-blue-100">
-            <span class="block text-[11px] text-blue-600 font-extrabold uppercase">Free Ship</span>
-            <span class="block text-[9px] text-gray-500 font-medium">Above ₹1500</span>
-          </div>
-          <div class="pl-2 pr-1">
-            <span class="text-[10px] font-mono font-bold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-100">FREESHIP</span>
-          </div>
-        </div>
-      </div>
+    <div class="flex items-center gap-1.5">
+      <div class="bg-emerald-200/50 p-1 rounded-full"><i data-lucide="credit-card"
+          class="w-3.5 h-3.5 text-emerald-700"></i></div>
+      <span class="text-[9px] font-bold text-emerald-900 uppercase tracking-tight leading-none">Secure<br>Pay</span>
     </div>
-
-    <!-- Image-Based Categories (Horizontal Scroll) -->
-    <div id="dynamic-image-categories" class="px-0 py-4 bg-white">
-      <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 px-4 custom-scrollbar hide-scrollbar pb-1">
-        <a href="products.html?category=Indoor%20Plants" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
-          <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
-            <img src="/images/indoor_cat.png" class="w-full h-full rounded-full object-cover" alt="Indoor">
-          </div>
-          <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Indoor</span>
-        </a>
-        <a href="products.html?category=Outdoor%20Plants" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
-          <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
-            <img src="/images/outdoor_cat.png" class="w-full h-full rounded-full object-cover" alt="Outdoor">
-          </div>
-          <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Outdoor</span>
-        </a>
-        <a href="products.html?category=Seeds" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
-          <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
-            <img src="/images/seeds_cat.png" class="w-full h-full rounded-full object-cover" alt="Seeds">
-          </div>
-          <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Seeds</span>
-        </a>
-        <a href="products.html?category=Pots" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
-          <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
-            <img src="/images/pots_cat.png" class="w-full h-full rounded-full object-cover" alt="Pots">
-          </div>
-          <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Pots</span>
-        </a>
-        <a href="products.html?category=Flowers" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
-          <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
-            <img src="/images/indoor_cat.png" class="w-full h-full rounded-full object-cover" alt="Flowers">
-          </div>
-          <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Flowers</span>
-        </a>
-        <a href="products.html?category=Tools" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
-          <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
-            <img src="/images/tools_cat.png" class="w-full h-full rounded-full object-cover" alt="Tools">
-          </div>
-          <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Tools</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- Deal of the Day (Flash Sale) -->
-    <div id="dynamic-deal-of-day" class="mt-2 bg-gradient-to-br from-blue-950 to-indigo-950 py-4 pb-5 overflow-hidden relative">
-      <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500 rounded-full blur-[80px] opacity-30"></div>
-      <div class="px-4 flex justify-between items-center mb-4 relative z-10">
-        <div class="flex flex-col">
-          <h3 class="font-bold text-white text-lg flex items-center gap-1.5 leading-none mb-1"><i data-lucide="zap" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i> Deal of the Day</h3>
-          <span class="text-[10px] text-blue-200 font-medium">Ends in <span class="font-mono font-bold bg-black/40 px-1.5 py-0.5 rounded ml-1 text-white shadow-inner">04:32:10</span></span>
-        </div>
-        <a href="products.html" class="bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full transition-colors shadow-sm">View All</a>
-      </div>
-      <div class="flex overflow-x-auto snap-x snap-mandatory px-4 gap-3 custom-scrollbar hide-scrollbar relative z-10 pb-2">
-        <a href="products.html?category=Indoor" class="snap-start shrink-0 w-32 bg-white rounded-xl overflow-hidden shadow-xl flex flex-col relative">
-          <span class="absolute top-0 left-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-br-lg z-10 shadow-sm">45% OFF</span>
-          <img src="/images/indoor_cat.png" class="w-full h-28 object-cover">
-          <div class="p-2.5 flex flex-col">
-            <h4 class="text-[11px] font-bold text-gray-800 line-clamp-1 mb-1 leading-tight">Snake Plant</h4>
-            <div class="flex items-center gap-1.5">
-              <span class="text-sm font-outfit font-extrabold text-primary">₹149</span>
-              <span class="text-[9px] font-medium text-gray-400 line-through">₹299</span>
-            </div>
-          </div>
-        </a>
-        <a href="products.html?category=Pots" class="snap-start shrink-0 w-32 bg-white rounded-xl overflow-hidden shadow-xl flex flex-col relative">
-          <span class="absolute top-0 left-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-br-lg z-10 shadow-sm">30% OFF</span>
-          <img src="/images/pots_cat.png" class="w-full h-28 object-cover">
-          <div class="p-2.5 flex flex-col">
-            <h4 class="text-[11px] font-bold text-gray-800 line-clamp-1 mb-1 leading-tight">Ceramic Pot</h4>
-            <div class="flex items-center gap-1.5">
-              <span class="text-sm font-outfit font-extrabold text-primary">₹299</span>
-              <span class="text-[9px] font-medium text-gray-400 line-through">₹499</span>
-            </div>
-          </div>
-        </a>
-        <a href="products.html?category=Seeds" class="snap-start shrink-0 w-32 bg-white rounded-xl overflow-hidden shadow-xl flex flex-col relative">
-          <span class="absolute top-0 left-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-br-lg z-10 shadow-sm">50% OFF</span>
-          <img src="/images/seeds_cat.png" class="w-full h-28 object-cover">
-          <div class="p-2.5 flex flex-col">
-            <h4 class="text-[11px] font-bold text-gray-800 line-clamp-1 mb-1 leading-tight">Tomato Seeds</h4>
-            <div class="flex items-center gap-1.5">
-              <span class="text-sm font-outfit font-extrabold text-primary">₹49</span>
-              <span class="text-[9px] font-medium text-gray-400 line-through">₹99</span>
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-
-    <!-- Featured Products Mobile -->
-    <div class="pt-5 pb-6 bg-gray-50 mt-2">
-      <div class="px-4 flex justify-between items-center mb-4">
-        <h3 class="font-outfit font-bold text-gray-900 text-lg">Best Sellers</h3>
-        <a href="products.html" class="text-primary text-xs font-bold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">View All</a>
-      </div>
-      <!-- Notice the style tag forcing the layout to horizontal swipeable carousel -->
-      <style>
-        #mobile-products-grid {
-          display: flex !important;
-          flex-wrap: nowrap;
-          overflow-x: auto;
-          gap: 12px;
-          padding: 0 16px 16px 16px;
-          scroll-snap-type: x mandatory;
-        }
-        #mobile-products-grid > div {
-          width: 140px;
-          flex: 0 0 auto;
-          scroll-snap-align: start;
-        }
-      </style>
-      <div id="mobile-products-grid" class="products-grid-container custom-scrollbar hide-scrollbar">
-        <!-- Products injected by cart.js -->
-      </div>
-    </div>
-
-    <!-- Contact Info Mobile -->
-    <div class="px-4 py-8 text-center border-t border-gray-200 mt-4">
-      <img src="/logo.png" alt="Ranjit Nursery Logo" class="h-[70px] w-auto scale-[1.2] object-contain mx-auto mb-0">
-      <h4 class="font-bold text-gray-900">Ranjit Nursery</h4>
-      <p class="text-xs text-gray-500 mt-1">Bisra Chowk, Rourkela - 769001</p>
-      <p class="text-[10px] text-gray-400 mt-4">&copy; 2026 Ranjit Nursery.</p>
-    </div>
-
   </div>
-  <!-- ================= END MOBILE APP VIEW ================= -->
 
-  <!-- ================= BOTTOM NAVIGATION BAR (MOBILE) ================= -->
-  <nav class="md:hidden fixed bottom-0 w-full bg-white border-t border-gray-200 z-50 px-2 py-2 flex justify-between items-center pb-safe">
-    <a href="#home" class="flex flex-col items-center justify-center w-1/4 text-primary">
-      <i data-lucide="home" class="w-6 h-6"></i>
-      <span class="text-[10px] font-medium mt-1">Home</span>
-    </a>
-    <a href="products.html" class="flex flex-col items-center justify-center w-1/4 text-gray-500 hover:text-primary transition-colors">
-      <i data-lucide="layout-grid" class="w-6 h-6"></i>
-      <span class="text-[10px] font-medium mt-1">Shop</span>
-    </a>
-    <a href="#" class="cart-icon-btn flex flex-col items-center justify-center w-1/4 text-gray-500 hover:text-primary transition-colors relative">
-      <div class="relative">
-        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
-        <span class="cart-badge hidden absolute -top-1 -right-2 bg-accent text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md">0</span>
+  <!-- Coupons Strip -->
+  <div id="dynamic-coupons" class="px-0 py-3 bg-gray-50/50 border-b border-gray-100">
+    <div class="flex overflow-x-auto gap-3 snap-x snap-mandatory px-4 custom-scrollbar hide-scrollbar">
+      <div
+        class="snap-start shrink-0 flex items-center bg-white border border-dashed border-emerald-300 rounded-lg p-2 min-w-[200px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] relative overflow-hidden">
+        <div
+          class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-r border-emerald-200">
+        </div>
+        <div
+          class="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-l border-emerald-200">
+        </div>
+        <div class="pl-3 pr-3 flex-1 border-r border-dashed border-emerald-100">
+          <span class="block text-[11px] text-emerald-600 font-extrabold uppercase">10% OFF</span>
+          <span class="block text-[9px] text-gray-500 font-medium">All Orders</span>
+        </div>
+        <div class="pl-2 pr-1">
+          <span
+            class="text-[10px] font-mono font-bold bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded border border-emerald-100">WELCOME10</span>
+        </div>
       </div>
-      <span class="text-[10px] font-medium mt-1">Cart</span>
-    </a>
-    <a href="#" onclick="window.RanjitCart.openTrackModal()" class="flex flex-col items-center justify-center w-1/4 text-gray-500 hover:text-primary transition-colors">
-      <i data-lucide="truck" class="w-6 h-6"></i>
-      <span class="text-[10px] font-medium mt-1">Track</span>
-    </a>
-  </nav>
-  <!-- ================= END BOTTOM NAVIGATION BAR ================= -->
-  </footer>
+      <div
+        class="snap-start shrink-0 flex items-center bg-white border border-dashed border-blue-300 rounded-lg p-2 min-w-[200px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] relative overflow-hidden">
+        <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-r border-blue-200">
+        </div>
+        <div
+          class="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full border-l border-blue-200">
+        </div>
+        <div class="pl-3 pr-3 flex-1 border-r border-dashed border-blue-100">
+          <span class="block text-[11px] text-blue-600 font-extrabold uppercase">Free Ship</span>
+          <span class="block text-[9px] text-gray-500 font-medium">Above ₹1500</span>
+        </div>
+        <div class="pl-2 pr-1">
+          <span
+            class="text-[10px] font-mono font-bold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-100">FREESHIP</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <script type="module" src="/main.js"></script>
+  <!-- Image-Based Categories (Horizontal Scroll) -->
+  <div id="dynamic-image-categories" class="px-0 py-4 bg-white">
+    <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 px-4 custom-scrollbar hide-scrollbar pb-1">
+      <a href="products.html?category=Indoor%20Plants"
+        class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+        <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+          <img src="/images/indoor_cat.png" class="w-full h-full rounded-full object-cover" alt="Indoor">
+        </div>
+        <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Indoor</span>
+      </a>
+      <a href="products.html?category=Outdoor%20Plants"
+        class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+        <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+          <img src="/images/outdoor_cat.png" class="w-full h-full rounded-full object-cover" alt="Outdoor">
+        </div>
+        <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Outdoor</span>
+      </a>
+      <a href="products.html?category=Seeds" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+        <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+          <img src="/images/seeds_cat.png" class="w-full h-full rounded-full object-cover" alt="Seeds">
+        </div>
+        <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Seeds</span>
+      </a>
+      <a href="products.html?category=Pots" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+        <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+          <img src="/images/pots_cat.png" class="w-full h-full rounded-full object-cover" alt="Pots">
+        </div>
+        <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Pots</span>
+      </a>
+      <a href="products.html?category=Flowers" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+        <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+          <img src="/images/indoor_cat.png" class="w-full h-full rounded-full object-cover" alt="Flowers">
+        </div>
+        <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Flowers</span>
+      </a>
+      <a href="products.html?category=Tools" class="snap-start shrink-0 flex flex-col items-center gap-1.5 w-[60px]">
+        <div class="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 p-[2px] bg-white shadow-sm">
+          <img src="/images/tools_cat.png" class="w-full h-full rounded-full object-cover" alt="Tools">
+        </div>
+        <span class="text-[9px] font-bold text-gray-800 text-center leading-tight">Tools</span>
+      </a>
+    </div>
+  </div>
 
-  <!-- Cart Drawer (slides from right) -->
-  <div id="cart-overlay"
-    class="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300"></div>
-  <aside id="cart-drawer"
-    class="fixed top-0 right-0 z-[95] h-full w-full max-w-md bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col overflow-hidden">
-    <!-- Drawer Header -->
-    <div class="flex items-center justify-between p-6 border-b border-gray-100 relative z-10 bg-white/80 backdrop-blur-sm">
-      <h3 class="text-xl font-outfit font-bold text-gray-900 flex items-center gap-2">
-        <i data-lucide="shopping-cart" class="w-5 h-5 text-primary"></i> Your Cart
+  <!-- Deal of the Day (Flash Sale) -->
+  <div id="dynamic-deal-of-day"
+    class="mt-2 bg-gradient-to-br from-blue-950 to-indigo-950 py-4 pb-5 overflow-hidden relative">
+    <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500 rounded-full blur-[80px] opacity-30"></div>
+    <div class="px-4 flex justify-between items-center mb-4 relative z-10">
+      <div class="flex flex-col">
+        <h3 class="font-bold text-white text-lg flex items-center gap-1.5 leading-none mb-1"><i data-lucide="zap"
+            class="w-5 h-5 text-yellow-400 fill-yellow-400"></i> Deal of the Day</h3>
+        <span class="text-[10px] text-blue-200 font-medium">Ends in <span
+            class="font-mono font-bold bg-black/40 px-1.5 py-0.5 rounded ml-1 text-white shadow-inner">04:32:10</span></span>
+      </div>
+      <a href="products.html"
+        class="bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full transition-colors shadow-sm">View
+        All</a>
+    </div>
+    <div
+      class="flex overflow-x-auto snap-x snap-mandatory px-4 gap-3 custom-scrollbar hide-scrollbar relative z-10 pb-2">
+      <a href="products.html?category=Indoor"
+        class="snap-start shrink-0 w-32 bg-white rounded-xl overflow-hidden shadow-xl flex flex-col relative">
+        <span
+          class="absolute top-0 left-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-br-lg z-10 shadow-sm">45%
+          OFF</span>
+        <img src="/images/indoor_cat.png" class="w-full h-28 object-cover">
+        <div class="p-2.5 flex flex-col">
+          <h4 class="text-[11px] font-bold text-gray-800 line-clamp-1 mb-1 leading-tight">Snake Plant</h4>
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm font-outfit font-extrabold text-primary">₹149</span>
+            <span class="text-[9px] font-medium text-gray-400 line-through">₹299</span>
+          </div>
+        </div>
+      </a>
+      <a href="products.html?category=Pots"
+        class="snap-start shrink-0 w-32 bg-white rounded-xl overflow-hidden shadow-xl flex flex-col relative">
+        <span
+          class="absolute top-0 left-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-br-lg z-10 shadow-sm">30%
+          OFF</span>
+        <img src="/images/pots_cat.png" class="w-full h-28 object-cover">
+        <div class="p-2.5 flex flex-col">
+          <h4 class="text-[11px] font-bold text-gray-800 line-clamp-1 mb-1 leading-tight">Ceramic Pot</h4>
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm font-outfit font-extrabold text-primary">₹299</span>
+            <span class="text-[9px] font-medium text-gray-400 line-through">₹499</span>
+          </div>
+        </div>
+      </a>
+      <a href="products.html?category=Seeds"
+        class="snap-start shrink-0 w-32 bg-white rounded-xl overflow-hidden shadow-xl flex flex-col relative">
+        <span
+          class="absolute top-0 left-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-br-lg z-10 shadow-sm">50%
+          OFF</span>
+        <img src="/images/seeds_cat.png" class="w-full h-28 object-cover">
+        <div class="p-2.5 flex flex-col">
+          <h4 class="text-[11px] font-bold text-gray-800 line-clamp-1 mb-1 leading-tight">Tomato Seeds</h4>
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm font-outfit font-extrabold text-primary">₹49</span>
+            <span class="text-[9px] font-medium text-gray-400 line-through">₹99</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Featured Products Mobile -->
+  <div class="pt-5 pb-6 bg-gray-50 mt-2">
+    <div class="px-4 flex justify-between items-center mb-4">
+      <h3 class="font-outfit font-bold text-gray-900 text-lg">Best Sellers</h3>
+      <a href="products.html"
+        class="text-primary text-xs font-bold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">View
+        All</a>
+    </div>
+    <!-- Notice the style tag forcing the layout to horizontal swipeable carousel -->
+    <style>
+      #mobile-products-grid {
+        display: flex !important;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 12px;
+        padding: 0 16px 16px 16px;
+        scroll-snap-type: x mandatory;
+      }
+
+      #mobile-products-grid>div {
+        width: 140px;
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+      }
+    </style>
+    <div id="mobile-products-grid" class="products-grid-container custom-scrollbar hide-scrollbar">
+      <!-- Products injected by cart.js -->
+    </div>
+  </div>
+
+  <!-- Contact Info Mobile -->
+  <div class="px-4 py-8 text-center border-t border-gray-200 mt-4">
+    <img src="/logo.png" alt="Ranjit Nursery Logo" class="h-[70px] w-auto scale-[1.2] object-contain mx-auto mb-0">
+    <h4 class="font-bold text-gray-900">Ranjit Nursery</h4>
+    <p class="text-xs text-gray-500 mt-1">Bisra Chowk, Rourkela - 769001</p>
+    <p class="text-[10px] text-gray-400 mt-4">&copy; 2026 Ranjit Nursery.</p>
+  </div>
+
+</div>
+<!-- ================= END MOBILE APP VIEW ================= -->
+
+<!-- ================= BOTTOM NAVIGATION BAR (MOBILE) ================= -->
+<nav
+  class="md:hidden fixed bottom-0 w-full bg-white border-t border-gray-200 z-50 px-2 py-2 flex justify-between items-center pb-safe">
+  <a href="#home" class="flex flex-col items-center justify-center w-1/4 text-primary">
+    <i data-lucide="home" class="w-6 h-6"></i>
+    <span class="text-[10px] font-medium mt-1">Home</span>
+  </a>
+  <a href="products.html"
+    class="flex flex-col items-center justify-center w-1/4 text-gray-500 hover:text-primary transition-colors">
+    <i data-lucide="layout-grid" class="w-6 h-6"></i>
+    <span class="text-[10px] font-medium mt-1">Shop</span>
+  </a>
+  <a href="#"
+    class="cart-icon-btn flex flex-col items-center justify-center w-1/4 text-gray-500 hover:text-primary transition-colors relative">
+    <div class="relative">
+      <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+      <span
+        class="cart-badge hidden absolute -top-1 -right-2 bg-accent text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md">0</span>
+    </div>
+    <span class="text-[10px] font-medium mt-1">Cart</span>
+  </a>
+  <a href="#" onclick="window.RanjitCart.openTrackModal()"
+    class="flex flex-col items-center justify-center w-1/4 text-gray-500 hover:text-primary transition-colors">
+    <i data-lucide="truck" class="w-6 h-6"></i>
+    <span class="text-[10px] font-medium mt-1">Track</span>
+  </a>
+</nav>
+<!-- ================= END BOTTOM NAVIGATION BAR ================= -->
+</footer>
+
+<script type="module" src="/main.js"></script>
+
+<!-- Cart Drawer (slides from right) -->
+<div id="cart-overlay"
+  class="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300"></div>
+<aside id="cart-drawer"
+  class="fixed top-0 right-0 z-[95] h-full w-full max-w-md bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col overflow-hidden">
+  <!-- Drawer Header -->
+  <div
+    class="flex items-center justify-between p-6 border-b border-gray-100 relative z-10 bg-white/80 backdrop-blur-sm">
+    <h3 class="text-xl font-outfit font-bold text-gray-900 flex items-center gap-2">
+      <i data-lucide="shopping-cart" class="w-5 h-5 text-primary"></i> Your Cart
+    </h3>
+    <button id="cart-drawer-close"
+      class="text-gray-400 hover:text-gray-700 p-2 rounded-xl hover:bg-gray-100 transition-colors">
+      <i data-lucide="x" class="w-5 h-5"></i>
+    </button>
+  </div>
+  <!-- Drawer Body -->
+  <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-4 relative z-10">
+    <div id="cart-empty" class="text-center py-16 shrink-0">
+      <i data-lucide="shopping-bag" class="w-16 h-16 text-gray-200 mx-auto mb-4"></i>
+      <p class="text-gray-400 font-medium">Your cart is empty</p>
+      <p class="text-gray-300 text-sm mt-1">Add some beautiful plants!</p>
+    </div>
+    <div id="cart-items-list" class="space-y-3 shrink-0 relative z-20"></div>
+
+    <!-- Watermark below items -->
+    <div
+      class="flex-1 flex flex-col items-center justify-center pointer-events-none select-none opacity-30 min-h-[150px] z-0">
+      <div class="flex flex-col items-center whitespace-nowrap">
+        <span class="text-4xl sm:text-5xl font-outfit font-extrabold text-primary">Ranjit Nursery</span>
+        <span class="text-[8px] sm:text-[10px] font-bold text-emerald-900 tracking-[0.3em] mt-2">YOUR TRUST IS OUR
+          MONEY</span>
+      </div>
+    </div>
+  </div>
+  <!-- Drawer Footer -->
+  <div class="border-t border-gray-100 p-6 bg-gray-50/95 backdrop-blur-sm relative z-10">
+
+    <!-- Pincode Checker -->
+    <div id="drawer-pincode-container" class="mb-5 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+      <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"><i data-lucide="map-pin"
+          class="w-3 h-3 inline"></i> Check Delivery Availability</label>
+      <div class="flex gap-2">
+        <input type="text" id="drawer-pincode" maxlength="6" pattern="[0-9]{6}"
+          class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary outline-none text-sm"
+          placeholder="Enter 6-digit Pincode">
+        <button type="button" onclick="window.RanjitCart.checkDrawerPincode()"
+          class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-lg text-sm font-bold transition-colors">Check</button>
+      </div>
+      <p id="drawer-pincode-msg" class="text-xs mt-2 hidden font-semibold"></p>
+    </div>
+
+    <div class="flex justify-between items-center mb-4">
+      <span class="text-gray-600 font-medium">Subtotal</span>
+      <span id="cart-subtotal" class="text-2xl font-outfit font-extrabold text-primary">₹0</span>
+    </div>
+    <button id="cart-checkout-btn" disabled
+      class="w-full bg-primary hover:bg-emerald-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 text-base">
+      <i data-lucide="credit-card" class="w-5 h-5"></i> Proceed to Checkout
+    </button>
+  </div>
+</aside>
+
+<!-- Checkout Modal -->
+<div id="checkout-modal"
+  class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300 flex">
+  <div id="checkout-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+  <div id="checkout-content"
+    class="relative z-10 bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl transform scale-95 transition-transform duration-300">
+    <!-- Modal Header -->
+    <div
+      class="sticky top-0 bg-white/95 backdrop-blur-md p-6 border-b border-gray-100 flex items-center justify-between rounded-t-3xl z-10">
+      <h3 class="text-2xl font-outfit font-bold text-gray-900 flex items-center gap-2">
+        <i data-lucide="package" class="w-6 h-6 text-primary"></i> Checkout
       </h3>
-      <button id="cart-drawer-close"
+      <button id="checkout-close"
         class="text-gray-400 hover:text-gray-700 p-2 rounded-xl hover:bg-gray-100 transition-colors">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
     </div>
-    <!-- Drawer Body -->
-    <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-4 relative z-10">
-      <div id="cart-empty" class="text-center py-16 shrink-0">
-        <i data-lucide="shopping-bag" class="w-16 h-16 text-gray-200 mx-auto mb-4"></i>
-        <p class="text-gray-400 font-medium">Your cart is empty</p>
-        <p class="text-gray-300 text-sm mt-1">Add some beautiful plants!</p>
-      </div>
-      <div id="cart-items-list" class="space-y-3 shrink-0 relative z-20"></div>
-      
-      <!-- Watermark below items -->
-      <div class="flex-1 flex flex-col items-center justify-center pointer-events-none select-none opacity-30 min-h-[150px] z-0">
-        <div class="flex flex-col items-center whitespace-nowrap">
-          <span class="text-4xl sm:text-5xl font-outfit font-extrabold text-primary">Ranjit Nursery</span>
-          <span class="text-[8px] sm:text-[10px] font-bold text-emerald-900 tracking-[0.3em] mt-2">YOUR TRUST IS OUR MONEY</span>
-        </div>
-      </div>
-    </div>
-    <!-- Drawer Footer -->
-    <div class="border-t border-gray-100 p-6 bg-gray-50/95 backdrop-blur-sm relative z-10">
-      
-      <!-- Pincode Checker -->
-      <div id="drawer-pincode-container" class="mb-5 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
-        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"><i data-lucide="map-pin" class="w-3 h-3 inline"></i> Check Delivery Availability</label>
-        <div class="flex gap-2">
-          <input type="text" id="drawer-pincode" maxlength="6" pattern="[0-9]{6}" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary outline-none text-sm" placeholder="Enter 6-digit Pincode">
-          <button type="button" onclick="window.RanjitCart.checkDrawerPincode()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-lg text-sm font-bold transition-colors">Check</button>
-        </div>
-        <p id="drawer-pincode-msg" class="text-xs mt-2 hidden font-semibold"></p>
-      </div>
-
-      <div class="flex justify-between items-center mb-4">
-        <span class="text-gray-600 font-medium">Subtotal</span>
-        <span id="cart-subtotal" class="text-2xl font-outfit font-extrabold text-primary">₹0</span>
-      </div>
-      <button id="cart-checkout-btn" disabled
-        class="w-full bg-primary hover:bg-emerald-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 text-base">
-        <i data-lucide="credit-card" class="w-5 h-5"></i> Proceed to Checkout
-      </button>
-    </div>
-  </aside>
-
-  <!-- Checkout Modal -->
-  <div id="checkout-modal"
-    class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300 flex">
-    <div id="checkout-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-    <div id="checkout-content"
-      class="relative z-10 bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl transform scale-95 transition-transform duration-300">
-      <!-- Modal Header -->
-      <div
-        class="sticky top-0 bg-white/95 backdrop-blur-md p-6 border-b border-gray-100 flex items-center justify-between rounded-t-3xl z-10">
-        <h3 class="text-2xl font-outfit font-bold text-gray-900 flex items-center gap-2">
-          <i data-lucide="package" class="w-6 h-6 text-primary"></i> Checkout
-        </h3>
-        <button id="checkout-close"
-          class="text-gray-400 hover:text-gray-700 p-2 rounded-xl hover:bg-gray-100 transition-colors">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-      <!-- Modal Body -->
-      <div class="p-6 space-y-6">
+    <!-- Modal Body -->
+    <div class="p-6 space-y-6">
         <!-- Order Summary -->
         <div>
           <h4 class="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
             <i data-lucide="receipt" class="w-4 h-4 text-primary"></i> Order Summary
           </h4>
           <div id="checkout-order-summary" class="bg-gray-50 rounded-2xl p-4 border border-gray-100"></div>
+        </div>
+
+        <!-- Add-ons Section -->
+        <div id="checkout-addons-section" class="hidden">
+          <h4 class="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
+            <i data-lucide="plus-circle" class="w-4 h-4 text-primary"></i> Frequently Bought Together
+          </h4>
+          <div class="flex overflow-x-auto gap-3 snap-x snap-mandatory pb-2 custom-scrollbar hide-scrollbar" id="checkout-addons-container">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Gifting Section -->
+        <div id="checkout-gifting-section" class="hidden">
+          <div class="bg-amber-50 border border-amber-100 rounded-xl p-4">
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" id="checkout-is-gift" class="w-5 h-5 text-amber-500 rounded focus:ring-amber-500 border-amber-300" onchange="window.RanjitCart.toggleGift()">
+              <div>
+                <span class="font-bold text-gray-900 flex items-center gap-2">Pack as a Gift <i data-lucide="gift" class="w-4 h-4 text-amber-500"></i></span>
+                <span class="text-xs text-gray-600 block mt-0.5" id="gifting-fee-text">Add premium gift wrapping (+₹49)</span>
+              </div>
+            </label>
+            <div id="gift-message-container" class="mt-3 hidden">
+              <textarea id="checkout-gift-message" rows="2" class="w-full px-3 py-2 rounded-lg border border-amber-200 focus:ring-2 focus:ring-amber-500 outline-none text-sm resize-none" placeholder="Write a personalized gift message..."></textarea>
+            </div>
+          </div>
         </div>
 
         <!-- Shipping Method Section -->
@@ -1572,317 +1677,416 @@
             <option value="Express (1-2 days)">Express Delivery (1-2 days)</option>
             <option value="Store Pickup">Store Pickup — Bisra Chowk, Rourkela</option>
           </select>
-        </div>
-
-        <!-- Promo Code Section -->
-        <div>
-          <h4 class="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
-            <i data-lucide="tag" class="w-4 h-4 text-primary"></i> Apply Promo Code
-          </h4>
-          <div id="dynamic-coupon-banner" class="hidden"></div>
-          <div class="flex gap-2">
-            <input type="text" id="promo-code-input"
-              class="uppercase w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none font-bold text-gray-700"
-              placeholder="e.g. MEGA16">
-            <button type="button" onclick="window.RanjitCart.applyCoupon()" id="apply-promo-btn"
-              class="bg-primary hover:bg-emerald-800 text-white font-bold px-6 py-3 rounded-xl transition-colors shadow-md flex-shrink-0">Apply</button>
-          </div>
-          <p id="promo-message" class="text-sm font-bold mt-2 hidden"></p>
-        </div>
-
-        <!-- Customer Details -->
-        <div>
-          <h4 class="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
-            <i data-lucide="user" class="w-4 h-4 text-primary"></i> Your Details
-          </h4>
-          <div class="space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Full Name *</label>
-                <input type="text" id="checkout-name" required
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none"
-                  placeholder="Your Name">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Phone Number *</label>
-                <input type="tel" id="checkout-phone" required
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none"
-                  placeholder="+91 XXXXX XXXXX">
-              </div>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Delivery Address *</label>
-                <textarea id="checkout-address" rows="2" required
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none resize-none"
-                  placeholder="House No., Street, City"></textarea>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Delivery Pincode *</label>
-                <div class="relative">
-                  <input type="text" id="checkout-pincode" required maxlength="6"
-                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none pr-10"
-                    placeholder="e.g. 769001">
-                  <span id="pincode-status-icon" class="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center justify-center"></span>
-                </div>
-                <p id="pincode-error" class="text-xs text-red-500 mt-1 hidden font-semibold">Sorry, we don't deliver to this area yet.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Payment Section -->
-        <div>
-          <h4 class="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
-            <i data-lucide="wallet" class="w-4 h-4 text-primary"></i> Payment Method
-          </h4>
           
-          <div class="grid grid-cols-2 gap-3 mb-4">
-            <label class="cursor-pointer">
-              <input type="radio" name="payment-method" value="upi" class="peer hidden" checked onchange="window.RanjitCart.togglePaymentMethod()">
-              <div class="rounded-xl border-2 border-gray-100 p-3 text-center peer-checked:border-primary peer-checked:bg-emerald-50 transition-colors">
-                <i data-lucide="smartphone" class="w-6 h-6 mx-auto mb-1 text-gray-600 peer-checked:text-primary"></i>
-                <span class="font-bold text-sm text-gray-700">UPI Payment</span>
-              </div>
-            </label>
-            <label class="cursor-not-allowed" id="cod-payment-label">
-              <input type="radio" name="payment-method" value="cod" class="peer hidden" disabled onchange="window.RanjitCart.togglePaymentMethod()">
-              <div class="rounded-xl border-2 border-gray-100 p-3 text-center peer-checked:border-primary peer-checked:bg-emerald-50 transition-colors opacity-50 bg-gray-50" id="cod-payment-box">
-                <i data-lucide="banknote" class="w-6 h-6 mx-auto mb-1 text-gray-400" id="cod-payment-icon"></i>
-                <span class="font-bold text-sm text-gray-400" id="cod-payment-text">Cash on Delivery</span>
-                <span class="block text-[10px] text-red-500 font-bold mt-1" id="cod-payment-subtext">Not available for this Pincode</span>
-              </div>
-            </label>
-          </div>
-
-          <!-- UPI Section -->
-          <div id="upi-payment-section">
-            <div class="bg-gradient-to-br from-emerald-50 to-blue-50 rounded-2xl p-6 border border-emerald-100 text-center">
-              <!-- Actual QR Code Image -->
-              <div class="w-56 h-auto mx-auto bg-white rounded-2xl p-2 mb-4 shadow-md border border-emerald-200">
-                <img src="/images/upi_qr_code.png" alt="Ranjit Nursery Payment QR Code"
-                  class="w-full h-auto rounded-xl" />
-              </div>
-              <p class="text-gray-600 text-sm font-medium mb-1">Scan QR Code via <strong class="text-primary">PhonePe / GPay / Paytm</strong></p>
-              <p class="text-gray-400 text-xs mb-3">to complete payment</p>
-
-              <!-- UPI ID Info -->
-              <div class="bg-white/90 rounded-lg p-3 inline-block border border-emerald-200 mt-2 min-w-[200px] shadow-sm">
-                <span class="text-xs text-emerald-600 font-semibold uppercase tracking-wider block mb-1">Or pay directly to UPI ID</span>
-                <span class="font-bold text-gray-900 text-base tracking-wider break-all user-select-all cursor-pointer" title="Copy to clipboard">7735227575@ibl</span>
-              </div>
+          <!-- Delivery Date & Time -->
+          <div id="checkout-date-section" class="hidden mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1">Preferred Delivery Date</label>
+              <input type="date" id="checkout-delivery-date" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary outline-none text-sm bg-white">
             </div>
-            <div class="mt-4">
-              <label class="block text-sm font-medium text-gray-600 mb-1">Enter UPI Transaction Ref No. / UTR No. *</label>
-              <input type="text" id="checkout-utr" maxlength="12" pattern="[0-9]{12}"
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1">Preferred Time Slot</label>
+              <select id="checkout-delivery-time" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary outline-none text-sm bg-white">
+                <option value="">Anytime</option>
+                <option value="Morning (9 AM - 1 PM)">Morning (9 AM - 1 PM)</option>
+                <option value="Afternoon (1 PM - 5 PM)">Afternoon (1 PM - 5 PM)</option>
+                <option value="Evening (5 PM - 8 PM)">Evening (5 PM - 8 PM)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+      <!-- Promo Code Section -->
+      <div>
+        <h4 class="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
+          <i data-lucide="tag" class="w-4 h-4 text-primary"></i> Apply Promo Code
+        </h4>
+        <div id="dynamic-coupon-banner" class="hidden"></div>
+        <div class="flex gap-2">
+          <input type="text" id="promo-code-input"
+            class="uppercase w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none font-bold text-gray-700"
+            placeholder="e.g. MEGA16">
+          <button type="button" onclick="window.RanjitCart.applyCoupon()" id="apply-promo-btn"
+            class="bg-primary hover:bg-emerald-800 text-white font-bold px-6 py-3 rounded-xl transition-colors shadow-md flex-shrink-0">Apply</button>
+        </div>
+        <p id="promo-message" class="text-sm font-bold mt-2 hidden"></p>
+      </div>
+
+      <!-- Customer Details -->
+      <div>
+        <h4 class="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
+          <i data-lucide="user" class="w-4 h-4 text-primary"></i> Your Details
+        </h4>
+        <div class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1">Full Name *</label>
+              <input type="text" id="checkout-name" required
                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none"
-                placeholder="e.g. 412345678901 (12 digits)">
-              <p id="utr-error" class="text-xs text-red-500 mt-1 hidden font-semibold">Please enter a valid 12-digit UTR number.</p>
+                placeholder="Your Name">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1">Phone Number *</label>
+              <input type="tel" id="checkout-phone" required
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none"
+                placeholder="+91 XXXXX XXXXX">
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1">Delivery Address *</label>
+              <textarea id="checkout-address" rows="2" required
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none resize-none"
+                placeholder="House No., Street, City"></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1">Delivery Pincode *</label>
+              <div class="relative">
+                <input type="text" id="checkout-pincode" required maxlength="6"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none pr-10"
+                  placeholder="e.g. 769001">
+                <span id="pincode-status-icon"
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center justify-center"></span>
+              </div>
+              <p id="pincode-error" class="text-xs text-red-500 mt-1 hidden font-semibold">Sorry, we don't deliver to
+                this area yet.</p>
             </div>
           </div>
           
-          <!-- COD Section -->
-          <div id="cod-payment-section" class="hidden">
-            <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100 flex items-start gap-3">
-              <i data-lucide="info" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
-              <p class="text-sm text-emerald-800 font-medium">You have selected Cash on Delivery. Your order will be confirmed after a brief verification call from our team.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Anti-Spam Captcha -->
-        <div class="mt-8 bg-gray-50 rounded-xl p-4 border border-gray-200">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Human Verification</label>
-          <div class="flex items-center gap-3">
-            <div class="bg-white px-4 py-2 rounded-lg border border-gray-300 font-bold text-lg tracking-widest text-gray-800 shadow-inner select-none" id="captcha-question">
-              <!-- JS will fill this, e.g. 5 + 3 = -->
-            </div>
-            <input type="text" id="captcha-answer" maxlength="2" class="w-20 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary text-center font-bold outline-none" placeholder="?">
-          </div>
-          <p id="captcha-error" class="text-xs text-red-500 mt-2 hidden font-semibold">Incorrect answer. Please try again.</p>
-        </div>
-      </div>
-      <!-- Modal Footer -->
-      <div class="sticky bottom-0 bg-white/95 backdrop-blur-md p-6 border-t border-gray-100 rounded-b-3xl">
-        <button id="place-order-btn"
-          class="w-full bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-[#25D366]/30 flex items-center justify-center gap-2 text-base">
-          <i data-lucide="message-circle" class="w-5 h-5"></i> Place Order via WhatsApp
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Track Order Modal -->
-  <div id="track-order-modal" class="fixed inset-0 z-[110] hidden bg-gray-900/80 backdrop-blur-sm flex justify-center items-center pt-20 px-4 opacity-0 transition-opacity duration-300 overflow-y-auto">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-transform duration-300">
-      <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-        <h2 class="text-2xl font-outfit font-bold text-gray-900">Track Your Order</h2>
-        <button onclick="window.closeModal('track-order-modal')" class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-      <div class="p-6 bg-gray-50">
-        <div id="track-order-history" class="hidden space-y-4">
-          <!-- Populated by JS when logged in -->
-        </div>
-        <form id="track-order-form" onsubmit="event.preventDefault(); window.RanjitCart.trackOrder();" class="space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-bold text-gray-700 mb-1">Order ID</label>
-              <input type="text" id="track-order-id" placeholder="ORD-YYYYMMDD-XXXX" required class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary font-mono text-sm uppercase">
-            </div>
-            <div>
-              <label class="block text-sm font-bold text-gray-700 mb-1">Phone Number</label>
-              <input type="tel" id="track-order-phone" placeholder="10-digit number" required class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary font-mono text-sm">
-            </div>
-          </div>
-          <button type="submit" id="track-order-btn" class="w-full bg-primary hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
-            <i data-lucide="search" class="w-5 h-5"></i> Track Order
-          </button>
-        </form>
-        
-        <div id="track-order-result" class="mt-8 hidden">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Auth / Login Modal -->
-  <div id="auth-modal" class="fixed inset-0 z-[120] hidden bg-gray-900/80 backdrop-blur-sm flex justify-center items-center px-4">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-transform duration-300">
-      <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-        <h2 class="text-xl font-outfit font-bold text-gray-900 flex items-center gap-2">Login / Sign Up</h2>
-        <button onclick="window.closeModal('auth-modal')" class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-      <div class="p-6">
-        <div id="auth-step-1">
-          <p class="text-sm text-gray-600 mb-4">Enter your email address to receive a secure login code (OTP).</p>
-          <form onsubmit="event.preventDefault(); window.RanjitCart.sendOtp();">
-            <label class="block text-sm font-bold text-gray-700 mb-1">Email Address</label>
-            <input type="email" id="auth-email" required class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm mb-4" placeholder="you@example.com">
-            <button type="submit" id="auth-send-btn" class="w-full bg-primary hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-md transition-all">Send OTP</button>
-          </form>
-        </div>
-        <div id="auth-step-2" class="hidden">
-          <p class="text-sm text-gray-600 mb-4">We've sent a login code to <strong id="auth-display-email"></strong>.</p>
-          <form onsubmit="event.preventDefault(); window.RanjitCart.verifyOtp();">
-            <label class="block text-sm font-bold text-gray-700 mb-1">Enter OTP</label>
-            <input type="text" id="auth-otp" required maxlength="8" pattern="[0-9]{6,8}" class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-center tracking-widest text-lg font-mono mb-4" placeholder="••••••••">
-            <button type="submit" id="auth-verify-btn" class="w-full bg-primary hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-md transition-all">Verify & Login</button>
-            <button type="button" onclick="window.RanjitCart.resetAuthStep()" class="w-full mt-3 text-sm text-gray-500 font-bold hover:text-primary transition-colors">Wrong email? Go back</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Profile Modal -->
-  <div id="profile-modal" class="fixed inset-0 z-[120] hidden bg-gray-900/80 backdrop-blur-sm flex justify-center items-center pt-20 px-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-transform duration-300 mb-10">
-      <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-        <h2 class="text-xl font-outfit font-bold text-gray-900 flex items-center gap-2"><i data-lucide="user" class="w-5 h-5 text-primary"></i> My Profile</h2>
-        <button onclick="window.closeModal('profile-modal')" class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-      <div class="p-6 bg-gray-50">
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
-          <p class="text-sm text-gray-500 font-semibold mb-1">Logged in as</p>
-          <p class="font-bold text-gray-900" id="profile-display-email">loading...</p>
-        </div>
-
-        <form id="profile-form" onsubmit="event.preventDefault(); window.RanjitCart.updateProfile();" class="space-y-4 mb-6">
-          <h3 class="font-bold text-gray-900 text-sm uppercase tracking-wider mb-2">Saved Details (For quick checkout)</h3>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Full Name</label>
-            <input type="text" id="profile-name" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm" placeholder="Your Name">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Phone Number</label>
-            <input type="tel" id="profile-phone" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm" placeholder="+91 XXXXX XXXXX">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Default Address</label>
-            <textarea id="profile-address" rows="2" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm resize-none" placeholder="House No., Street, City, PIN"></textarea>
-          </div>
-          <button type="submit" id="profile-save-btn" class="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold py-2 rounded-lg border border-emerald-200 transition-colors text-sm">Save Details</button>
-        </form>
-
-        <div class="border-t border-gray-200 pt-4 mt-4">
-          <button type="button" onclick="window.RanjitCart.signOut()" class="w-full text-red-500 font-bold py-2 rounded-lg hover:bg-red-50 transition-colors text-sm flex items-center justify-center gap-2">
-            <i data-lucide="log-out" class="w-4 h-4"></i> Sign Out
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Write Review Modal -->
-  <div id="write-review-modal" class="fixed inset-0 z-[120] hidden bg-gray-900/90 backdrop-blur-sm flex justify-center items-center px-4">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-transform duration-300">
-      <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-        <h2 class="text-xl font-outfit font-bold text-gray-900 flex items-center gap-2"><i data-lucide="star" class="w-5 h-5 text-amber-500 fill-amber-500"></i> Write a Review</h2>
-        <button onclick="window.closeModal('write-review-modal')" class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-      <div class="p-6">
-        <form id="write-review-form" onsubmit="event.preventDefault(); window.RanjitCart.submitReview();" class="space-y-4">
-          <input type="hidden" id="review-product-id">
-          <input type="hidden" id="review-order-id">
-          <input type="hidden" id="review-customer-name">
-          
-          <div class="flex items-center gap-4 bg-gray-50 p-3 rounded-lg border border-gray-100 mb-4">
-            <img id="review-product-img" src="" class="w-12 h-12 object-cover rounded shadow-sm">
-            <div>
-              <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider" id="review-product-cat"></p>
-              <h3 class="font-bold text-gray-900" id="review-product-name"></h3>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-sm font-bold text-gray-700 mb-2 text-center">How would you rate this product?</label>
-            <div class="flex items-center justify-center gap-2" id="star-rating-container">
-              <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors" data-rating="1"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
-              <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors" data-rating="2"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
-              <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors" data-rating="3"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
-              <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors" data-rating="4"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
-              <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors" data-rating="5"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
-            </div>
-            <input type="hidden" id="review-rating" required>
-            <p id="review-rating-error" class="text-red-500 text-xs text-center mt-1 hidden">Please select a star rating.</p>
+          <!-- Order Notes -->
+          <div id="checkout-notes-section" class="hidden">
+            <label class="block text-sm font-medium text-gray-600 mb-1">Special Delivery Instructions (Optional)</label>
+            <textarea id="checkout-notes" rows="2" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none resize-none" placeholder="e.g. Leave at the door, call before arriving..."></textarea>
           </div>
           
-          <div>
-            <label class="block text-sm font-bold text-gray-700 mb-1">Your Feedback (Optional)</label>
-            <textarea id="review-comment" rows="3" placeholder="Tell us what you liked about it..." class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm resize-none"></textarea>
-          </div>
+          <!-- Save Details Checkbox -->
+          <label class="flex items-center gap-2 cursor-pointer mt-2 w-max">
+            <input type="checkbox" id="checkout-save-details" class="w-4 h-4 text-primary rounded focus:ring-primary border-gray-300" checked>
+            <span class="text-sm font-medium text-gray-600">Save my details for faster checkout</span>
+          </label>
+        </div>
+      </div>
 
-          <button type="submit" id="submit-review-btn" class="w-full bg-primary hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
-            Submit Review
-          </button>
+      <!-- Payment Section -->
+      <div>
+        <h4 class="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
+          <i data-lucide="wallet" class="w-4 h-4 text-primary"></i> Payment Method
+        </h4>
+
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <label class="cursor-pointer">
+            <input type="radio" name="payment-method" value="upi" class="peer hidden" checked
+              onchange="window.RanjitCart.togglePaymentMethod()">
+            <div
+              class="rounded-xl border-2 border-gray-100 p-3 text-center peer-checked:border-primary peer-checked:bg-emerald-50 transition-colors">
+              <i data-lucide="smartphone" class="w-6 h-6 mx-auto mb-1 text-gray-600 peer-checked:text-primary"></i>
+              <span class="font-bold text-sm text-gray-700">UPI Payment</span>
+            </div>
+          </label>
+          <label class="cursor-not-allowed" id="cod-payment-label">
+            <input type="radio" name="payment-method" value="cod" class="peer hidden" disabled
+              onchange="window.RanjitCart.togglePaymentMethod()">
+            <div
+              class="rounded-xl border-2 border-gray-100 p-3 text-center peer-checked:border-primary peer-checked:bg-emerald-50 transition-colors opacity-50 bg-gray-50"
+              id="cod-payment-box">
+              <i data-lucide="banknote" class="w-6 h-6 mx-auto mb-1 text-gray-400" id="cod-payment-icon"></i>
+              <span class="font-bold text-sm text-gray-400" id="cod-payment-text">Cash on Delivery</span>
+              <span class="block text-[10px] text-red-500 font-bold mt-1" id="cod-payment-subtext">Not available for
+                this Pincode</span>
+            </div>
+          </label>
+        </div>
+
+        <!-- UPI Section -->
+        <div id="upi-payment-section">
+          <div
+            class="bg-gradient-to-br from-emerald-50 to-blue-50 rounded-2xl p-6 border border-emerald-100 text-center">
+            <!-- Actual QR Code Image -->
+            <div class="w-56 h-auto mx-auto bg-white rounded-2xl p-2 mb-4 shadow-md border border-emerald-200">
+              <img src="/images/upi_qr_code.png" alt="Ranjit Nursery Payment QR Code"
+                class="w-full h-auto rounded-xl" />
+            </div>
+            <p class="text-gray-600 text-sm font-medium mb-1">Scan QR Code via <strong class="text-primary">PhonePe /
+                GPay / Paytm</strong></p>
+            <p class="text-gray-400 text-xs mb-3">to complete payment</p>
+
+            <!-- UPI ID Info -->
+            <div class="bg-white/90 rounded-lg p-3 inline-block border border-emerald-200 mt-2 min-w-[200px] shadow-sm">
+              <span class="text-xs text-emerald-600 font-semibold uppercase tracking-wider block mb-1">Or pay directly
+                to UPI ID</span>
+              <span class="font-bold text-gray-900 text-base tracking-wider break-all user-select-all cursor-pointer"
+                title="Copy to clipboard">7735227575@ibl</span>
+            </div>
+          </div>
+          <div class="mt-4">
+            <label class="block text-sm font-medium text-gray-600 mb-1">Enter UPI Transaction Ref No. / UTR No.
+              *</label>
+            <input type="text" id="checkout-utr" maxlength="12" pattern="[0-9]{12}"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none"
+              placeholder="e.g. 412345678901 (12 digits)">
+            <p id="utr-error" class="text-xs text-red-500 mt-1 hidden font-semibold">Please enter a valid 12-digit UTR
+              number.</p>
+          </div>
+        </div>
+
+        <!-- COD Section -->
+        <div id="cod-payment-section" class="hidden">
+          <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100 flex items-start gap-3">
+            <i data-lucide="info" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+            <p class="text-sm text-emerald-800 font-medium">You have selected Cash on Delivery. Your order will be
+              confirmed after a brief verification call from our team.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Anti-Spam Captcha -->
+      <div class="mt-8 bg-gray-50 rounded-xl p-4 border border-gray-200">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Human Verification</label>
+        <div class="flex items-center gap-3">
+          <div
+            class="bg-white px-4 py-2 rounded-lg border border-gray-300 font-bold text-lg tracking-widest text-gray-800 shadow-inner select-none"
+            id="captcha-question">
+            <!-- JS will fill this, e.g. 5 + 3 = -->
+          </div>
+          <input type="text" id="captcha-answer" maxlength="2"
+            class="w-20 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary text-center font-bold outline-none"
+            placeholder="?">
+        </div>
+        <p id="captcha-error" class="text-xs text-red-500 mt-2 hidden font-semibold">Incorrect answer. Please try again.
+        </p>
+      </div>
+    </div>
+    <!-- Modal Footer -->
+    <div class="sticky bottom-0 bg-white/95 backdrop-blur-md p-6 border-t border-gray-100 rounded-b-3xl">
+      <button id="place-order-btn"
+        class="w-full bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-[#25D366]/30 flex items-center justify-center gap-2 text-base">
+        <i data-lucide="message-circle" class="w-5 h-5"></i> Place Order via WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Track Order Modal -->
+<div id="track-order-modal"
+  class="fixed inset-0 z-[110] hidden bg-gray-900/80 backdrop-blur-sm flex justify-center items-center pt-20 px-4 opacity-0 transition-opacity duration-300 overflow-y-auto">
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-transform duration-300">
+    <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+      <h2 class="text-2xl font-outfit font-bold text-gray-900">Track Your Order</h2>
+      <button onclick="window.closeModal('track-order-modal')"
+        class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <div class="p-6 bg-gray-50">
+      <div id="track-order-history" class="hidden space-y-4">
+        <!-- Populated by JS when logged in -->
+      </div>
+      <form id="track-order-form" onsubmit="event.preventDefault(); window.RanjitCart.trackOrder();" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Order ID</label>
+            <input type="text" id="track-order-id" placeholder="ORD-YYYYMMDD-XXXX" required
+              class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary font-mono text-sm uppercase">
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Phone Number</label>
+            <input type="tel" id="track-order-phone" placeholder="10-digit number" required
+              class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary font-mono text-sm">
+          </div>
+        </div>
+        <button type="submit" id="track-order-btn"
+          class="w-full bg-primary hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+          <i data-lucide="search" class="w-5 h-5"></i> Track Order
+        </button>
+      </form>
+
+      <div id="track-order-result" class="mt-8 hidden">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Auth / Login Modal -->
+<div id="auth-modal"
+  class="fixed inset-0 z-[120] hidden bg-gray-900/80 backdrop-blur-sm flex justify-center items-center px-4">
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-transform duration-300">
+    <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+      <h2 class="text-xl font-outfit font-bold text-gray-900 flex items-center gap-2">Login / Sign Up</h2>
+      <button onclick="window.closeModal('auth-modal')"
+        class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <div class="p-6">
+      <div id="auth-step-1">
+        <p class="text-sm text-gray-600 mb-4">Enter your email address to receive a secure login code (OTP).</p>
+        <form onsubmit="event.preventDefault(); window.RanjitCart.sendOtp();">
+          <label class="block text-sm font-bold text-gray-700 mb-1">Email Address</label>
+          <input type="email" id="auth-email" required
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm mb-4"
+            placeholder="you@example.com">
+          <button type="submit" id="auth-send-btn"
+            class="w-full bg-primary hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-md transition-all">Send
+            OTP</button>
+        </form>
+      </div>
+      <div id="auth-step-2" class="hidden">
+        <p class="text-sm text-gray-600 mb-4">We've sent a login code to <strong id="auth-display-email"></strong>.</p>
+        <form onsubmit="event.preventDefault(); window.RanjitCart.verifyOtp();">
+          <label class="block text-sm font-bold text-gray-700 mb-1">Enter OTP</label>
+          <input type="text" id="auth-otp" required maxlength="8" pattern="[0-9]{6,8}"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-center tracking-widest text-lg font-mono mb-4"
+            placeholder="••••••••">
+          <button type="submit" id="auth-verify-btn"
+            class="w-full bg-primary hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-md transition-all">Verify
+            & Login</button>
+          <button type="button" onclick="window.RanjitCart.resetAuthStep()"
+            class="w-full mt-3 text-sm text-gray-500 font-bold hover:text-primary transition-colors">Wrong email? Go
+            back</button>
         </form>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Search Modal -->
-  <div id="search-modal" class="fixed inset-0 z-[110] hidden bg-gray-900/80 backdrop-blur-sm flex justify-center items-start pt-20 px-4 opacity-0 transition-opacity duration-300">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden transform scale-95 transition-transform duration-300">
-      <div class="p-4 border-b border-gray-100 flex items-center gap-3">
-        <i data-lucide="search" class="w-6 h-6 text-gray-400"></i>
-        <input type="text" id="global-search-input" class="w-full text-xl font-medium outline-none bg-transparent placeholder-gray-300 text-gray-800" placeholder="Search for plants, seeds, fertilizers..." autocomplete="off" autofocus>
-        <button onclick="window.closeModal('search-modal')" class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
+<!-- Profile Modal -->
+<div id="profile-modal"
+  class="fixed inset-0 z-[120] hidden bg-gray-900/80 backdrop-blur-sm flex justify-center items-center pt-20 px-4 overflow-y-auto">
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-transform duration-300 mb-10">
+    <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+      <h2 class="text-xl font-outfit font-bold text-gray-900 flex items-center gap-2"><i data-lucide="user"
+          class="w-5 h-5 text-primary"></i> My Profile</h2>
+      <button onclick="window.closeModal('profile-modal')"
+        class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <div class="p-6 bg-gray-50">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+        <p class="text-sm text-gray-500 font-semibold mb-1">Logged in as</p>
+        <p class="font-bold text-gray-900" id="profile-display-email">loading...</p>
       </div>
-      <div id="global-search-results" class="max-h-[60vh] overflow-y-auto p-2 bg-gray-50 custom-scrollbar">
-        <div class="text-center text-gray-400 py-10">Start typing to search our catalogue...</div>
+
+      <form id="profile-form" onsubmit="event.preventDefault(); window.RanjitCart.updateProfile();"
+        class="space-y-4 mb-6">
+        <h3 class="font-bold text-gray-900 text-sm uppercase tracking-wider mb-2">Saved Details (For quick checkout)
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Full Name</label>
+          <input type="text" id="profile-name"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
+            placeholder="Your Name">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Phone Number</label>
+          <input type="tel" id="profile-phone"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
+            placeholder="+91 XXXXX XXXXX">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Default Address</label>
+          <textarea id="profile-address" rows="2"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm resize-none"
+            placeholder="House No., Street, City, PIN"></textarea>
+        </div>
+        <button type="submit" id="profile-save-btn"
+          class="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold py-2 rounded-lg border border-emerald-200 transition-colors text-sm">Save
+          Details</button>
+      </form>
+
+      <div class="border-t border-gray-200 pt-4 mt-4">
+        <button type="button" onclick="window.RanjitCart.signOut()"
+          class="w-full text-red-500 font-bold py-2 rounded-lg hover:bg-red-50 transition-colors text-sm flex items-center justify-center gap-2">
+          <i data-lucide="log-out" class="w-4 h-4"></i> Sign Out
+        </button>
       </div>
     </div>
   </div>
+</div>
 
-  
+<!-- Write Review Modal -->
+<div id="write-review-modal"
+  class="fixed inset-0 z-[120] hidden bg-gray-900/90 backdrop-blur-sm flex justify-center items-center px-4">
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-transform duration-300">
+    <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+      <h2 class="text-xl font-outfit font-bold text-gray-900 flex items-center gap-2"><i data-lucide="star"
+          class="w-5 h-5 text-amber-500 fill-amber-500"></i> Write a Review</h2>
+      <button onclick="window.closeModal('write-review-modal')"
+        class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <div class="p-6">
+      <form id="write-review-form" onsubmit="event.preventDefault(); window.RanjitCart.submitReview();"
+        class="space-y-4">
+        <input type="hidden" id="review-product-id">
+        <input type="hidden" id="review-order-id">
+        <input type="hidden" id="review-customer-name">
+
+        <div class="flex items-center gap-4 bg-gray-50 p-3 rounded-lg border border-gray-100 mb-4">
+          <img id="review-product-img" src="" class="w-12 h-12 object-cover rounded shadow-sm">
+          <div>
+            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider" id="review-product-cat"></p>
+            <h3 class="font-bold text-gray-900" id="review-product-name"></h3>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-2 text-center">How would you rate this product?</label>
+          <div class="flex items-center justify-center gap-2" id="star-rating-container">
+            <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors"
+              data-rating="1"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
+            <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors"
+              data-rating="2"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
+            <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors"
+              data-rating="3"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
+            <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors"
+              data-rating="4"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
+            <button type="button" class="star-btn text-gray-300 hover:text-amber-500 transition-colors"
+              data-rating="5"><i data-lucide="star" class="w-8 h-8 pointer-events-none"></i></button>
+          </div>
+          <input type="hidden" id="review-rating" required>
+          <p id="review-rating-error" class="text-red-500 text-xs text-center mt-1 hidden">Please select a star rating.
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-1">Your Feedback (Optional)</label>
+          <textarea id="review-comment" rows="3" placeholder="Tell us what you liked about it..."
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm resize-none"></textarea>
+        </div>
+
+        <button type="submit" id="submit-review-btn"
+          class="w-full bg-primary hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+          Submit Review
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Search Modal -->
+<div id="search-modal"
+  class="fixed inset-0 z-[110] hidden bg-gray-900/80 backdrop-blur-sm flex justify-center items-start pt-20 px-4 opacity-0 transition-opacity duration-300">
+  <div
+    class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden transform scale-95 transition-transform duration-300">
+    <div class="p-4 border-b border-gray-100 flex items-center gap-3">
+      <i data-lucide="search" class="w-6 h-6 text-gray-400"></i>
+      <input type="text" id="global-search-input"
+        class="w-full text-xl font-medium outline-none bg-transparent placeholder-gray-300 text-gray-800"
+        placeholder="Search for plants, seeds, fertilizers..." autocomplete="off" autofocus>
+      <button onclick="window.closeModal('search-modal')"
+        class="p-2 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <div id="global-search-results" class="max-h-[60vh] overflow-y-auto p-2 bg-gray-50 custom-scrollbar">
+      <div class="text-center text-gray-400 py-10">Start typing to search our catalogue...</div>
+    </div>
+  </div>
+</div>

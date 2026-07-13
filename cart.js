@@ -18,6 +18,7 @@ export let verifiedPincode = null;
 export let orderWhatsapp = '919692905128';
 export let inquiryWhatsapp = '917735227575';
 export let servicesWhatsapp = '916371900967';
+export let checkoutFeatures = {};
 
 const VALID_COUPONS = {
   'WELCOME10': { type: 'percent', value: 10, minSpend: 0, desc: '10% OFF on all orders' },
@@ -82,7 +83,7 @@ function loadCart() {
 
 export function getCart() { return cart; }
 
-export function addToCart(productId, qty = 1) {
+export function addToCart(productId, qty = 1, variantName = null, variantPrice = null) {
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
   
@@ -92,7 +93,9 @@ export function addToCart(productId, qty = 1) {
     return;
   }
   
-  const existing = cart.find(item => item.id === productId);
+  const cId = variantName ? `${productId}_${variantName}` : productId;
+  const existing = cart.find(item => (item.cartItemId && item.cartItemId === cId) || (!item.cartItemId && item.id === productId && !variantName));
+  
   if (existing) {
     if (existing.qty + qty > stock) {
       showToast(`Cannot add more. Only ${stock} left in stock.`);
@@ -104,24 +107,30 @@ export function addToCart(productId, qty = 1) {
       showToast(`Only ${stock} left in stock.`);
       return;
     }
-    cart.push({ ...product, qty });
+    const itemToAdd = { ...product, qty, cartItemId: cId };
+    if (variantName) {
+        itemToAdd.variantName = variantName;
+        itemToAdd.price = variantPrice;
+    }
+    cart.push(itemToAdd);
   }
   saveCart();
   updateCartUI();
-  showToast(`${product.name} added to cart!`);
+  const vText = variantName ? ` (${variantName})` : '';
+  showToast(`${product.name}${vText} added to cart!`);
 }
 
-export function removeFromCart(productId) {
-  cart = cart.filter(item => item.id !== productId);
+export function removeFromCart(cartItemId) {
+  cart = cart.filter(item => (item.cartItemId || item.id) != cartItemId);
   saveCart();
   updateCartUI();
 }
 
-export function updateQty(productId, delta) {
-  const item = cart.find(i => i.id === productId);
+export function updateQty(cartItemId, delta) {
+  const item = cart.find(i => (i.cartItemId || i.id) == cartItemId);
   if (!item) return;
   
-  const product = PRODUCTS.find(p => p.id === productId);
+  const product = PRODUCTS.find(p => p.id === item.id);
   if (!product) return;
   
   const stock = product.stock !== undefined && product.stock !== null ? product.stock : 10;
@@ -132,7 +141,7 @@ export function updateQty(productId, delta) {
   
   item.qty += delta;
   if (item.qty <= 0) {
-    removeFromCart(productId);
+    removeFromCart(cartItemId);
     return;
   }
   saveCart();
@@ -222,7 +231,11 @@ export function generateProductHTML(p) {
         : (p.badge ? `<div class="absolute top-2 right-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] md:text-xs font-bold px-2 py-0.5 rounded-full shadow-lg backdrop-blur-sm z-10">${p.badge}</div>` : '');
 
     let priceHTML = '';
-    if (p.discount_price && p.discount_price < p.price) {
+    const isCarpetGrass = p.name.toLowerCase().includes('carpet grass');
+    
+    if (isCarpetGrass) {
+        priceHTML = `<div class="flex flex-col"><span class="text-xs md:text-lg font-outfit font-extrabold text-emerald-600 drop-shadow-sm">₹3 to ₹15</span><span class="text-[9px] md:text-xs font-bold text-gray-500 uppercase tracking-wide">per square feet !!</span></div>`;
+    } else if (p.discount_price && p.discount_price < p.price) {
         const percentOff = Math.round(((p.price - p.discount_price) / p.price) * 100);
         priceHTML = `
             <div class="flex items-center gap-1 md:gap-1.5 flex-wrap">
@@ -234,28 +247,15 @@ export function generateProductHTML(p) {
         priceHTML = `<span class="text-xs md:text-lg font-outfit font-extrabold text-emerald-600 drop-shadow-sm">₹${p.price}</span>`;
     }
 
-    let actionButtonsHTML = '';
-    if (isOutOfStock) {
-        actionButtonsHTML = `
-            <button disabled class="w-full bg-gray-200 text-gray-500 py-2 rounded-lg font-semibold text-[10px] md:text-sm cursor-not-allowed flex items-center justify-center gap-2">
-            <i data-lucide="x-circle" class="w-3 h-3 md:w-4 md:h-4"></i> Out of Stock
-            </button>
-        `;
-    } else {
-        actionButtonsHTML = `
-            <button onclick="window.RanjitCart.addToCart(${p.id}); event.stopPropagation();" class="w-full bg-primary hover:bg-emerald-700 text-white py-2 px-2 rounded-lg font-semibold text-[10px] md:text-sm transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-1 md:gap-2 border border-transparent group/btn">
-                <i data-lucide="shopping-bag" class="w-3 h-3 md:w-4 md:h-4 group-hover/btn:scale-110 transition-transform"></i>
-                <span>Add to Cart</span>
-            </button>
-        `;
-    }
-
     return `
-    <div class="product-card group relative bg-white rounded-xl md:rounded-2xl border border-gray-100 hover:border-emerald-200 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-[280px] md:h-[400px] overflow-hidden cursor-pointer animate-on-scroll opacity-0 translate-y-8" onclick="window.location.href='products.html?id=${p.id}'">
+    <div class="product-card group relative bg-white rounded-xl md:rounded-2xl border border-gray-100 hover:border-emerald-200 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-[230px] md:h-[340px] overflow-hidden cursor-pointer animate-on-scroll opacity-0 translate-y-8" onclick="window.RanjitCart.openProductModal(${p.id})">
         <div class="relative h-[120px] md:h-[200px] w-full bg-gray-50 overflow-hidden">
         <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
         ${badgeHTML}
-        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20">
+            <span class="bg-white/90 text-gray-900 text-[10px] md:text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm shadow-sm flex items-center gap-1.5 transform translate-y-4 group-hover:translate-y-0 transition-all"><i data-lucide="eye" class="w-3 h-3 md:w-4 md:h-4 inline"></i> Quick View</span>
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none"></div>
         </div>
         <div class="p-2.5 md:p-5 flex flex-col flex-grow">
         <div>
@@ -271,11 +271,222 @@ export function generateProductHTML(p) {
             </div>
             <p class="text-gray-500 text-[9px] md:text-xs mb-1.5 md:mb-2 line-clamp-1">${p.description || ''}</p>
         </div>
-        <div class="mt-auto pt-2 md:pt-3 border-t border-gray-50 w-full">
-            ${actionButtonsHTML}
-        </div>
         </div>
     </div>`;
+}
+
+export function openProductModal(productId) {
+    const product = PRODUCTS.find(p => p.id === productId);
+    if (!product) return;
+
+    if (!document.getElementById('product-quickview-modal')) {
+        const modalHtml = `
+        <div id="product-quickview-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4">
+            <div id="product-quickview-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 cursor-pointer" onclick="window.RanjitCart.closeProductModal()"></div>
+            <div id="product-quickview-content" class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl relative z-10 transform scale-95 opacity-0 transition-all duration-300">
+                <button onclick="window.RanjitCart.closeProductModal()" class="absolute top-3 right-3 bg-white/50 hover:bg-white backdrop-blur-md rounded-full p-1.5 text-gray-600 transition-colors z-20">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+                <div class="relative h-64 w-full bg-gray-50">
+                    <span id="pm-badge" class="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-20 hidden"></span>
+                    <img id="pm-image" src="" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <span id="pm-category" class="text-[10px] font-bold uppercase tracking-wider text-primary/70 mb-1 block"></span>
+                    <h2 id="pm-name" class="text-2xl font-outfit font-extrabold text-gray-900 mb-2 leading-tight"></h2>
+                    <div class="flex items-center gap-1 mb-3">
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <span id="pm-rating" class="text-sm font-bold text-gray-700"></span>
+                        <span id="pm-reviews" class="text-xs text-gray-400 ml-1"></span>
+                    </div>
+                    <div class="flex items-end gap-3 mb-4 flex-wrap" id="pm-price-container">
+                        <!-- Prices injected here -->
+                    </div>
+                    <p id="pm-desc" class="text-sm text-gray-600 mb-5 line-clamp-3 leading-relaxed"></p>
+                    <div id="pm-action-container">
+                        <button id="pm-add-btn" class="w-full bg-primary hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-[0_5px_15px_rgba(45,90,39,0.3)] transition-all flex items-center justify-center gap-2 group">
+                            <i data-lucide="shopping-bag" class="w-5 h-5 group-hover:scale-110 transition-transform"></i> Add to Cart
+                        </button>
+                    </div>
+                    <a id="pm-details-link" href="#" class="block text-center text-primary text-xs font-bold mt-4 hover:underline">View Full Details →</a>
+                </div>
+            </div>
+        </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    document.getElementById('pm-image').src = product.image;
+    document.getElementById('pm-name').textContent = product.name;
+    document.getElementById('pm-desc').textContent = product.description || 'Beautiful addition for your garden or indoors.';
+    document.getElementById('pm-rating').textContent = product.avgRating > 0 ? product.avgRating.toFixed(1) : 'New';
+    document.getElementById('pm-reviews').textContent = product.reviewCount > 0 ? `(${product.reviewCount} reviews)` : '';
+    
+    const cat = product.categories && product.categories.length > 0 
+        ? (typeof product.categories === 'string' ? product.categories.replace(/[\[\]"]/g,'').split(',')[0] : product.categories[0]) 
+        : (product.category || 'Plant');
+    document.getElementById('pm-category').textContent = cat;
+    
+    const badgeEl = document.getElementById('pm-badge');
+    if (product.stock !== undefined && product.stock <= 0) {
+        badgeEl.textContent = 'Out of Stock';
+        badgeEl.className = 'absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-20';
+        badgeEl.classList.remove('hidden');
+    } else if (product.badge) {
+        badgeEl.textContent = product.badge;
+        badgeEl.className = 'absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-20';
+        badgeEl.classList.remove('hidden');
+    } else {
+        badgeEl.classList.add('hidden');
+    }
+
+    let priceHTML = '';
+    const isCarpetGrassModal = product.name.toLowerCase().includes('carpet grass');
+    
+    if (isCarpetGrassModal) {
+        priceHTML = `
+            <div class="flex items-end gap-2 w-full border-b border-emerald-100 pb-2 mb-2">
+                <span class="text-2xl font-black text-emerald-600 leading-none">₹3 to ₹15</span>
+                <span class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-0.5">per square feet !!</span>
+            </div>
+        `;
+    } else if (product.discount_price && product.discount_price < product.price) {
+        const percentOff = Math.round(((product.price - product.discount_price) / product.price) * 100);
+        priceHTML = `
+            <span class="text-3xl font-black text-emerald-600">₹${product.discount_price}</span>
+            <span class="text-base text-gray-400 line-through font-medium mb-1">₹${product.price}</span>
+            <span class="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded-md mb-1">${percentOff}% OFF</span>
+        `;
+    } else {
+        priceHTML = `<span class="text-3xl font-black text-emerald-600">₹${product.price}</span>`;
+    }
+    document.getElementById('pm-price-container').innerHTML = priceHTML;
+
+    // Variants Handling
+    const variantsContainer = document.getElementById('pm-variants-container');
+    let hasVariants = false;
+    let variants = [];
+    if (!variantsContainer && document.getElementById('pm-price-container')) {
+        document.getElementById('pm-price-container').insertAdjacentHTML('beforebegin', '<div id="pm-variants-container" class="mb-3 hidden"></div>');
+    }
+    const vContainer = document.getElementById('pm-variants-container');
+    
+    if (vContainer && !isCarpetGrassModal) {
+        variants = product.variants || [];
+        if (typeof variants === 'string') {
+            try { variants = JSON.parse(variants); } catch(e) { variants = []; }
+        }
+        hasVariants = Array.isArray(variants) && variants.length > 0;
+        
+        if (hasVariants) {
+            let variantsHTML = '<div class="space-y-2">';
+            variants.forEach((v, index) => {
+                const checked = index === 0 ? 'checked' : '';
+                let priceHTML = `<span class="text-sm font-bold text-emerald-600">₹${v.price}</span>`;
+                if (v.mrp && v.mrp > v.price) {
+                    priceHTML = `
+                        <div class="flex flex-col items-end">
+                            <span class="text-sm font-bold text-emerald-600">₹${v.price}</span>
+                            <span class="text-[10px] text-gray-400 line-through font-medium">₹${v.mrp}</span>
+                        </div>
+                    `;
+                }
+                
+                variantsHTML += `
+                    <label class="flex items-center justify-between p-2.5 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors ${index===0 ? 'border-primary bg-emerald-50/30' : 'border-gray-200'}">
+                        <div class="flex items-center gap-3">
+                            <input type="radio" name="product-variant" value="${index}" ${checked} class="w-4 h-4 text-primary focus:ring-primary" onchange="window.RanjitCart.updateVariantPrice(${productId}, ${index})">
+                            <span class="text-sm font-semibold text-gray-800">${v.name}</span>
+                        </div>
+                        ${priceHTML}
+                    </label>
+                `;
+            });
+            variantsHTML += '</div>';
+            vContainer.innerHTML = variantsHTML;
+            vContainer.classList.remove('hidden');
+            
+            // Initial price setup
+            let initPriceHtml = `<span class="text-3xl font-black text-emerald-600">₹${variants[0].price}</span>`;
+            if (variants[0].mrp && variants[0].mrp > variants[0].price) {
+                const percentOff = Math.round(((variants[0].mrp - variants[0].price) / variants[0].mrp) * 100);
+                initPriceHtml = `
+                    <span class="text-3xl font-black text-emerald-600">₹${variants[0].price}</span>
+                    <span class="text-base text-gray-400 line-through font-medium mb-1">₹${variants[0].mrp}</span>
+                    <span class="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded-md mb-1">${percentOff}% OFF</span>
+                `;
+            }
+            document.getElementById('pm-price-container').innerHTML = initPriceHtml;
+        } else {
+            vContainer.innerHTML = '';
+            vContainer.classList.add('hidden');
+        }
+    } else if (vContainer) {
+        vContainer.classList.add('hidden');
+    }
+
+    const actionContainer = document.getElementById('pm-action-container');
+    if (isCarpetGrassModal) {
+        actionContainer.innerHTML = `
+            <a href="tel:+917978809687" class="w-full bg-primary hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-[0_5px_15px_rgba(45,90,39,0.3)] transition-all flex items-center justify-center gap-2 group">
+                <i data-lucide="phone" class="w-5 h-5 group-hover:scale-110 transition-transform"></i> Contact Now
+            </a>
+        `;
+    } else if (product.stock !== undefined && product.stock <= 0) {
+        actionContainer.innerHTML = `
+            <button disabled class="w-full bg-gray-200 text-gray-500 py-3.5 rounded-xl font-bold cursor-not-allowed flex items-center justify-center gap-2">
+                <i data-lucide="x-circle" class="w-5 h-5"></i> Out of Stock
+            </button>
+        `;
+    } else {
+        actionContainer.innerHTML = `
+            <button id="pm-add-btn" class="w-full bg-primary hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-[0_5px_15px_rgba(45,90,39,0.3)] transition-all flex items-center justify-center gap-2 group">
+                <i data-lucide="shopping-bag" class="w-5 h-5 group-hover:scale-110 transition-transform"></i> Add to Cart
+            </button>
+        `;
+        document.getElementById('pm-add-btn').onclick = () => {
+            if (hasVariants) {
+                const selectedRadio = document.querySelector('input[name="product-variant"]:checked');
+                if (selectedRadio) {
+                    const variant = variants[parseInt(selectedRadio.value)];
+                    window.RanjitCart.addToCart(product.id, 1, variant.name, variant.price);
+                } else {
+                    window.RanjitCart.addToCart(product.id);
+                }
+            } else {
+                window.RanjitCart.addToCart(product.id);
+            }
+            window.RanjitCart.closeProductModal();
+        };
+    }
+
+    document.getElementById('pm-details-link').href = `products.html?id=${product.id}`;
+
+    const modal = document.getElementById('product-quickview-modal');
+    const overlay = document.getElementById('product-quickview-overlay');
+    const content = document.getElementById('product-quickview-content');
+    
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        overlay.classList.remove('opacity-0');
+        content.classList.remove('scale-95', 'opacity-0');
+    }, 10);
+    document.body.style.overflow = 'hidden';
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+export function closeProductModal() {
+    const modal = document.getElementById('product-quickview-modal');
+    const overlay = document.getElementById('product-quickview-overlay');
+    const content = document.getElementById('product-quickview-content');
+    
+    if (overlay) overlay.classList.add('opacity-0');
+    if (content) content.classList.add('scale-95', 'opacity-0');
+    
+    setTimeout(() => {
+        if (modal) modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }, 300);
 }
 
 export function renderProducts() {
@@ -383,6 +594,7 @@ function updateCartUI() {
     setTimeout(() => badge.classList.remove('animate-bounce'), 500);
   });
   renderCartDrawerItems();
+  renderCheckoutSummary();
 }
 
 // ─── Cart Drawer Rendering ───────────────────────────────────
@@ -432,18 +644,19 @@ function renderCartDrawerItems() {
         <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover flex-shrink-0 shadow-sm" />
         <div class="flex-1 min-w-0">
           <h4 class="font-semibold text-gray-900 text-sm truncate">${item.name}</h4>
+          ${item.variantName ? `<p class="text-xs text-gray-500 font-medium mb-1">Variant: ${item.variantName}</p>` : ''}
           <p class="text-primary font-bold text-sm">₹${item.price}</p>
           ${b2bBadge}
           <div class="flex items-center gap-2 mt-1">
-            <button onclick="window.RanjitCart.updateQty(${item.id}, -1)" class="w-7 h-7 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm flex items-center justify-center transition-colors">−</button>
+            <button onclick="window.RanjitCart.updateQty('${item.cartItemId || item.id}', -1)" class="w-7 h-7 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm flex items-center justify-center transition-colors">−</button>
             <span class="font-bold text-sm w-6 text-center">${item.qty}</span>
-            <button onclick="window.RanjitCart.updateQty(${item.id}, 1)" class="w-7 h-7 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary font-bold text-sm flex items-center justify-center transition-colors">+</button>
+            <button onclick="window.RanjitCart.updateQty('${item.cartItemId || item.id}', 1)" class="w-7 h-7 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary font-bold text-sm flex items-center justify-center transition-colors">+</button>
           </div>
         </div>
         <div class="text-right flex flex-col items-end gap-1">
           ${item.qty >= 50 ? `<span class="text-xs text-gray-400 line-through font-semibold">₹${originalPrice}</span>` : ''}
           <span class="font-bold text-gray-900 text-sm">₹${finalPrice}</span>
-          <button onclick="window.RanjitCart.removeFromCart(${item.id})" class="text-red-400 hover:text-red-600 transition-colors p-1" title="Remove">
+          <button onclick="window.RanjitCart.removeFromCart('${item.cartItemId || item.id}')" class="text-red-400 hover:text-red-600 transition-colors p-1" title="Remove">
             <i data-lucide="trash-2" class="w-4 h-4"></i>
           </button>
         </div>
@@ -571,11 +784,21 @@ function renderCheckoutSummary() {
   }
 
   const total = (subtotal + shippingCost) - discountAmount;
+  
+  let giftFee = 0;
+  const giftChk = document.getElementById('checkout-is-gift');
+  if (giftChk && giftChk.checked && checkoutFeatures.gifting_enabled) {
+    giftFee = parseInt(checkoutFeatures.gifting_fee) || 49;
+  }
+  const finalTotal = total + giftFee;
 
   summaryContainer.innerHTML = cart.map(item => `
-    <div class="flex justify-between items-center text-sm py-1.5 border-b border-gray-100 last:border-0">
-      <span class="text-gray-700">${item.name} × ${item.qty}</span>
-      <span class="font-bold text-gray-900">₹${(item.price * item.qty).toLocaleString('en-IN')}</span>
+    <div class="flex flex-col text-sm py-1.5 border-b border-gray-100 last:border-0">
+      <div class="flex justify-between items-center">
+        <span class="text-gray-700">${item.name} × ${item.qty}</span>
+        <span class="font-bold text-gray-900">₹${(item.price * item.qty).toLocaleString('en-IN')}</span>
+      </div>
+      ${item.variantName ? `<span class="text-xs text-gray-500">Variant: ${item.variantName}</span>` : ''}
     </div>
   `).join('');
 
@@ -607,11 +830,86 @@ function renderCheckoutSummary() {
     </div>`;
   }
 
+  if (giftFee > 0) {
+    summaryContainer.innerHTML += `
+    <div class="flex justify-between items-center text-sm py-1.5 border-b border-gray-100 last:border-0">
+      <span class="text-amber-600 flex items-center gap-1"><i data-lucide="gift" class="w-3 h-3"></i> Gift Wrapping</span>
+      <span class="font-bold text-amber-600">+₹${giftFee}</span>
+    </div>`;
+  }
+
   summaryContainer.innerHTML += `
     <div class="flex justify-between items-center text-base pt-3 mt-2 border-t-2 border-primary/20">
       <span class="font-bold text-gray-900">Total Amount</span>
-      <span class="font-extrabold text-primary text-xl">₹${total.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
+      <span class="font-extrabold text-primary text-xl">₹${finalTotal.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
     </div>`;
+}
+
+// ─── Checkout Features Logic ─────────────────────────────────
+export function toggleGift() {
+  const chk = document.getElementById('checkout-is-gift');
+  const msg = document.getElementById('gift-message-container');
+  if (chk && msg) {
+    if (chk.checked) {
+      msg.classList.remove('hidden');
+    } else {
+      msg.classList.add('hidden');
+      document.getElementById('checkout-gift-message').value = '';
+    }
+  }
+  renderCheckoutSummary();
+};
+
+function renderCheckoutAddons() {
+  const container = document.getElementById('checkout-addons-container');
+  if (!container || !checkoutFeatures.addons_enabled) return;
+
+  const category = (checkoutFeatures.addon_category || '').toLowerCase();
+  
+  // Find products that match the addon category
+  const addonProducts = PRODUCTS.filter(p => {
+    let cats = p.categories;
+    if (typeof cats === 'string') {
+      try { cats = JSON.parse(cats); } catch(e) { cats = []; }
+    }
+    if (Array.isArray(cats)) {
+      return cats.some(c => c.toLowerCase().includes(category));
+    }
+    return false;
+  }).slice(0, 5); // show top 5
+
+  if (addonProducts.length === 0) {
+    document.getElementById('checkout-addons-section')?.classList.add('hidden');
+    return;
+  }
+
+  container.innerHTML = addonProducts.map(p => {
+    let variants = [];
+    try {
+      variants = typeof p.variants === 'string' ? JSON.parse(p.variants) : p.variants;
+    } catch(e) {}
+    let price = p.price;
+    if (variants && variants.length > 0) {
+      price = variants[0].selling_price || variants[0].price || p.price;
+    }
+
+    return `
+      <div class="snap-start shrink-0 w-36 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <img src="${p.image}" class="w-full h-24 object-cover" alt="${p.name}">
+        <div class="p-2 flex flex-col flex-1">
+          <h5 class="text-xs font-bold text-gray-800 line-clamp-1 mb-1">${p.name}</h5>
+          <div class="flex items-center justify-between mt-auto">
+            <span class="text-sm font-bold text-primary">₹${price}</span>
+            <button type="button" onclick="window.RanjitCart.addToCart(${p.id}, 1, '${(variants && variants.length > 0) ? variants[0].name : ''}', ${price}, null, event)" class="bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-full p-1.5 transition-colors">
+              <i data-lucide="plus" class="w-3 h-3"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
 // ─── Checkout Modal ──────────────────────────────────────────
@@ -632,6 +930,51 @@ export function openCheckoutModal() {
   }
 
   generateCaptcha();
+
+  // Load Saved Details
+  const savedDetails = JSON.parse(localStorage.getItem('ranjit_saved_details') || '{}');
+  if (savedDetails.name) document.getElementById('checkout-name').value = savedDetails.name;
+  if (savedDetails.phone) document.getElementById('checkout-phone').value = savedDetails.phone;
+  if (savedDetails.address) document.getElementById('checkout-address').value = savedDetails.address;
+  // Let user type pincode or let verifiedPincode take precedence
+  
+  // Apply Checkout Features
+  const addonsSection = document.getElementById('checkout-addons-section');
+  const giftingSection = document.getElementById('checkout-gifting-section');
+  const dateSection = document.getElementById('checkout-date-section');
+  const notesSection = document.getElementById('checkout-notes-section');
+  const giftingFeeText = document.getElementById('gifting-fee-text');
+
+  if (checkoutFeatures.addons_enabled && addonsSection) {
+    addonsSection.classList.remove('hidden');
+    renderCheckoutAddons();
+  } else if (addonsSection) {
+    addonsSection.classList.add('hidden');
+  }
+
+  if (checkoutFeatures.gifting_enabled && giftingSection) {
+    giftingSection.classList.remove('hidden');
+    if (giftingFeeText) giftingFeeText.textContent = `Add premium gift wrapping (+₹${checkoutFeatures.gifting_fee || 49})`;
+    // Reset gift state
+    const giftChk = document.getElementById('checkout-is-gift');
+    if (giftChk) giftChk.checked = false;
+    document.getElementById('gift-message-container')?.classList.add('hidden');
+    window.RanjitCart.toggleGift(); // update total
+  } else if (giftingSection) {
+    giftingSection.classList.add('hidden');
+  }
+
+  if (checkoutFeatures.date_picker_enabled && dateSection) {
+    dateSection.classList.remove('hidden');
+  } else if (dateSection) {
+    dateSection.classList.add('hidden');
+  }
+
+  if (checkoutFeatures.order_notes_enabled && notesSection) {
+    notesSection.classList.remove('hidden');
+  } else if (notesSection) {
+    notesSection.classList.add('hidden');
+  }
 
   modal.classList.remove('hidden');
   setTimeout(() => {
@@ -744,7 +1087,24 @@ export async function placeOrder() {
       else if (appliedCoupon.type === 'shipping') shippingCost = 0;
     }
 
-    const total = (subtotal + shippingCost) - discountAmount;
+    // New Checkout Features Data
+    const isGift = document.getElementById('checkout-is-gift')?.checked || false;
+    const giftMessage = document.getElementById('checkout-gift-message')?.value?.trim() || '';
+    const giftFee = isGift && checkoutFeatures.gifting_enabled ? (parseInt(checkoutFeatures.gifting_fee) || 49) : 0;
+    const deliveryDate = document.getElementById('checkout-delivery-date')?.value || '';
+    const deliveryTime = document.getElementById('checkout-delivery-time')?.value || '';
+    const orderNotes = document.getElementById('checkout-notes')?.value?.trim() || '';
+    const saveDetails = document.getElementById('checkout-save-details')?.checked || false;
+
+    if (saveDetails) {
+      localStorage.setItem('ranjit_saved_details', JSON.stringify({
+        name: custName,
+        phone: custPhone,
+        address: custAddr
+      }));
+    }
+
+    const total = (subtotal + shippingCost + giftFee) - discountAmount;
     
     // Generate Order ID (Local Time)
     const d = new Date();
@@ -800,11 +1160,32 @@ export async function placeOrder() {
       msg += `*Discount (${appliedCoupon.code}):* -₹${discountAmount.toLocaleString('en-IN', {maximumFractionDigits:0})}\n`;
     }
     
+    if (giftFee > 0) {
+      msg += `*Gift Wrap Fee:* +₹${giftFee}\n`;
+    }
+
     msg += `*Total Amount: ₹${total.toLocaleString('en-IN', {maximumFractionDigits:0})}*\n`;
     msg += `*Payment Method:* ${paymentMethod === 'upi' ? 'UPI' : 'Cash on Delivery (COD)'}\n`;
     if (paymentMethod === 'upi' && utr) {
       msg += `*UPI Txn Ref / UTR:* ${utr}\n`;
     }
+    
+    // Additional Details
+    if (isGift || deliveryDate || orderNotes) {
+      msg += `━━━━━━━━━━━━━━━━━━\n`;
+      if (isGift) {
+        msg += `🎁 *GIFT ORDER*\n`;
+        if (giftMessage) msg += `*Message:* "${giftMessage}"\n`;
+      }
+      if (deliveryDate) {
+        msg += `📅 *Preferred Date:* ${deliveryDate}\n`;
+        if (deliveryTime) msg += `🕒 *Time Slot:* ${deliveryTime}\n`;
+      }
+      if (orderNotes) {
+        msg += `📝 *Notes:* ${orderNotes}\n`;
+      }
+    }
+
     if (paymentMethod === 'cod') {
       msg += `\n*Note:* Please call me to verify this COD order.\n`;
     }
@@ -923,6 +1304,11 @@ export async function init() {
             const subtitleEl = document.getElementById('featured-subtitle');
             if (titleEl && settingsData.featured_title) titleEl.textContent = settingsData.featured_title;
             if (subtitleEl && settingsData.featured_subtitle) subtitleEl.textContent = settingsData.featured_subtitle;
+        }
+
+        // Apply checkout features
+        if (settingsData.landing_config && settingsData.landing_config.checkout_settings) {
+            checkoutFeatures = settingsData.landing_config.checkout_settings;
         }
       }
     } catch (e) { console.error("Error fetching initial data", e); }
@@ -1438,6 +1824,28 @@ if (typeof document !== 'undefined') {
       });
     });
   });
+}
+
+export function updateVariantPrice(productId, variantIndex) {
+    const product = PRODUCTS.find(p => p.id === productId);
+    if (!product) return;
+    let variants = product.variants || [];
+    if (typeof variants === 'string') {
+        try { variants = JSON.parse(variants); } catch(e) { variants = []; }
+    }
+    const variant = variants[variantIndex];
+    if (variant) {
+        let priceHtml = `<span class="text-3xl font-black text-emerald-600">₹${variant.price}</span>`;
+        if (variant.mrp && variant.mrp > variant.price) {
+            const percentOff = Math.round(((variant.mrp - variant.price) / variant.mrp) * 100);
+            priceHtml = `
+                <span class="text-3xl font-black text-emerald-600">₹${variant.price}</span>
+                <span class="text-base text-gray-400 line-through font-medium mb-1">₹${variant.mrp}</span>
+                <span class="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded-md mb-1">${percentOff}% OFF</span>
+            `;
+        }
+        document.getElementById('pm-price-container').innerHTML = priceHtml;
+    }
 }
 
 // ==========================================

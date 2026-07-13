@@ -275,6 +275,11 @@ window.openAddModal = () => {
     form.reset();
     document.getElementById('p-id').value = '';
     document.getElementById('modal-title').innerText = 'Add New Product';
+    const variantsContainer = document.getElementById('variants-container');
+    if (variantsContainer) {
+        variantsContainer.innerHTML = '';
+        addVariantRow('Default', ''); // Add initial mandatory variant row
+    }
     document.getElementById('addProductModal').classList.remove('hidden');
 };
 
@@ -285,21 +290,8 @@ window.openEditModal = (id) => {
     document.getElementById('p-id').value = product.id;
     document.getElementById('p-name').value = product.name;
     
-    const priceInput = document.getElementById('p-price');
     const isCarpetGrass = product.name.toLowerCase().includes('carpet grass');
-    if (isCarpetGrass) {
-        priceInput.type = 'text';
-        priceInput.value = '3 to 15 per sq. ft.';
-        priceInput.readOnly = true;
-        priceInput.classList.add('bg-gray-100', 'cursor-not-allowed', 'text-gray-500');
-    } else {
-        priceInput.type = 'number';
-        priceInput.value = product.price;
-        priceInput.readOnly = false;
-        priceInput.classList.remove('bg-gray-100', 'cursor-not-allowed', 'text-gray-500');
-    }
-    
-    document.getElementById('p-mrp').value = product.mrp || '';
+    // Main price and MRP are now handled via variants, inputs removed from UI.
     document.getElementById('p-badge').value = product.badge || '';
     document.getElementById('p-stock').value = product.stock !== undefined && product.stock !== null ? product.stock : 10;
     
@@ -317,6 +309,18 @@ window.openEditModal = (id) => {
     document.getElementById('p-image').value = product.image || '';
     document.getElementById('p-desc').value = product.description || '';
     
+    const variantsContainer = document.getElementById('variants-container');
+    if (variantsContainer) {
+        variantsContainer.innerHTML = '';
+        let variants = product.variants || [];
+        if (typeof variants === 'string') {
+            try { variants = JSON.parse(variants); } catch(e) { variants = []; }
+        }
+        if (Array.isArray(variants)) {
+            variants.forEach(v => addVariantRow(v.name, v.price, v.mrp));
+        }
+    }
+    
     document.getElementById('modal-title').innerText = 'Edit Product';
     document.getElementById('addProductModal').classList.remove('hidden');
 };
@@ -330,9 +334,6 @@ form.addEventListener('submit', async (e) => {
     try {
         const idVal = document.getElementById('p-id').value;
         const name = document.getElementById('p-name').value;
-        const price = parseFloat(document.getElementById('p-price').value);
-        const mrpVal = document.getElementById('p-mrp').value;
-        const mrp = mrpVal ? parseFloat(mrpVal) : null;
         const stockVal = document.getElementById('p-stock').value;
         const stock = stockVal ? parseInt(stockVal) : 0;
         const image = document.getElementById('p-image').value;
@@ -344,9 +345,32 @@ form.addEventListener('submit', async (e) => {
         
         const categories = categoriesRaw.split(',').map(c => c.trim()).filter(Boolean);
 
+        // Collect Variants
+        const variants = [];
+        const variantRows = document.querySelectorAll('.variant-row');
+        variantRows.forEach(row => {
+            const vName = row.querySelector('.v-name').value.trim();
+            const vPrice = parseFloat(row.querySelector('.v-price').value);
+            const vMrpVal = row.querySelector('.v-mrp').value;
+            const vMrp = vMrpVal ? parseFloat(vMrpVal) : null;
+            if (vName && !isNaN(vPrice)) {
+                variants.push({ name: vName, price: vPrice, mrp: vMrp });
+            }
+        });
+
+        if (variants.length === 0) {
+            alert("Please add at least one variant with a valid name and price.");
+            saveBtn.innerHTML = `Save Product`;
+            saveBtn.disabled = false;
+            return;
+        }
+
+        const price = variants[0].price;
+        const mrp = variants[0].mrp;
+
         if (idVal) {
             // UPDATE EXISTING
-            const updateProduct = { name, price, mrp, stock, image, description: desc, badge, categories, availability_status };
+            const updateProduct = { name, price, mrp, stock, image, description: desc, badge, categories, availability_status, variants };
             const { error } = await supabase.from('products').update(updateProduct).eq('id', parseInt(idVal));
             if (error) throw error;
             showToast("Product updated successfully!");
@@ -365,7 +389,8 @@ form.addEventListener('submit', async (e) => {
                 badge,
                 categories,
                 is_available: true,
-                availability_status
+                availability_status,
+                variants
             };
             const { error } = await supabase.from('products').insert([newProduct]);
             if (error) throw error;
@@ -385,6 +410,29 @@ form.addEventListener('submit', async (e) => {
         if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 });
+
+// Variant Row Logic
+const addVariantBtn = document.getElementById('add-variant-btn');
+if (addVariantBtn) {
+    addVariantBtn.addEventListener('click', () => addVariantRow());
+}
+
+function addVariantRow(name = '', price = '', mrp = '') {
+    const container = document.getElementById('variants-container');
+    if (!container) return;
+    
+    const row = document.createElement('div');
+    row.className = 'variant-row flex gap-2 items-center';
+    const mrpStr = mrp !== null && mrp !== undefined ? mrp : '';
+    row.innerHTML = `
+        <input type="text" placeholder="Size/Option" value="${name}" class="v-name w-2/5 bg-white border border-gray-300 rounded-md px-3 py-1.5 text-sm outline-none focus:border-primary">
+        <input type="number" placeholder="Price (₹)" value="${price}" class="v-price w-1/4 bg-white border border-gray-300 rounded-md px-3 py-1.5 text-sm outline-none focus:border-primary">
+        <input type="number" placeholder="MRP (₹)" value="${mrpStr}" class="v-mrp w-1/4 bg-white border border-gray-300 rounded-md px-3 py-1.5 text-sm outline-none focus:border-primary">
+        <button type="button" class="text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors" onclick="this.closest('.variant-row').remove()"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+    `;
+    container.appendChild(row);
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
 
 function showToast(msg) {
     toastMsg.textContent = msg;
@@ -844,6 +892,24 @@ window.fetchSettings = async () => {
             if (featuredTitle) featuredTitle.value = data.featured_title || 'Our Core Products';
             if (featuredSubtitle) featuredSubtitle.value = data.featured_subtitle || 'Explore our diverse collection of premium plants, gardening supplies, and exotic specialities perfect for any space.';
             if (featuredCategory) featuredCategory.value = data.featured_category || '';
+
+            // Load checkout settings
+            const config = data.landing_config || {};
+            const chkSettings = config.checkout_settings || {};
+            
+            const chkAddons = document.getElementById('chk-addons-enabled');
+            const chkCategory = document.getElementById('chk-addon-category');
+            const chkGifting = document.getElementById('chk-gifting-enabled');
+            const chkFee = document.getElementById('chk-gifting-fee');
+            const chkDate = document.getElementById('chk-date-enabled');
+            const chkNotes = document.getElementById('chk-notes-enabled');
+
+            if (chkAddons) chkAddons.checked = chkSettings.addons_enabled === true;
+            if (chkCategory) chkCategory.value = chkSettings.addon_category || 'Accessories';
+            if (chkGifting) chkGifting.checked = chkSettings.gifting_enabled === true;
+            if (chkFee) chkFee.value = chkSettings.gifting_fee !== undefined ? chkSettings.gifting_fee : 49;
+            if (chkDate) chkDate.checked = chkSettings.date_picker_enabled === true;
+            if (chkNotes) chkNotes.checked = chkSettings.order_notes_enabled === true;
         }
     } catch (err) {
         console.error("Error fetching settings:", err);
@@ -917,6 +983,54 @@ window.saveFeaturedSettings = async () => {
         btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Save Featured Settings`;
         btn.disabled = false;
         if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+};
+
+window.saveCheckoutSettings = async () => {
+    if (!supabase) return;
+    const btn = document.getElementById('save-checkout-settings-btn');
+    if(btn) {
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Saving...`;
+        btn.disabled = true;
+    }
+
+    try {
+        const addons_enabled = document.getElementById('chk-addons-enabled').checked;
+        const addon_category = document.getElementById('chk-addon-category').value.trim();
+        const gifting_enabled = document.getElementById('chk-gifting-enabled').checked;
+        const gifting_fee = parseInt(document.getElementById('chk-gifting-fee').value) || 0;
+        const date_picker_enabled = document.getElementById('chk-date-enabled').checked;
+        const order_notes_enabled = document.getElementById('chk-notes-enabled').checked;
+
+        // Fetch existing config first
+        const { data, error: fetchErr } = await supabase.from('store_settings').select('landing_config').eq('id', 1).single();
+        if (fetchErr && fetchErr.code !== 'PGRST116') throw fetchErr;
+
+        const configData = data?.landing_config || {};
+        configData.checkout_settings = {
+            addons_enabled,
+            addon_category,
+            gifting_enabled,
+            gifting_fee,
+            date_picker_enabled,
+            order_notes_enabled
+        };
+
+        const { error } = await supabase.from('store_settings').update({
+            landing_config: configData
+        }).eq('id', 1);
+
+        if (error) throw error;
+        showToast("Checkout features saved successfully!");
+    } catch (err) {
+        console.error("Error saving checkout settings:", err);
+        alert("Failed to save settings: " + err.message);
+    } finally {
+        if(btn) {
+            btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Save Checkout Settings`;
+            btn.disabled = false;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
     }
 };
 
@@ -1239,14 +1353,6 @@ let dealOfDay = { enabled: false, end_time: '', products: [] };
 let couponsList = [];
 let bestSellersConfig = { category: '' };
 
-// New Mobile Exclusive Sections Configs
-let roomBgImage = '';
-let roomHotspots = [];
-let processTimeline = [];
-let trendingGrid = [];
-let parallaxBanner = { image: '', quote: '' };
-let featuresGrid = [];
-let faqList = [];
 
 window.fetchLandingConfig = async () => {
     if (!supabase) return;
@@ -1269,14 +1375,6 @@ window.fetchLandingConfig = async () => {
         couponsList = config.coupons || [];
         bestSellersConfig = config.best_sellers || { category: '' };
         
-        roomBgImage = config.room_bg_image || '';
-        roomHotspots = config.room_hotspots || [];
-        processTimeline = config.process_timeline || [];
-        trendingGrid = config.trending_grid || [];
-        parallaxBanner = config.parallax_banner || { image: '', quote: '' };
-        featuresGrid = config.features_grid || [];
-        faqList = config.faq_list || [];
-        
         const trustStripToggle = document.getElementById('cms-trust-strip-toggle');
         const dealTimeInput = document.getElementById('cms-deal-time');
         const dealTitleInput = document.getElementById('cms-deal-title');
@@ -1291,12 +1389,7 @@ window.fetchLandingConfig = async () => {
         document.getElementById('cms-about-image').value = aboutData.image || '';
         document.getElementById('cms-about-text').value = aboutData.text || '';
         
-        const rBg = document.getElementById('cms-room-bg');
-        if (rBg) rBg.value = roomBgImage;
-        const pBg = document.getElementById('cms-parallax-bg');
-        if (pBg) pBg.value = parallaxBanner.image;
-        const pQt = document.getElementById('cms-parallax-quote');
-        if (pQt) pQt.value = parallaxBanner.quote;
+
 
         window.renderLandingConfig();
     } catch (err) {
@@ -1489,11 +1582,6 @@ window.renderLandingConfig = () => {
     renderAdminDealOfDay();
     renderAdminCoupons();
     
-    renderAdminRoomHotspots();
-    renderAdminTimeline();
-    renderAdminTrendingGrid();
-    renderAdminFeaturesGrid();
-    renderAdminFaq();
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
 };
@@ -1705,85 +1793,7 @@ window.addCoupon = () => { couponsList.push({ title: '20% OFF', desc: 'Summer Sa
 window.removeCoupon = (index) => { if(confirm("Remove coupon?")) { couponsList.splice(index, 1); window.renderLandingConfig(); } };
 window.updateCoupon = (index, field, value) => { couponsList[index][field] = value; window.renderLandingConfig(); };
 
-// ---- Mobile Exclusive Rendering logic ----
 
-function renderAdminRoomHotspots() {
-    const cont = document.getElementById('cms-room-hotspots-container');
-    if (!cont) return;
-    cont.innerHTML = roomHotspots.map((h, i) => `
-        <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex gap-2 relative items-center">
-            <button onclick="window.removeRoomHotspot(${i})" class="absolute top-1 right-1 text-red-500 hover:text-red-700"><i data-lucide="x" class="w-4 h-4"></i></button>
-            <input type="text" value="${h.name || ''}" onchange="window.updateRoomHotspot(${i}, 'name', this.value)" class="w-full text-xs p-1 border rounded" placeholder="Plant Name">
-            <input type="text" value="${h.price || ''}" onchange="window.updateRoomHotspot(${i}, 'price', this.value)" class="w-full text-xs p-1 border rounded" placeholder="₹ Price">
-            <input type="number" value="${h.x || 50}" onchange="window.updateRoomHotspot(${i}, 'x', this.value)" class="w-16 text-xs p-1 border rounded" placeholder="X%">
-            <input type="number" value="${h.y || 50}" onchange="window.updateRoomHotspot(${i}, 'y', this.value)" class="w-16 text-xs p-1 border rounded" placeholder="Y%">
-        </div>
-    `).join('');
-}
-window.addShopRoomHotspot = () => { roomHotspots.push({ name: 'New Plant', price: '₹99', x: 50, y: 50 }); window.renderLandingConfig(); };
-window.removeRoomHotspot = (index) => { roomHotspots.splice(index, 1); window.renderLandingConfig(); };
-window.updateRoomHotspot = (index, field, value) => { roomHotspots[index][field] = value; };
-
-function renderAdminTimeline() {
-    const cont = document.getElementById('cms-timeline-container');
-    if (!cont) return;
-    if (processTimeline.length === 0) processTimeline = [{title:'Seed', desc:''}, {title:'Sprout', desc:''}, {title:'Growth', desc:''}, {title:'Delivery', desc:''}];
-    cont.innerHTML = processTimeline.map((t, i) => `
-        <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3">
-            <div class="text-xs font-bold mb-1">Step ${i+1}</div>
-            <input type="text" value="${t.title || ''}" onchange="window.updateTimeline(${i}, 'title', this.value)" class="w-full text-sm p-2 mb-2 border rounded" placeholder="Title">
-            <input type="text" value="${t.desc || ''}" onchange="window.updateTimeline(${i}, 'desc', this.value)" class="w-full text-sm p-2 border rounded" placeholder="Description">
-        </div>
-    `).join('');
-}
-window.updateTimeline = (index, field, value) => { processTimeline[index][field] = value; };
-
-function renderAdminTrendingGrid() {
-    const cont = document.getElementById('cms-trending-container');
-    if (!cont) return;
-    cont.innerHTML = trendingGrid.map((t, i) => `
-        <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex gap-2 relative">
-            <button onclick="window.removeTrendingGrid(${i})" class="absolute top-1 right-1 text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
-            <input type="text" value="${t.title || ''}" onchange="window.updateTrendingGrid(${i}, 'title', this.value)" class="w-full text-sm p-2 border rounded" placeholder="Title">
-            <input type="text" value="${t.image || ''}" onchange="window.updateTrendingGrid(${i}, 'image', this.value)" class="w-full text-sm p-2 border rounded" placeholder="Image URL">
-        </div>
-    `).join('');
-    cont.innerHTML += `<button onclick="window.addTrendingGrid()" class="text-sm text-primary">+ Add Trending Item</button>`;
-}
-window.addTrendingGrid = () => { trendingGrid.push({title:'', image:''}); window.renderLandingConfig(); };
-window.removeTrendingGrid = (index) => { trendingGrid.splice(index, 1); window.renderLandingConfig(); };
-window.updateTrendingGrid = (index, field, value) => { trendingGrid[index][field] = value; };
-
-function renderAdminFeaturesGrid() {
-    const cont = document.getElementById('cms-features-container');
-    if (!cont) return;
-    cont.innerHTML = featuresGrid.map((f, i) => `
-        <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex gap-2 relative">
-            <button onclick="window.removeFeaturesGrid(${i})" class="absolute top-1 right-1 text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
-            <input type="text" value="${f.icon || ''}" onchange="window.updateFeaturesGrid(${i}, 'icon', this.value)" class="w-1/3 text-sm p-2 border rounded" placeholder="Lucide Icon">
-            <input type="text" value="${f.title || ''}" onchange="window.updateFeaturesGrid(${i}, 'title', this.value)" class="w-2/3 text-sm p-2 border rounded" placeholder="Feature Title">
-        </div>
-    `).join('');
-    cont.innerHTML += `<button onclick="window.addFeaturesGrid()" class="text-sm text-primary">+ Add Feature</button>`;
-}
-window.addFeaturesGrid = () => { featuresGrid.push({icon:'leaf', title:''}); window.renderLandingConfig(); };
-window.removeFeaturesGrid = (index) => { featuresGrid.splice(index, 1); window.renderLandingConfig(); };
-window.updateFeaturesGrid = (index, field, value) => { featuresGrid[index][field] = value; };
-
-function renderAdminFaq() {
-    const cont = document.getElementById('cms-faq-container');
-    if (!cont) return;
-    cont.innerHTML = faqList.map((f, i) => `
-        <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 relative">
-            <button onclick="window.removeFaqItem(${i})" class="absolute top-2 right-2 text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
-            <input type="text" value="${f.q || ''}" onchange="window.updateFaqItem(${i}, 'q', this.value)" class="w-full text-sm p-2 mb-2 border rounded" placeholder="Question">
-            <textarea onchange="window.updateFaqItem(${i}, 'a', this.value)" class="w-full text-sm p-2 border rounded" placeholder="Answer">${f.a || ''}</textarea>
-        </div>
-    `).join('');
-}
-window.addFaqItem = () => { faqList.push({ q: 'New Question', a: 'Answer' }); window.renderLandingConfig(); };
-window.removeFaqItem = (index) => { faqList.splice(index, 1); window.renderLandingConfig(); };
-window.updateFaqItem = (index, field, value) => { faqList[index][field] = value; };
 window.saveLandingConfig = async () => {
     if (!supabase) return;
     const btn = document.getElementById('save-landing-btn');
@@ -1812,19 +1822,7 @@ window.saveLandingConfig = async () => {
             products: dealOfDay.products 
         },
         coupons: couponsList,
-        best_sellers: { category: document.getElementById('cms-best-sellers-category').value.trim() },
-        
-        // Mobile Exclusive Configs
-        room_bg_image: document.getElementById('cms-room-bg') ? document.getElementById('cms-room-bg').value : '',
-        room_hotspots: roomHotspots,
-        process_timeline: processTimeline,
-        trending_grid: trendingGrid,
-        parallax_banner: {
-            image: document.getElementById('cms-parallax-bg') ? document.getElementById('cms-parallax-bg').value : '',
-            quote: document.getElementById('cms-parallax-quote') ? document.getElementById('cms-parallax-quote').value : ''
-        },
-        features_grid: featuresGrid,
-        faq_list: faqList
+        best_sellers: { category: document.getElementById('cms-best-sellers-category').value.trim() }
     };
     
     try {

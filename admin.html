@@ -403,70 +403,6 @@
                 </div>
             </div>
 
-            <!-- ================= MOBILE EXCLUSIVE SECTIONS CMS ================= -->
-            
-            <div class="mt-12 mb-6 border-b-2 border-emerald-500 pb-2">
-                <h2 class="text-2xl font-outfit font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
-                    <i data-lucide="smartphone" class="w-6 h-6 text-emerald-600"></i> Mobile Exclusive Sections
-                </h2>
-                <p class="text-gray-500 text-sm mt-1">Configure the premium visual sections that appear only on mobile devices.</p>
-            </div>
-
-            <!-- Shop By Room CMS -->
-            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
-                <div class="flex justify-between items-center mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Shop by Room (Lookbook)</h3>
-                    <button onclick="window.addShopRoomHotspot()" class="text-sm text-primary hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="plus" class="w-4 h-4"></i> Add Hotspot</button>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Main Background Image URL</label>
-                    <input type="text" id="cms-room-bg" class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl w-full p-2.5" placeholder="/images/living_room.jpg">
-                </div>
-                <div id="cms-room-hotspots-container" class="space-y-3"></div>
-            </div>
-
-            <!-- Timeline CMS -->
-            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">Process Timeline (4 Steps)</h3>
-                <div id="cms-timeline-container" class="space-y-4"></div>
-            </div>
-
-            <!-- Trending Grid CMS -->
-            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">Trending Collections (Masonry)</h3>
-                <div id="cms-trending-container" class="space-y-4"></div>
-            </div>
-
-            <!-- Parallax Banner CMS -->
-            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">Parallax Banner</h3>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Background Image URL</label>
-                        <input type="text" id="cms-parallax-bg" class="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl w-full p-2.5" placeholder="/images/farm.jpg">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Quote Text</label>
-                        <input type="text" id="cms-parallax-quote" class="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl w-full p-2.5" placeholder="Rooted in Nature, Growing with Love.">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Features Grid CMS -->
-            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">Features Grid (Why Choose Us)</h3>
-                <div id="cms-features-container" class="space-y-4"></div>
-            </div>
-
-            <!-- FAQ CMS -->
-            <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
-                <div class="flex justify-between items-center mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">FAQ Section</h3>
-                    <button onclick="window.addFaqItem()" class="text-sm text-primary hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="plus" class="w-4 h-4"></i> Add FAQ</button>
-                </div>
-                <div id="cms-faq-container" class="space-y-3"></div>
-            </div>
-
             <!-- About Us Section -->
             <div class="bg-white dark:bg-[#1a1d24] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mt-6">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">
@@ -658,6 +594,80 @@
                     </div>
                 </form>
             </div>
+
+            <!-- Checkout Settings Form -->
+            <div class="bg-white/90 dark:bg-[#1a1d24]/90 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 dark:border-gray-800 p-6 max-w-2xl mt-6 transition-colors">
+                <form id="checkout-settings-form" onsubmit="event.preventDefault(); window.saveCheckoutSettings();" class="space-y-6">
+                    <div>
+                        <h2 class="text-xl font-outfit font-bold text-gray-900 dark:text-white mb-1">Checkout Page Features</h2>
+                        <p class="text-sm text-gray-500 mb-4">Enable or disable premium features on the checkout drawer.</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Add-ons -->
+                        <div class="flex items-center justify-between p-4 border border-gray-100 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                            <div>
+                                <label class="text-sm font-bold text-gray-800 dark:text-gray-200 block">Last-Minute Add-ons</label>
+                                <p class="text-xs text-gray-500">Show upsell items at checkout.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="chk-addons-enabled" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                        <div class="space-y-2 ml-4">
+                            <label class="text-xs font-bold text-gray-700 dark:text-gray-300">Add-on Category/Tag</label>
+                            <input type="text" id="chk-addon-category" placeholder="e.g. Accessories" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all shadow-sm">
+                        </div>
+
+                        <!-- Gifting -->
+                        <div class="flex items-center justify-between p-4 border border-gray-100 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                            <div>
+                                <label class="text-sm font-bold text-gray-800 dark:text-gray-200 block">Premium Gifting</label>
+                                <p class="text-xs text-gray-500">Allow customers to pack as a gift.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="chk-gifting-enabled" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                        <div class="space-y-2 ml-4">
+                            <label class="text-xs font-bold text-gray-700 dark:text-gray-300">Gifting Fee (₹)</label>
+                            <input type="number" id="chk-gifting-fee" value="49" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all shadow-sm">
+                        </div>
+
+                        <!-- Delivery Date -->
+                        <div class="flex items-center justify-between p-4 border border-gray-100 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                            <div>
+                                <label class="text-sm font-bold text-gray-800 dark:text-gray-200 block">Delivery Date & Time Slot</label>
+                                <p class="text-xs text-gray-500">Let customers pick when they want delivery.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="chk-date-enabled" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+
+                        <!-- Order Notes -->
+                        <div class="flex items-center justify-between p-4 border border-gray-100 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                            <div>
+                                <label class="text-sm font-bold text-gray-800 dark:text-gray-200 block">Order Notes</label>
+                                <p class="text-xs text-gray-500">Allow customers to add delivery instructions.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="chk-notes-enabled" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-100 flex justify-end">
+                        <button type="submit" id="save-checkout-settings-btn" class="bg-primary hover:bg-green-800 text-white px-6 py-2.5 rounded-lg font-semibold shadow-sm flex items-center gap-2 transition-colors">
+                            <i data-lucide="save" class="w-5 h-5"></i> Save Checkout Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div> <!-- End of View Settings -->
         <!-- CATEGORIES VIEW -->
         <div id="view-categories" class="space-y-6 hidden">
@@ -738,17 +748,7 @@
                             <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Product Name *</label>
                             <input type="text" id="p-name" required class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary dark:focus:ring-green-500 focus:border-primary outline-none transition-all shadow-sm">
                         </div>
-                        
-                        <div class="space-y-1">
-                            <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Selling Price (₹) *</label>
-                            <input type="number" id="p-price" required min="1" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary dark:focus:ring-green-500 focus:border-primary outline-none transition-all shadow-sm">
-                        </div>
 
-                        <div class="space-y-1">
-                            <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">MRP (₹) - Optional</label>
-                            <input type="number" id="p-mrp" min="1" placeholder="e.g. 599" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary dark:focus:ring-green-500 focus:border-primary outline-none transition-all shadow-sm">
-                        </div>
-                        
                         <div class="space-y-1">
                             <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Badge (Optional)</label>
                             <input type="text" id="p-badge" placeholder="e.g. Bestseller, New" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary dark:focus:ring-green-500 focus:border-primary outline-none transition-all shadow-sm">
@@ -783,6 +783,18 @@
                         <div class="space-y-1 md:col-span-2">
                             <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Description</label>
                             <textarea id="p-desc" rows="3" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary dark:focus:ring-green-500 focus:border-primary outline-none transition-all shadow-sm resize-none"></textarea>
+                        </div>
+
+                        <!-- Variants UI -->
+                        <div class="space-y-2 md:col-span-2 mt-4 p-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-900">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-sm font-bold text-gray-800 dark:text-gray-200">Product Variants & Prices *</label>
+                                <button type="button" id="add-variant-btn" class="px-3 py-1 bg-white border border-gray-300 text-sm font-semibold rounded-lg hover:bg-gray-50 flex items-center gap-1 transition-colors"><i data-lucide="plus" class="w-4 h-4"></i> Add Variant</button>
+                            </div>
+                            <p class="text-xs text-gray-500 mb-2">Add at least one variant to set the price. The first variant will be used as the base/display price. Use variants to offer different sizes or options (e.g., "Small", "Large").</p>
+                            <div id="variants-container" class="space-y-2">
+                                <!-- Variant rows injected here by JS -->
+                            </div>
                         </div>
                     </div>
                     
